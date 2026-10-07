@@ -4,6 +4,62 @@ import '../css/main.css';
 const doc = document.documentElement;
 doc.classList.add('js');
 
+/* Homepage hero film. Loaded only on the homepage; Three.js loads later, when idle. */
+const hero = document.querySelector('[data-hero]');
+if (hero) {
+  import('./hero.js').then(({ initHero, renderStills }) => {
+    const renderMode = doc.dataset.env === 'local' && new URLSearchParams(window.location.search).has('render-stills');
+    if (renderMode) {
+      window.__eeStills = renderStills();
+      return;
+    }
+    initHero(hero);
+  });
+}
+
+/* Small-homes 3D viewers: loaded when a viewer nears the screen, never on low-end devices. */
+const viewerFrames = document.querySelectorAll('[data-home-viewer]');
+if (viewerFrames.length) {
+  const start = (frame) =>
+    import('./homes-viewer.js')
+      .then(({ createHomesViewer }) => {
+        const viewer = createHomesViewer(frame, {
+          models: JSON.parse(frame.dataset.models || '{}'),
+          initial: frame.dataset.initial,
+        });
+        const toggle = frame.querySelector('[data-mood-toggle]');
+        if (toggle) {
+          toggle.hidden = false;
+          const buttons = toggle.querySelectorAll('[data-mood]');
+          buttons.forEach((b) =>
+            b.addEventListener('click', () => {
+              viewer.setMood(b.dataset.mood);
+              buttons.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+            }),
+          );
+        }
+        frame.closest('[data-homes-viewer]')?.addEventListener('design-change', (e) => viewer.show(e.detail.slug));
+      })
+      .catch(() => {
+        /* The poster stays in place; every fact is also in the page text. */
+      });
+
+  import('./quality.js').then(({ initialTier }) => {
+    if (initialTier() === 'stills') return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          io.unobserve(entry.target);
+          start(entry.target);
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    viewerFrames.forEach((f) => io.observe(f));
+  });
+}
+
 /* Header gains a shadow after 8 px of scroll */
 const header = document.querySelector('.site-header');
 if (header) {

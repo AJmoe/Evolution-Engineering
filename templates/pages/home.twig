@@ -4,27 +4,57 @@
 {% block skip %}<a class="skip-link" href="#main">Skip to content</a><a class="skip-link" href="#after-hero">Skip animation</a>{% endblock %}
 
 {% block content %}
-  {# Hero. Phase 3 turns this into the scroll-driven 3D film; this static version is also the reduced-motion layout. #}
-  <section class="hero" aria-labelledby="hero-heading">
-    <div class="container hero__inner">
-      <div class="hero__copy">
-        <h1 id="hero-heading" class="display">Engineered before it is built.</h1>
-        <p class="lede">Civil, mechanical and electrical engineering for mines, utilities, ministries and private clients across Botswana.</p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="/contact">Request a quote</a>
-          <a class="btn btn--secondary" href="/projects">See our projects</a>
+  {#
+    Hero. Without JavaScript, or with reduced motion, this is a still of the handover followed by
+    the three stage panels. With JavaScript it becomes the scroll-driven film (resources/js/hero.js).
+  #}
+  <section class="hero" data-hero aria-labelledby="hero-heading">
+    <div class="hero__track" data-hero-track>
+      <div class="hero__stage">
+        <div class="hero__media" data-hero-media>
+          <picture class="hero__poster">
+            <source media="(max-width: 899px)" srcset="/images/hero/stage-3-m.webp" width="780" height="930">
+            <img src="/images/hero/stage-3.webp" width="1600" height="1000" alt="" fetchpriority="high">
+          </picture>
         </div>
-        <ul class="stage-tracker" role="list" aria-label="From drawing to handover">
-          <li><a href="#stage-blueprint"><span>Blueprint</span><span class="bar"><span></span></span></a></li>
-          <li><a href="#stage-build"><span>Build</span><span class="bar"><span></span></span></a></li>
-          <li><a href="#stage-handover"><span>Handover</span><span class="bar"><span></span></span></a></li>
-        </ul>
+        <div class="hero__scrim" aria-hidden="true"></div>
+        <div class="container hero__inner">
+          <div class="hero__copy">
+            <div class="hero__texts" aria-live="off">
+              <div class="hero__text is-active" data-stage-text>
+                <h1 id="hero-heading" class="display">Engineered before it is built.</h1>
+                <p class="lede">Civil, mechanical and electrical engineering for mines, utilities, ministries and private clients across Botswana.</p>
+              </div>
+              <div class="hero__text" data-stage-text>
+                <p class="display">Foundations, frame and facade, on one team.</p>
+                <p class="lede">Concrete, steel and glass go up floor by floor, with our own plant on site and the engineers who run it.</p>
+              </div>
+              <div class="hero__text" data-stage-text>
+                <p class="display">Delivered across Botswana since 2007.</p>
+                <p class="lede">A 100% citizen-owned contractor, trusted on everything from clinics and warehouses to a 100 km water transmission pipeline.</p>
+              </div>
+            </div>
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="/contact">Request a quote</a>
+              <a class="btn btn--secondary" href="/projects">See our projects</a>
+            </div>
+            <div class="stage-tracker" role="group" aria-label="Jump to a stage of the animation">
+              {% for label in ['Blueprint', 'Build', 'Handover'] %}
+                <button type="button" data-stage-go aria-current="{{ loop.first ? 'step' : 'false' }}">
+                  <span>{{ label }}</span><span class="bar"><span data-stage-bar></span></span>
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <p class="hero__hint" data-scroll-hint aria-hidden="true">Scroll to start building
+          <svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true"><path d="M6 1v13M1 9l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </p>
       </div>
-      <div class="hero__art">{% include 'partials/hero-art.twig' %}</div>
     </div>
   </section>
 
-  <section class="section section--tight" aria-label="From drawing to handover">
+  <section class="section section--tight" data-hero-stages aria-label="From drawing to handover">
     <div class="container stages">
       <article class="stage" id="stage-blueprint">
         <span class="stage__num">Blueprint</span>
@@ -109,8 +139,8 @@
     {% set first = homes|first %}
     <section class="section" aria-labelledby="homes-heading">
       <div class="container split">
-        <div class="viewer-frame" data-placeholder="home-design">
-          {{ ui.home_poster(first) }}
+        <div class="viewer-frame" data-placeholder="home-design" data-home-viewer data-models="{{ {(first.slug): {name: first.name, params: first.model_params}}|json_encode }}" data-initial="{{ first.slug }}">
+          <div data-design-poster="{{ first.slug }}">{{ ui.home_poster(first) }}</div>
           <span class="tag">Concept design: {{ first.name }}</span>
         </div>
         <div class="stack-lg">

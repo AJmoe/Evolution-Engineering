@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "stills": "node tools/render-stills.mjs",
+    "check:pages": "node tools/screenshots.mjs",
+    "check:hero": "node tools/hero-check.mjs && node tools/fallback-check.mjs",
+    "check:viewer": "node tools/viewer-check.mjs",
     "lint": "eslint resources/js && prettier --check \"resources/**/*.{js,css}\""
   },
   "devDependencies": {
@@ -14,5 +18,8 @@
     "eslint": "^9.10.0",
     "prettier": "^3.3.0",
     "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "three": "0.186.1"
   }
 }

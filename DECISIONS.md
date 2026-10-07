@@ -16,3 +16,15 @@ Non-obvious decisions, newest last.
 - **Contract values.** Stored in `value_pula` and hidden unless `show_value` is set per project. Repositories null the value when hidden so templates cannot leak it.
 - **Placeholder imagery.** Until photography arrives, projects, plant and homes use blueprint-style inline SVG drawings marked `data-placeholder`. The hero uses an SVG daylight still until the 3D poster is rendered in phase 3.
 - **HTML page cache deferred.** On-disk HTML caching with admin-save invalidation lands with the admin in phase 4, because the contact page carries a per-request CSRF token and must stay uncached.
+
+## 2026-10-07: Phase 3, 3D hero and homes viewer
+
+- **No prototype on hand.** The scene was built from the brief's description, because `evolution-engineers-sample-v2.html` was not supplied. Its listed techniques are all used: clipping-plane facade reveal, `InstancedMesh` for trees, cars and lamps, `LineSegments` with `setDrawRange` for the site plan, `depthWrite: false` on transparent lines, layers at least 0.02 m apart, near plane at 2, and a canvas facade texture with per-face repeats.
+- **Three.js r186, pinned.** Light intensities were re-tuned for physical light units. `PCFSoftShadowMap` was removed upstream, so shadows use `PCFShadowMap` with a blur radius. Tone mapping is `NeutralToneMapping`, which keeps the brand blue and orange true.
+- **Sky in the scene, not in CSS.** A vertex-coloured sky dome whose horizon matches the fog colour, so distant ground melts into the sky and the pre-rendered stills match live frames exactly.
+- **Glass.** A metalness and roughness map from the facade canvas makes glass reflect the sky environment while spandrels stay matte.
+- **Layout via view offset.** On desktop the camera's view offset shifts the building right of frame, leaving the left five columns for text. On phones the canvas fills the top 55% and the camera pulls back by aspect ratio.
+- **Frame-time step-down.** Only consecutive rendered frames are measured, after ten warm-up frames, because the scene renders on demand rather than continuously.
+- **Stills and social image are generated.** `npm run stills` renders the three stage stills (desktop and phone), the poster and `og-default.png` from the live scene in headless Edge. They are never hand-edited.
+- **Homes viewer.** Procedural models for gable, L-shaped and courtyard types, driven by `model_params`. The `.glb` path (phase 2 of model sourcing) is still to add when the client supplies models.
+- **Bundle.** Three.js and the shared helpers form one lazy chunk of about 143 KB gzipped. The hero scene adds about 5 KB and the homes viewer about 4 KB. Neither loads on the stills tier or with reduced motion.

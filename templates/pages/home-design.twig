@@ -12,9 +12,13 @@
   <section class="section" aria-labelledby="design-heading">
     <div class="container homes-viewer">
       <div class="stack-lg">
-        <div class="viewer-frame" data-placeholder="home-design">
-          {{ ui.home_poster(home) }}
+        <div class="viewer-frame" data-placeholder="home-design" data-home-viewer data-models="{{ {(home.slug): {name: home.name, params: home.model_params}}|json_encode }}" data-initial="{{ home.slug }}">
+          <div data-design-poster="{{ home.slug }}">{{ ui.home_poster(home) }}</div>
           <span class="tag">Concept design</span>
+          <div class="mood-toggle" role="group" aria-label="Lighting" data-mood-toggle hidden>
+            <button type="button" data-mood="day" aria-pressed="true">Day</button>
+            <button type="button" data-mood="evening" aria-pressed="false">Evening</button>
+          </div>
         </div>
         {{ ui.floorplan(home) }}
       </div>

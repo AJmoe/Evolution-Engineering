@@ -19,11 +19,16 @@
         {% endfor %}
       </div>
       <div class="homes-viewer" data-homes-viewer>
-        <div class="viewer-frame" data-placeholder="home-design">
+        {% set models = {} %}{% for h in homes %}{% set models = models|merge({(h.slug): {name: h.name, params: h.model_params}}) %}{% endfor %}
+        <div class="viewer-frame" data-placeholder="home-design" data-home-viewer data-models="{{ models|json_encode }}" data-initial="{{ active.slug }}">
           {% for h in homes %}
             <div class="poster" data-design-poster="{{ h.slug }}"{% if h.slug != active.slug %} hidden{% endif %}>{{ ui.home_poster(h) }}</div>
           {% endfor %}
           <span class="tag">Concept design</span>
+          <div class="mood-toggle" role="group" aria-label="Lighting" data-mood-toggle hidden>
+            <button type="button" data-mood="day" aria-pressed="true">Day</button>
+            <button type="button" data-mood="evening" aria-pressed="false">Evening</button>
+          </div>
         </div>
         {% for h in homes %}
           <div class="stack-lg" role="tabpanel" id="panel-{{ h.slug }}" data-design-panel="{{ h.slug }}"{% if h.slug != active.slug %} hidden{% endif %}>
