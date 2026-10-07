@@ -1,0 +1,9 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+
+{% block title %}Something went wrong{% endblock %}
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Something went wrong on our side.', 'Please try again in a minute. If it keeps happening, call us on ' ~ (settings.phone ?? '392 3065') ~ '.', []) }}
+{% endblock %}

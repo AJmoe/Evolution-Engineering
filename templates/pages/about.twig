@@ -1,0 +1,64 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'About', href: '/about' }] %}
+
+{% block title %}About and compliance{% endblock %}
+{% block description %}Evolution Engineers is a 100% citizen-owned engineering contractor established in Gaborone in May 2007, registered with PPADB in five disciplines and tax cleared.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('A Botswana contractor since May 2007', 'Evolution Engineers is a 100% citizen-owned company specialising in civil, mechanical and electrical engineering works.', crumbs) }}
+
+  <section class="section" aria-labelledby="story-heading">
+    <div class="container intro">
+      <div class="stack-lg">
+        <h2 id="story-heading">Our story</h2>
+        <p class="lede">We were established in May 2007. Our engineers and artisans bring long experience from Botswana's mining sector, and our clients include Debswana, particularly at the Jwaneng and Orapa mines, Karowe Diamond Mine, Tati Nickel Mining Company, government ministries, councils and the private sector.</p>
+        <p>Our work runs from land servicing, roads and pipelines to building design and construction, mechanical maintenance and fabrication, and electrical installations.</p>
+      </div>
+      <ul class="facts">
+        <li><strong>May 2007</strong><span>Established</span></li>
+        <li><strong>100%</strong><span>Citizen owned</span></li>
+        <li><strong>Block 8 Industrial</strong><span>Head office and workshop, Gaborone</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--cloud" aria-labelledby="mission-heading">
+    <div class="container two-col">
+      <div class="stack">
+        <h2 id="mission-heading">Mission</h2>
+        <p class="lede">To be a leader in value-added construction services, building a partnership with each customer throughout the construction process.</p>
+      </div>
+      <div class="stack">
+        <h2>Vision</h2>
+        <p class="lede">Lasting relationships earned by exceeding expectations through the performance of every member of our team, and superior value from the products and services we buy and supply.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="facilities-heading">
+    <div class="container detail">
+      <div class="stack-lg">
+        <h2 id="facilities-heading">Facilities</h2>
+        <p>Our head office and fabrication workshop are at Plot 61047, Block 8 Industrial, Gaborone. The premises have been extensively renovated.</p>
+      </div>
+      <div class="viewer-frame" data-placeholder="facility-photo">{{ ui.drawing('mechanical') }}</div>
+    </div>
+  </section>
+
+  <section class="section section--cloud" aria-labelledby="compliance-heading">
+    <div class="container two-col">
+      <div class="stack-lg">
+        <h2 id="compliance-heading">Registrations</h2>
+        <p>We are registered for various grades with the Public Procurement and Asset Disposal Board (PPADB) in:</p>
+      </div>
+      <div class="stack-lg">
+        <ul class="plain-list" data-placeholder="TODO-CLIENT: confirm grades and registration period">
+          {% for r in registrations %}<li>{{ r }}</li>{% endfor %}
+        </ul>
+        <p>We are registered with the tax department and tax cleared.</p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

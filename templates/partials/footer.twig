@@ -1,0 +1,45 @@
+{% import 'components/macros.twig' as ui %}
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="stack">
+        <div class="footer-plate">{{ ui.brand() }}</div>
+        <p>Civil, mechanical and electrical engineering contractor. 100% citizen owned, established in May 2007.</p>
+      </div>
+      <div>
+        <h2>Visit or write</h2>
+        <address>
+          {{ settings.address_line }}<br>
+          {{ settings.postal_address }}
+        </address>
+      </div>
+      <div>
+        <h2>Call or email</h2>
+        <ul>
+          <li>Telephone <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a></li>
+          <li>Cell <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a></li>
+          {% if settings.fax %}<li>Fax {{ settings.fax }}</li>{% endif %}
+          <li><a href="mailto:{{ settings.email_general }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_general }}</a></li>
+          <li><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></li>
+          <li><a href="mailto:{{ settings.email_homes }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_homes }}</a></li>
+        </ul>
+      </div>
+      <nav aria-label="Footer">
+        <h2>Pages</h2>
+        <ul>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/supplies">Supplies</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/small-homes">Small homes</a></li>
+          <li><a href="/plant-and-equipment">Plant and equipment</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>{{ settings.registrations_line }}</p>
+      <p>&copy; {{ year_now }} Evolution Engineers. <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+    </div>
+  </div>
+</footer>

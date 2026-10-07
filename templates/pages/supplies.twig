@@ -1,0 +1,30 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Supplies', href: '/supplies' }] %}
+
+{% block title %}Supplies{% endblock %}
+{% block description %}Industrial valves, HDPE, galvanised and stainless steel pipes, and electric motors, supplied by Evolution Engineers in Gaborone. Request a price.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Valves, pipes and electric motors', 'We supply the products we install. Ask for a price on any group below and we will reply by email.', crumbs) }}
+
+  {% for key, g in groups %}
+    <section class="section{% if loop.index is even %} section--cloud{% endif %}" aria-labelledby="sup-{{ key }}">
+      <div class="container detail">
+        <div class="stack-lg">
+          <h2 id="sup-{{ key }}">{{ g.label }}</h2>
+          <ul class="scope-list">
+            {% for item in g.items %}
+              <li{% if item.is_placeholder %} data-placeholder="TODO-CLIENT"{% endif %}>{{ item.name }}{% if item.description %} <span class="small muted">{{ item.description }}</span>{% endif %}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <aside class="detail__aside stack">
+          <p class="muted">No cart and no online prices. We quote for each order.</p>
+          <div><a class="btn btn--secondary" href="/contact?type=supplies&amp;item={{ g.label|url_encode }}">Request a price</a></div>
+        </aside>
+      </div>
+    </section>
+  {% endfor %}
+{% endblock %}

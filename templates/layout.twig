@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en-BW" data-env="{{ noindex ? 'local' : 'production' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% set page_title = block('title') is defined and block('title') ? block('title') ~ ' / Evolution Engineers' : 'Evolution Engineers / Civil, mechanical and electrical engineering in Botswana' %}
+  <title>{{ page_title }}</title>
+  <meta name="description" content="{% block description %}A 100% citizen-owned civil, mechanical and electrical engineering contractor in Gaborone, working for mines, utilities, ministries and private clients since 2007.{% endblock %}">
+  <link rel="canonical" href="{{ canonical }}">
+  {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="color-scheme" content="light">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Evolution Engineers">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:description" content="{{ block('description') }}">
+  <meta property="og:url" content="{{ canonical }}">
+  <meta property="og:image" content="{{ base_url }}/images/og-default.png" data-placeholder>
+  <meta name="twitter:card" content="summary_large_image">
+
+  {{ vite_preload_fonts('resources/js/main.js', ['fraunces-latin-300', 'hanken-grotesk-latin-400']) }}
+  {% if vite_dev() %}
+    {{ vite_css('resources/js/main.js') }}
+  {% else %}
+    <style nonce="{{ csp_nonce }}">{{ vite_inline_css('resources/js/main.js') }}</style>
+  {% endif %}
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <script type="application/ld+json" nonce="{{ csp_nonce }}">
+  {{ {
+    '@context': 'https://schema.org',
+    '@type': ['Organization', 'GeneralContractor'],
+    'name': 'Evolution Engineers',
+    'url': base_url ~ '/',
+    'foundingDate': '2007-05',
+    'telephone': '+267 392 3065',
+    'address': {
+      '@type': 'PostalAddress',
+      'streetAddress': 'Plot 61047, Block 8 Industrial',
+      'addressLocality': 'Gaborone',
+      'addressCountry': 'BW'
+    },
+    'areaServed': { '@type': 'Country', 'name': 'Botswana' }
+  }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}
+  </script>
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% block skip %}<a class="skip-link" href="#main">Skip to content</a>{% endblock %}
+  {% include 'partials/header.twig' %}
+
+  <main id="main" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block cta %}{% include 'partials/cta.twig' %}{% endblock %}
+  {% include 'partials/footer.twig' %}
+
+  {{ vite_js('resources/js/main.js', csp_nonce) }}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

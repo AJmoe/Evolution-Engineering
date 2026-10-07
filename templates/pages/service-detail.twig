@@ -1,0 +1,51 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Services', href: '/services' }, { label: service.name, href: service.url }] %}
+
+{% block title %}{{ service.name }}{% endblock %}
+{% block description %}{{ service.name }} from Evolution Engineers, Gaborone: {{ service.summary|lower|trim('.') }}. Request a quote for your project.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header(service.name, service.summary, crumbs) }}
+
+  <section class="section" aria-labelledby="scope-heading">
+    <div class="container detail">
+      <div class="stack-lg">
+        <h2 id="scope-heading">What we offer</h2>
+        <ul class="scope-list">
+          {% for item in service.scope %}<li>{{ item }}</li>{% endfor %}
+        </ul>
+      </div>
+      <aside class="detail__aside stack">
+        <h3>Who we work for</h3>
+        <p class="muted">{{ service.clients }}</p>
+        <div><a class="btn btn--primary" href="/contact?type={{ service.slug == 'civil-engineering' ? 'civil' : (service.slug == 'mechanical-engineering' ? 'mechanical' : 'electrical') }}">Request a quote</a></div>
+      </aside>
+    </div>
+  </section>
+
+  {% if related %}
+    <section class="section section--cloud" aria-labelledby="related-heading">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <h2 id="related-heading">Related projects</h2>
+          <a class="link-arrow" href="/projects">All projects {{ ui.arrow() }}</a>
+        </div>
+        <div class="card-grid">{% for p in related %}{{ ui.project_card(p) }}{% endfor %}</div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="section" aria-labelledby="other-heading">
+    <div class="container">
+      <h2 id="other-heading" class="h3">Other services</h2>
+      <ul class="service-rows">
+        {% for s in others %}
+          <li class="service-row"><a href="{{ s.url }}"><h3>{{ s.name }}</h3><p>{{ s.summary }}</p></a></li>
+        {% endfor %}
+        <li class="service-row"><a href="/supplies"><h3>Supplies</h3><p>Valves, pipes and electric motors.</p></a></li>
+      </ul>
+    </div>
+  </section>
+{% endblock %}

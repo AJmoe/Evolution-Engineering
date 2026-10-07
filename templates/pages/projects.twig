@@ -1,0 +1,42 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Projects', href: '/projects' }] %}
+
+{% block title %}Projects{% endblock %}
+{% block description %}Roads, pipelines, sewer networks, clinics and mine works delivered by Evolution Engineers for Botswana's mines, utilities, ministries and councils since 2008.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Projects', 'Roads, water, sewerage, buildings and mine works for public and private clients across Botswana.', crumbs) }}
+
+  <section class="section" aria-labelledby="project-list-heading">
+    <div class="container">
+      <h2 id="project-list-heading" class="visually-hidden">Project list</h2>
+      <div class="filters" role="group" aria-label="Filter projects">
+        <div class="filter-row">
+          <span>Type</span>
+          <a class="chip" href="/projects{{ active_year ? '?year=' ~ active_year }}" data-filter="type:" aria-current="{{ active_type is null ? 'true' : 'false' }}">All</a>
+          {% for key, label in categories %}
+            <a class="chip" href="/projects?type={{ key }}{{ active_year ? '&year=' ~ active_year }}" data-filter="type:{{ key }}" aria-current="{{ active_type == key ? 'true' : 'false' }}">{{ label }}</a>
+          {% endfor %}
+        </div>
+        <div class="filter-row">
+          <span>Year</span>
+          <a class="chip" href="/projects{{ active_type ? '?type=' ~ active_type }}" data-filter="year:" aria-current="{{ active_year is null ? 'true' : 'false' }}">Any</a>
+          {% for y in years %}
+            <a class="chip" href="/projects?{{ active_type ? 'type=' ~ active_type ~ '&' }}year={{ y }}" data-filter="year:{{ y }}" aria-current="{{ active_year == y ? 'true' : 'false' }}">{{ y }}</a>
+          {% endfor %}
+        </div>
+        <p class="results-count" data-results-count aria-live="polite">{{ projects|length }} {{ projects|length == 1 ? 'project' : 'projects' }}</p>
+      </div>
+
+      <div class="card-grid" data-project-grid>
+        {% for p in all_projects %}
+          {% set visible = (active_type is null or p.category == active_type) and (active_year is null or p.year == active_year) %}
+          {{ ui.project_card(p, not visible) }}
+        {% endfor %}
+      </div>
+      <p class="notice" data-empty{% if projects|length > 0 %} hidden{% endif %}>No projects match these filters. <a href="/projects">Show all projects</a>.</p>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Services', href: '/services' }] %}
+
+{% block title %}Services{% endblock %}
+{% block description %}Civil, mechanical and electrical engineering, plus valves, pipes and motors, from one Gaborone contractor with its own workshop and plant.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Civil, mechanical and electrical, under one roof.', 'Three engineering disciplines and a supplies business, run from our head office and fabrication workshop at Block 8 Industrial, Gaborone.', crumbs) }}
+
+  {% for s in services %}
+    <section class="section{% if loop.index is even %} section--cloud{% endif %}" aria-labelledby="svc-{{ s.slug }}">
+      <div class="container detail">
+        <div class="stack-lg">
+          <h2 id="svc-{{ s.slug }}">{{ s.name }}</h2>
+          <ul class="scope-list">
+            {% for item in s.scope %}<li>{{ item }}</li>{% endfor %}
+          </ul>
+        </div>
+        <div class="stack">
+          <p class="muted">{{ s.clients }}</p>
+          <a class="link-arrow" href="{{ s.url }}">More on {{ s.name|lower }} {{ ui.arrow() }}</a>
+        </div>
+      </div>
+    </section>
+  {% endfor %}
+
+  <section class="section" aria-labelledby="svc-supplies">
+    <div class="container detail">
+      <div class="stack-lg">
+        <h2 id="svc-supplies">Supplies</h2>
+        <ul class="scope-list">
+          {% for key, g in supplies %}
+            <li><strong>{{ g.label }}.</strong> {% for i in g.items %}{{ i.name }}{% if not loop.last %}; {% endif %}{% endfor %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="stack">
+        <p class="muted">Request a price for any product group. We do not sell online.</p>
+        <a class="link-arrow" href="/supplies">See the supplies catalogue {{ ui.arrow() }}</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

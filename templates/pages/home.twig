@@ -1,0 +1,184 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+
+{% block skip %}<a class="skip-link" href="#main">Skip to content</a><a class="skip-link" href="#after-hero">Skip animation</a>{% endblock %}
+
+{% block content %}
+  {# Hero. Phase 3 turns this into the scroll-driven 3D film; this static version is also the reduced-motion layout. #}
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <h1 id="hero-heading" class="display">Engineered before it is built.</h1>
+        <p class="lede">Civil, mechanical and electrical engineering for mines, utilities, ministries and private clients across Botswana.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/contact">Request a quote</a>
+          <a class="btn btn--secondary" href="/projects">See our projects</a>
+        </div>
+        <ul class="stage-tracker" role="list" aria-label="From drawing to handover">
+          <li><a href="#stage-blueprint"><span>Blueprint</span><span class="bar"><span></span></span></a></li>
+          <li><a href="#stage-build"><span>Build</span><span class="bar"><span></span></span></a></li>
+          <li><a href="#stage-handover"><span>Handover</span><span class="bar"><span></span></span></a></li>
+        </ul>
+      </div>
+      <div class="hero__art">{% include 'partials/hero-art.twig' %}</div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-label="From drawing to handover">
+    <div class="container stages">
+      <article class="stage" id="stage-blueprint">
+        <span class="stage__num">Blueprint</span>
+        <h2 class="h3">Engineered before it is built.</h2>
+        <p class="muted">Civil, mechanical and electrical engineering for mines, utilities, ministries and private clients across Botswana.</p>
+      </article>
+      <article class="stage" id="stage-build">
+        <span class="stage__num">Build</span>
+        <h2 class="h3">Foundations, frame and facade, on one team.</h2>
+        <p class="muted">Concrete, steel and glass go up floor by floor, with our own plant on site and the engineers who run it.</p>
+      </article>
+      <article class="stage" id="stage-handover">
+        <span class="stage__num">Handover</span>
+        <h2 class="h3">Delivered across Botswana since 2007.</h2>
+        <p class="muted">A 100% citizen-owned contractor, trusted on everything from clinics and warehouses to a 100 km water transmission pipeline.</p>
+      </article>
+    </div>
+  </section>
+
+  {# 1. Introduction #}
+  <section class="section" id="after-hero" tabindex="-1" aria-labelledby="intro-heading">
+    <div class="container intro">
+      <div class="stack-lg">
+        <h2 id="intro-heading" class="visually-hidden">About Evolution Engineers</h2>
+        <p class="statement">We are a Gaborone engineering contractor with our own workshop, plant and engineers. Since 2007 we have built roads, pipelines, sewer networks, clinics and warehouses for Botswana's mines, utilities, ministries and councils.</p>
+        <a class="link-arrow" href="/about">About the company {{ ui.arrow() }}</a>
+      </div>
+      <ul class="facts">
+        <li><strong>May 2007</strong><span>Established</span></li>
+        <li><strong>100% citizen owned</strong><span>A Botswana company</span></li>
+        <li><strong>Five disciplines</strong><span>Registered with PPADB</span></li>
+      </ul>
+    </div>
+  </section>
+
+  {# 2. Services #}
+  <section class="section" aria-labelledby="services-heading">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="services-heading">Civil, mechanical and electrical, under one roof.</h2>
+      </div>
+      <ul class="service-rows">
+        {% for s in services %}
+          <li class="service-row">
+            <a href="{{ s.url }}">
+              <h3>{{ s.name }}</h3>
+              <p>{{ s.summary }}</p>
+              <svg class="service-row__art" viewBox="0 0 120 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
+                {% if loop.index == 1 %}<path d="M4 60L40 8M116 60L80 8M60 60v-10M60 42v-8M60 28v-6M2 4h116M2 0v8M118 0v8"/>
+                {% elseif loop.index == 2 %}<circle cx="40" cy="32" r="22"/><circle cx="40" cy="32" r="8"/><path d="M62 32h54M90 20v24M106 24v16"/>
+                {% else %}<path d="M8 32h28l8-20 12 40 12-40 8 20h36M110 24v16"/>{% endif %}
+              </svg>
+            </a>
+          </li>
+        {% endfor %}
+        <li class="service-row">
+          <a href="/supplies">
+            <h3>Supplies</h3>
+            <p>Valves, HDPE, galvanised and stainless steel pipes, and electric motors.</p>
+            <svg class="service-row__art" viewBox="0 0 120 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 32h40M76 32h40M44 14v36M76 14v36M44 14l32 36M44 50l32-36M60 14V4M52 4h16"/></svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  {# 3. Featured projects #}
+  <section class="section section--cloud" aria-labelledby="projects-heading">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <h2 id="projects-heading">Recent work</h2>
+        <a class="link-arrow" href="/projects">View all projects {{ ui.arrow() }}</a>
+      </div>
+      <div class="tiles">
+        {% for p in featured %}{{ ui.project_card(p) }}{% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {# 4. Small homes #}
+  {% if homes %}
+    {% set first = homes|first %}
+    <section class="section" aria-labelledby="homes-heading">
+      <div class="container split">
+        <div class="viewer-frame" data-placeholder="home-design">
+          {{ ui.home_poster(first) }}
+          <span class="tag">Concept design: {{ first.name }}</span>
+        </div>
+        <div class="stack-lg">
+          <h2 id="homes-heading">Small homes, designed and built by the same team.</h2>
+          <p class="lede">Explore concept designs from one to three bedrooms. Final drawings, sizes and costs are prepared for each plot.</p>
+          <div><a class="btn btn--secondary" href="/small-homes">Explore the designs</a></div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {# 5. Clients and registrations #}
+  <section class="section section--cloud" aria-labelledby="clients-heading">
+    <div class="container two-col">
+      <div class="stack-lg">
+        <h2 id="clients-heading">Trusted by Botswana's mines and public bodies</h2>
+        <ul class="client-names">
+          <li>Debswana, at Jwaneng and Orapa</li>
+          <li>Karowe Diamond Mine</li>
+          <li>Tati Nickel Mining Company</li>
+          <li>Government ministries</li>
+          <li>District and city councils</li>
+        </ul>
+      </div>
+      <div class="stack-lg">
+        <h3>Registered with PPADB in</h3>
+        <ul class="plain-list">
+          {% for r in registrations %}<li>{{ r }}</li>{% endfor %}
+        </ul>
+        <p class="small muted">Public Procurement and Asset Disposal Board. Registered with the tax department and tax cleared.</p>
+      </div>
+    </div>
+  </section>
+
+  {# 6. Plant and equipment #}
+  <section class="section" aria-labelledby="plant-heading">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <div class="stack">
+          <h2 id="plant-heading">Our own plant, on our own sites</h2>
+          <p class="lede">Excavators, loaders, rollers and trucks, run by the people who maintain them.</p>
+        </div>
+        <a class="link-arrow" href="/plant-and-equipment">Full plant list {{ ui.arrow() }}</a>
+      </div>
+      <ul class="scroller plain" role="list" aria-label="Plant highlights" tabindex="0">
+        {% for m in equipment %}
+          <li class="card">
+            <div class="machine__media" data-placeholder="plant-photo">{{ ui.machine(m.group_name) }}</div>
+            <div class="card__body">
+              <h3 class="card__title">{{ m.make }} {{ m.model }}</h3>
+              <p class="card__meta">{{ m.role }}{% if m.quantity_label %}<span>{{ m.quantity_label }}</span>{% endif %}</p>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  {# 7. How we work. Draft copy for the client to confirm. #}
+  <section class="section section--cloud" aria-labelledby="process-heading">
+    <div class="container">
+      <div class="section-head"><h2 id="process-heading">How we work</h2></div>
+      <ol class="steps" data-placeholder="process-copy">
+        <li><h3>Survey and design</h3><p class="muted">We survey the site and engineer the solution before work starts.</p></li>
+        <li><h3>Procure</h3><p class="muted">We source materials and supplies, including valves, pipes and motors.</p></li>
+        <li><h3>Build</h3><p class="muted">Our engineers, artisans and plant deliver the works on site.</p></li>
+        <li><h3>Hand over and maintain</h3><p class="muted">We commission, hand over and stay available for maintenance.</p></li>
+      </ol>
+    </div>
+  </section>
+{% endblock %}

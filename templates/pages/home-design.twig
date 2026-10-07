@@ -1,0 +1,46 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Small homes', href: '/small-homes' }, { label: home.name, href: '/small-homes/' ~ home.slug }] %}
+
+{% block title %}{{ home.name }}, small home design{% endblock %}
+{% block description %}{{ home.name }}: a {{ home.bedrooms }}-bedroom, {{ home.bathrooms }}-bathroom concept home of {{ home.area_m2 }} m² {{ home.outdoor_label }}, designed and built by Evolution Engineers.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header(home.name, home.blurb, crumbs) }}
+
+  <section class="section" aria-labelledby="design-heading">
+    <div class="container homes-viewer">
+      <div class="stack-lg">
+        <div class="viewer-frame" data-placeholder="home-design">
+          {{ ui.home_poster(home) }}
+          <span class="tag">Concept design</span>
+        </div>
+        {{ ui.floorplan(home) }}
+      </div>
+      <div class="stack-lg detail__aside">
+        <h2 id="design-heading" class="h3">Specification</h2>
+        <dl class="spec">
+          <dt>Bedrooms</dt><dd>{{ home.bedrooms }}</dd>
+          <dt>Bathrooms</dt><dd>{{ home.bathrooms }}</dd>
+          <dt>Floor area</dt><dd>{{ home.area_m2 }} m² {{ home.outdoor_label }}</dd>
+        </dl>
+        <ul class="features" aria-label="Features">{% for feat in home.features %}<li>{{ feat }}</li>{% endfor %}</ul>
+        <div><a class="btn btn--primary" href="/contact?design={{ home.slug }}">Ask about this design</a></div>
+        <p class="concept-note">Concept design. Final drawings, sizes and costs are prepared for each plot.</p>
+      </div>
+    </div>
+  </section>
+
+  {% if others %}
+    <section class="section section--cloud" aria-labelledby="others-heading">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <h2 id="others-heading">Other designs</h2>
+          <a class="link-arrow" href="/small-homes">All small homes {{ ui.arrow() }}</a>
+        </div>
+        <div class="card-grid">{% for h in others %}{{ ui.home_card(h) }}{% endfor %}</div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

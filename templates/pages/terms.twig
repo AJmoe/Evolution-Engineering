@@ -1,0 +1,23 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Terms of use', href: '/terms' }] %}
+
+{% block title %}Terms of use{% endblock %}
+{% block description %}The terms that apply when you use the Evolution Engineers website, including how to treat concept designs and project information shown on it.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Terms of use', 'Plain-language placeholder. Our lawyer will approve the final wording before launch.', crumbs) }}
+  <section class="section">
+    <div class="container prose" data-placeholder="TODO-CLIENT: lawyer-approved terms wording">
+      <h2>Using this website</h2>
+      <p>This website describes Evolution Engineers and the work we do. You may read, print and share its pages for your own reference.</p>
+      <h2>Concept designs</h2>
+      <p>The small home designs are concepts. Final drawings, sizes and costs are prepared for each plot and confirmed in writing.</p>
+      <h2>Information on this site</h2>
+      <p>We work to keep this information accurate. A quote or contract from us takes precedence over anything on this website.</p>
+      <h2>Contact</h2>
+      <p>Questions about these terms can go to <a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a>.</p>
+    </div>
+  </section>
+{% endblock %}

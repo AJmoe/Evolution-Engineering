@@ -1,0 +1,12 @@
+/vendor/
+/node_modules/
+/public/assets/
+/storage/logs/*
+/storage/cache/*
+/storage/uploads/*
+!/storage/**/.gitkeep
+.env
+/tools/composer.phar
+.phpunit.cache/
+/test-results/
+/storage/screenshots/

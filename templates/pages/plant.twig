@@ -1,0 +1,30 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Plant and equipment', href: '/plant-and-equipment' }] %}
+
+{% block title %}Plant and equipment{% endblock %}
+{% block description %}The Evolution Engineers fleet: JCB and Hitachi excavators, loaders, Hamm rollers, haulage trucks and off-road vehicles for field inspections and surveys.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Plant and equipment', 'Our own earthmoving, compaction and haulage fleet, with fully equipped off-road vehicles for field inspections and reconnaissance surveys.', crumbs) }}
+
+  {% for key, g in groups %}
+    <section class="section{% if loop.index is even %} section--cloud{% endif %}" aria-labelledby="grp-{{ key }}">
+      <div class="container">
+        <div class="section-head"><h2 id="grp-{{ key }}">{{ g.label }}</h2></div>
+        <ul class="card-grid" role="list">
+          {% for m in g.items %}
+            <li class="card">
+              <div class="machine__media" data-placeholder="plant-photo">{{ ui.machine(key) }}</div>
+              <div class="card__body">
+                <h3 class="card__title">{{ m.make }} {{ m.model }}</h3>
+                <p class="card__meta"><span>{{ m.role }}</span>{% if m.quantity_label %}<span>{{ m.quantity_label }}</span>{% endif %}</p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+  {% endfor %}
+{% endblock %}

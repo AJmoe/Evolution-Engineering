@@ -1,0 +1,123 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Contact', href: '/contact' }] %}
+
+{% block title %}Contact{% endblock %}
+{% block description %}Request a quote, invite us to tender or ask about a small home design. Evolution Engineers, Plot 61047, Block 8 Industrial, Gaborone. Telephone 392 3065.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+{% block cta %}{% endblock %}
+
+{% macro err(errors, name) %}{% if errors[name] is defined %}<p class="field-error" id="{{ name }}-error">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+{% macro described(errors, name, hint) %}{% set ids = [] %}{% if hint %}{% set ids = ids|merge([name ~ '-hint']) %}{% endif %}{% if errors[name] is defined %}{% set ids = ids|merge([name ~ '-error']) %}{% endif %}{% if ids %} aria-describedby="{{ ids|join(' ') }}"{% endif %}{% if errors[name] is defined %} aria-invalid="true"{% endif %}{% endmacro %}
+
+{% block content %}
+  {% import _self as f %}
+  {{ ui.page_header('Request a quote', 'Tell us what you need. We reply to every enquiry, and tender invitations go straight to our tenders team.', crumbs) }}
+
+  <section class="section" aria-label="Enquiry form and contact details">
+    <div class="container contact-grid">
+      <div>
+        {% if sent %}
+          <div class="notice notice--success" role="status" tabindex="-1" id="form-result">
+            <h2>Thank you. Your enquiry has been sent.</h2>
+            <p>We have emailed you a copy. If your project is urgent, call us on <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a>.</p>
+          </div>
+        {% else %}
+          {% if errors %}
+            <div class="notice notice--error" role="alert" tabindex="-1" id="form-result">
+              <h2>Please fix {{ errors|length == 1 ? 'this problem' : 'these ' ~ errors|length ~ ' problems' }}</h2>
+              <ul>
+                {% for name, message in errors %}<li>{% if name != 'form' %}<a href="#{{ name }}">{{ message }}</a>{% else %}{{ message }}{% endif %}</li>{% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <form class="form" method="post" action="/contact" novalidate>
+            <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+            {% if values.design %}<input type="hidden" name="design" value="{{ values.design }}">{% endif %}
+            <div class="hp" aria-hidden="true">
+              <label for="website">Leave this field empty</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="field{% if errors.name is defined %} field--error{% endif %}">
+              <label for="name">Name <span class="req">(required)</span></label>
+              {{ f.err(errors, 'name') }}
+              <input type="text" id="name" name="name" autocomplete="name" required maxlength="160" value="{{ values.name ?? '' }}"{{ f.described(errors, 'name', false) }}>
+            </div>
+
+            <div class="field{% if errors.email is defined %} field--error{% endif %}">
+              <label for="email">Email <span class="req">(required)</span></label>
+              {{ f.err(errors, 'email') }}
+              <input type="email" id="email" name="email" autocomplete="email" required maxlength="254" value="{{ values.email ?? '' }}"{{ f.described(errors, 'email', false) }}>
+            </div>
+
+            <div class="field{% if errors.phone is defined %} field--error{% endif %}">
+              <label for="phone">Phone <span class="req">(optional)</span></label>
+              <p class="hint" id="phone-hint">A landline or mobile number, such as 72 225 339.</p>
+              {{ f.err(errors, 'phone') }}
+              <input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="40" value="{{ values.phone ?? '' }}"{{ f.described(errors, 'phone', true) }}>
+            </div>
+
+            <div class="field{% if errors.type is defined %} field--error{% endif %}">
+              <label for="type">What do you need? <span class="req">(required)</span></label>
+              {{ f.err(errors, 'type') }}
+              <select id="type" name="type" required{{ f.described(errors, 'type', false) }}>
+                <option value="">Choose one</option>
+                {% for key, label in types %}
+                  <option value="{{ key }}"{% if values.type == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="field{% if errors.message is defined %} field--error{% endif %}">
+              <label for="message">Project details <span class="req">(optional)</span></label>
+              <p class="hint" id="message-hint">Location, scope, timing and any drawings you can share. <span data-char-count></span></p>
+              {{ f.err(errors, 'message') }}
+              <textarea id="message" name="message" maxlength="{{ message_max }}" rows="7"{{ f.described(errors, 'message', true) }}>{{ values.message ?? '' }}</textarea>
+            </div>
+
+            <div class="field{% if errors.consent is defined %} field--error{% endif %}">
+              {{ f.err(errors, 'consent') }}
+              <div class="check">
+                <input type="checkbox" id="consent" name="consent" value="1" required{{ f.described(errors, 'consent', false) }}>
+                <label for="consent">I agree that Evolution Engineers may store my enquiry and contact me about it, as described in the <a href="/privacy">privacy notice</a>. <span class="req">(required)</span></label>
+              </div>
+            </div>
+
+            <div><button class="btn btn--primary" type="submit">Send enquiry</button></div>
+          </form>
+        {% endif %}
+      </div>
+
+      <aside class="contact-routes">
+        <div class="stack">
+          <h2>Call</h2>
+          <p>Telephone <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a><br>Cell <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a></p>
+        </div>
+        <div class="stack">
+          <h2>Email</h2>
+          <dl class="spec">
+            <dt>Tenders and quotes</dt><dd><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></dd>
+            <dt>Small homes</dt><dd><a href="mailto:{{ settings.email_homes }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_homes }}</a></dd>
+            <dt>General</dt><dd><a href="mailto:{{ settings.email_general }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_general }}</a></dd>
+          </dl>
+        </div>
+        <div class="stack">
+          <h2>Visit</h2>
+          <address>{{ settings.address_line }}<br>{{ settings.postal_address }}</address>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query={{ ('Block 8 Industrial, Gaborone, Botswana')|url_encode }}" rel="noopener" data-placeholder="static-map">
+            <svg viewBox="0 0 400 240" aria-hidden="true" fill="none">
+              <rect width="400" height="240" fill="#F4F8FB"/>
+              <g stroke="#D3DFEA" stroke-width="10"><path d="M0 70h400M0 170h400M120 0v240M290 0v240"/></g>
+              <g stroke="#E6EEF5" stroke-width="4"><path d="M0 120h400M200 0v240M60 0v240"/></g>
+              <circle cx="200" cy="118" r="10" fill="#F26A21"/><circle cx="200" cy="118" r="22" stroke="#F26A21" stroke-width="1.5"/>
+            </svg>
+            <span class="visually-hidden">Open Block 8 Industrial, Gaborone in your maps app</span>
+          </a>
+          <p class="small"><a href="https://www.google.com/maps/search/?api=1&amp;query={{ ('Block 8 Industrial, Gaborone, Botswana')|url_encode }}" rel="noopener">Open in your maps app</a></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

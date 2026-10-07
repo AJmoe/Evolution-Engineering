@@ -1,0 +1,56 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Projects', href: '/projects' }, { label: project.title, href: '/projects/' ~ project.slug }] %}
+
+{% block title %}{{ project.title }}{% endblock %}
+{% block description %}{{ project.summary|length > 150 ? project.summary|slice(0, 147) ~ '...' : project.summary ~ ' For ' ~ project.client_name ~ '.' }}{% endblock %}
+{% block head %}
+  {{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}
+  <script type="application/ld+json" nonce="{{ csp_nonce }}">{{ {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    'headline': project.title,
+    'description': project.summary,
+    'about': project.category_label,
+    'author': { '@type': 'Organization', 'name': 'Evolution Engineers' },
+    'mainEntityOfPage': canonical
+  }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+{% endblock %}
+
+{% block content %}
+  {{ ui.page_header(project.title, project.client_name ~ ', ' ~ project.year_label, crumbs) }}
+
+  <section class="section" aria-labelledby="overview-heading">
+    <div class="container detail">
+      <div class="stack-lg">
+        <div class="viewer-frame">{{ ui.drawing(project.category) }}</div>
+        <h2 id="overview-heading" class="h3">Scope</h2>
+        <p>{{ project.scope }}</p>
+      </div>
+      <aside class="detail__aside">
+        <h2 class="visually-hidden">Key facts</h2>
+        <dl class="spec">
+          <dt>Client</dt><dd>{{ project.client_name }}</dd>
+          <dt>Type</dt><dd>{{ project.category_label }}</dd>
+          <dt>Year</dt><dd>{{ project.year_label }}</dd>
+          <dt>Role</dt><dd>{{ project.role_label }}</dd>
+          {% for label, value in project.key_facts %}<dt>{{ label }}</dt><dd>{{ value }}</dd>{% endfor %}
+          {% if project.value_pula %}<dt>Contract value</dt><dd>P {{ project.value_pula|number_format(2, '.', ',') }}</dd>{% endif %}
+        </dl>
+        <p class="small muted" data-placeholder="project-photos">Project photography to follow.</p>
+      </aside>
+    </div>
+  </section>
+
+  {% if related %}
+    <section class="section section--cloud" aria-labelledby="related-heading">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <h2 id="related-heading">Related projects</h2>
+          <a class="link-arrow" href="/projects?type={{ project.category }}">More {{ project.category_label|lower }} work {{ ui.arrow() }}</a>
+        </div>
+        <div class="card-grid">{% for p in related %}{{ ui.project_card(p) }}{% endfor %}</div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,184 @@
+{# Shared UI macros. #}
+
+{% macro brand() %}
+  {# TODO-CLIENT: replace this wordmark with evolution-engineers-logo-clean.png (or the vector logo) once supplied. #}
+  <a class="brand" href="/" aria-label="Evolution Engineers, home" data-placeholder="logo">
+    <span class="brand__name">Evolution Engineers</span>
+  </a>
+{% endmacro %}
+
+{% macro arrow() %}
+  <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6h14M9 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+{% endmacro %}
+
+{% macro page_header(title, intro, crumbs) %}
+  <header class="page-header">
+    <svg class="blueprint-motif" viewBox="0 0 520 320" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
+      <path d="M20 300V60h300v240M20 60l150-50 150 50M80 300V140h80v160M220 300V140h60v160"/>
+      <path d="M20 316h300M20 310v12M320 310v12M360 60v240M354 60h12M354 300h12" stroke-width="1"/>
+      <circle cx="430" cy="120" r="44"/><path d="M430 60v120M370 120h120" stroke-dasharray="4 6"/>
+    </svg>
+    <div class="container page-header__inner">
+      {% if crumbs %}
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            {% for c in crumbs %}
+              <li>{% if c.href is defined and not loop.last %}<a href="{{ c.href }}">{{ c.label }}</a>{% else %}<span aria-current="page">{{ c.label }}</span>{% endif %}</li>
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+      <h1>{{ title }}</h1>
+      {% if intro %}<p class="lede">{{ intro }}</p>{% endif %}
+    </div>
+  </header>
+{% endmacro %}
+
+{% macro breadcrumb_jsonld(crumbs, base_url, nonce) %}
+  {% set items = [{ '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': base_url ~ '/' }] %}
+  {% for c in crumbs %}
+    {% set items = items|merge([{ '@type': 'ListItem', 'position': loop.index + 1, 'name': c.label, 'item': base_url ~ (c.href ?? '') }]) %}
+  {% endfor %}
+  <script type="application/ld+json" nonce="{{ nonce }}">{{ { '@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': items }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+{% endmacro %}
+
+{# Blueprint drawing used in place of project photography until real photos arrive. #}
+{% macro drawing(category) %}
+  <div class="drawing" data-placeholder="project-photo">
+    <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+      <g stroke="#D3DFEA" stroke-width="0.8">
+        {% for x in range(0, 400, 25) %}<path d="M{{ x }} 0v300"/>{% endfor %}
+        {% for y in range(0, 300, 25) %}<path d="M0 {{ y }}h400"/>{% endfor %}
+      </g>
+      {% if category == 'roads' %}
+        <path d="M60 300L180 90M340 300L220 90M200 300v-26M200 250v-26M200 202v-24M200 158v-20M200 124v-16M200 100v-10"/>
+        <path d="M150 90h100" stroke-dasharray="3 5"/>
+        <path d="M40 300l14-24M360 300l-14-24"/>
+        <path d="M60 60h280M60 54v12M340 54v12" stroke-width="0.9"/>
+      {% elseif category == 'design_build' %}
+        <path d="M20 200C110 200 120 140 200 140S300 90 380 90"/>
+        <path d="M20 214C110 214 120 154 200 154S300 104 380 104"/>
+        <circle cx="300" cy="230" r="40"/><circle cx="300" cy="230" r="30"/>
+        <path d="M250 230h-30M350 230h30M300 180v-12" stroke-dasharray="3 5"/>
+        <path d="M60 250h120M60 244v12M180 244v12" stroke-width="0.9"/>
+      {% elseif category == 'civil_building' %}
+        <path d="M80 260V110h240v150M80 110l120-50 120 50"/>
+        <path d="M110 140h40v40h-40zM180 140h40v40h-40zM250 140h40v40h-40zM180 210h40v50h-40z"/>
+        <path d="M60 280h280M60 274v12M340 274v12" stroke-width="0.9"/>
+        <path d="M350 110v150M344 110h12M344 260h12" stroke-width="0.9"/>
+      {% elseif category == 'water_sewerage' %}
+        <circle cx="140" cy="160" r="70"/><circle cx="140" cy="160" r="56"/>
+        <path d="M60 160h-30M220 160h150M140 80V60" stroke-dasharray="3 5"/>
+        <path d="M250 120h120v80H250z"/><path d="M250 150h120" stroke-dasharray="6 4"/>
+        <path d="M70 260h140M70 254v12M210 254v12" stroke-width="0.9"/>
+      {% else %}
+        <path d="M60 240h280M80 240V140l60-40h120l60 40v100"/>
+        <path d="M80 140h240M140 100v140M260 100v140M140 140l60 100 60-100"/>
+        <circle cx="200" cy="80" r="22"/><path d="M200 50v-10M200 110v10M170 80h-10M230 80h10"/>
+        <path d="M60 270h280M60 264v12M340 264v12" stroke-width="0.9"/>
+      {% endif %}
+    </svg>
+  </div>
+{% endmacro %}
+
+{% macro project_card(p, hidden) %}
+  <article class="card" data-category="{{ p.category }}" data-year="{{ p.year }}"{% if hidden %} hidden{% endif %}>
+    <div class="card__media">{{ _self.drawing(p.category) }}</div>
+    <div class="card__body">
+      <h3 class="card__title"><a href="/projects/{{ p.slug }}">{{ p.title }}</a></h3>
+      <p class="card__meta"><span>{{ p.client_name }}</span><span>{{ p.year_label }}</span></p>
+      <p class="card__meta"><span>{{ p.category_label }}</span><span>{{ p.role_label }}</span></p>
+    </div>
+  </article>
+{% endmacro %}
+
+{% macro machine(group) %}
+  <svg viewBox="0 0 200 120" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    {% if group == 'compaction' %}
+      <circle cx="50" cy="88" r="24"/><circle cx="152" cy="94" r="18"/>
+      <path d="M50 64h40l10-30h40l10 30v42M76 64v-14h28"/><path d="M26 106h150"/>
+    {% elseif group == 'haulage' or group == 'vehicles' %}
+      <path d="M14 88V44h96v44M110 88V58h42l26 22v8z"/><circle cx="46" cy="94" r="12"/><circle cx="150" cy="94" r="12"/>
+      <path d="M122 62h24l16 16h-40z"/>
+    {% else %}
+      <path d="M20 96h110M30 96V72h70v24M60 72V54h26v18"/><circle cx="40" cy="98" r="10"/><circle cx="92" cy="98" r="10"/>
+      <path d="M100 66l40-40 34 22-8 30h-22"/><path d="M144 78l-6 14h26z"/>
+    {% endif %}
+  </svg>
+{% endmacro %}
+
+{# Daylight poster of a concept home, drawn per design type. Replaced by the 3D viewer when it loads. #}
+{% macro home_poster(home) %}
+  {% set t = home.model_params.type ?? 'gable' %}
+  <svg viewBox="0 0 400 300" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky-{{ home.slug }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6F7"/><stop offset="1" stop-color="#F4F8FB"/></linearGradient>
+    </defs>
+    <rect width="400" height="300" fill="url(#sky-{{ home.slug }})"/>
+    <ellipse cx="200" cy="246" rx="190" ry="34" fill="#9CC46A" opacity=".55"/>
+    <ellipse cx="200" cy="244" rx="130" ry="14" fill="#0B2A4A" opacity=".08"/>
+    {% if t == 'gable' %}
+      <path d="M110 236V160h180v76z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
+      <path d="M96 164l104-62 104 62z" fill="#8A97A6" stroke="#0B2A4A" stroke-width="1.5"/>
+      <path d="M110 180h-36v56h36" fill="#F4F8FB" stroke="#0B2A4A" stroke-width="1.5"/><path d="M68 180h42" stroke="#0B2A4A" stroke-width="3"/>
+      <rect x="140" y="184" width="36" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="226" y="184" width="36" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="190" y="196" width="22" height="40" fill="#C2A27A" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="300" y="196" width="24" height="40" rx="3" fill="#D3DFEA" stroke="#0B2A4A" stroke-width="1.2"/>
+    {% elseif t == 'lshape' %}
+      <path d="M70 236v-70h150v70z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
+      <path d="M220 236v-92h110v92z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
+      <path d="M60 170l80-36 90 36z" fill="#8A97A6" stroke="#0B2A4A" stroke-width="1.5"/>
+      <path d="M210 148l65-44 65 44z" fill="#8A97A6" stroke="#0B2A4A" stroke-width="1.5"/>
+      <rect x="90" y="186" width="40" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="150" y="196" width="22" height="40" fill="#C2A27A" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="240" y="170" width="30" height="26" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="284" y="170" width="30" height="26" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
+    {% else %}
+      <path d="M60 236v-78h120v78zM220 236v-78h120v78z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
+      <path d="M52 158h136v-10H52zM212 158h136v-10H212z" fill="#D3DFEA" stroke="#0B2A4A" stroke-width="1.5"/>
+      <path d="M180 236v-60h40v60" fill="#F4F8FB" stroke="#0B2A4A" stroke-width="1.2"/>
+      <path d="M176 176h48M184 176v-8M196 176v-8M208 176v-8M216 176v-8" stroke="#C2A27A" stroke-width="3"/>
+      <rect x="80" y="180" width="36" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="130" y="196" width="22" height="40" fill="#C2A27A" stroke="#0B2A4A" stroke-width="1.2"/>
+      <rect x="244" y="180" width="72" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
+      <path d="M340 236v-56h44v56M336 180h52" fill="none" stroke="#0B2A4A" stroke-width="1.5"/>
+    {% endif %}
+  </svg>
+{% endmacro %}
+
+{# Indicative floor plan drawn from the design type. TODO-CLIENT: replace with the designer's SVG plans. #}
+{% macro floorplan(home) %}
+  {% set t = home.model_params.type ?? 'gable' %}
+  <figure class="floorplan" data-placeholder="floor-plan">
+    <svg viewBox="0 0 320 220" role="img" aria-labelledby="fp-{{ home.slug }}" fill="none" stroke="currentColor" stroke-width="3" font-family="Hanken Grotesk, sans-serif" font-size="10">
+      <title id="fp-{{ home.slug }}">Indicative floor plan of {{ home.name }}: {{ home.bedrooms }} bedroom{{ home.bedrooms > 1 ? 's' }}, {{ home.bathrooms }} bathroom{{ home.bathrooms > 1 ? 's' }}, {{ home.area_m2 }} m²</title>
+      {% if t == 'gable' %}
+        <rect x="60" y="30" width="200" height="130"/><path d="M160 30v80M160 110h100M210 110v50" stroke-width="2"/>
+        <rect x="60" y="160" width="200" height="40" stroke-dasharray="5 4" stroke-width="1.5"/>
+        <g fill="currentColor" stroke="none"><text x="80" y="80">Living and kitchen</text><text x="178" y="72">Bedroom</text><text x="168" y="140">Bath</text><text x="220" y="140">Store</text><text x="130" y="184">Veranda</text></g>
+      {% elseif t == 'lshape' %}
+        <path d="M30 30h170v90h90v80H30z"/><path d="M200 30v90M110 30v90M30 120h170M200 120v80M120 120v80" stroke-width="2"/>
+        <rect x="200" y="30" width="90" height="90" stroke-dasharray="5 4" stroke-width="1.5"/>
+        <g fill="currentColor" stroke="none"><text x="44" y="80">Bedroom 1</text><text x="124" y="80">Bedroom 2</text><text x="54" y="164">Bath</text><text x="140" y="164">Kitchen</text><text x="224" y="164">Living</text><text x="222" y="80">Veranda</text></g>
+      {% else %}
+        <path d="M20 20h280v180H20z"/><rect x="110" y="70" width="100" height="80" stroke-dasharray="5 4" stroke-width="1.5"/>
+        <path d="M110 20v50M210 20v50M110 150v50M210 150v50M20 110h90M210 110h90" stroke-width="2"/>
+        <g fill="currentColor" stroke="none"><text x="34" y="60">Bedroom 1</text><text x="130" y="48">Living</text><text x="226" y="60">Bedroom 2</text><text x="134" y="114">Courtyard</text><text x="34" y="160">Kitchen</text><text x="130" y="180">Bath</text><text x="226" y="160">Bedroom 3</text></g>
+      {% endif %}
+    </svg>
+    <figcaption class="small muted">Indicative plan. Final drawings are prepared for each plot.</figcaption>
+  </figure>
+{% endmacro %}
+
+{% macro home_card(h) %}
+  <article class="card">
+    <div class="card__media">{{ _self.home_poster(h) }}</div>
+    <div class="card__body">
+      <span class="tag">Concept design</span>
+      <h3 class="card__title"><a href="/small-homes/{{ h.slug }}">{{ h.name }}</a></h3>
+      <p class="card__meta"><span>{{ h.bedrooms }} bed</span><span>{{ h.bathrooms }} bath</span><span>{{ h.area_m2 }} m² {{ h.outdoor_label }}</span></p>
+    </div>
+  </article>
+{% endmacro %}

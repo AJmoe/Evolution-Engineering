@@ -1,0 +1,25 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Privacy notice', href: '/privacy' }] %}
+
+{% block title %}Privacy notice{% endblock %}
+{% block description %}How Evolution Engineers handles the personal information you send through this website's enquiry form, how long we keep it, and how to contact us about it.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Privacy notice', 'Plain-language placeholder. Our lawyer will approve the final wording before launch.', crumbs) }}
+  <section class="section">
+    <div class="container prose" data-placeholder="TODO-CLIENT: lawyer-approved privacy wording">
+      <h2>What we collect</h2>
+      <p>When you send an enquiry we store your name, email address, phone number if you give one, what you need, your project details and the time you agreed to this notice. We also store a scrambled version of your internet address to stop spam. We cannot turn it back into the real address.</p>
+      <h2>Why we collect it</h2>
+      <p>We use it only to reply to your enquiry and to keep a record of it.</p>
+      <h2>Cookies and tracking</h2>
+      <p>This website sets no cookies for visitors and uses no third-party trackers. We count page visits in a way that does not identify you.</p>
+      <h2>How long we keep it</h2>
+      <p>We delete or anonymise enquiries after 24 months.</p>
+      <h2>Your choices</h2>
+      <p>To see, correct or delete the information we hold about you, email <a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a> or call {{ settings.phone }}.</p>
+    </div>
+  </section>
+{% endblock %}
