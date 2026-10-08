@@ -90,8 +90,9 @@
     </div>
   </section>
 
-  {# 2. Services #}
-  <section class="section" aria-labelledby="services-heading">
+  {# 2. Services. The outlined band is decoration only. #}
+  <section class="section section--flush-top" aria-labelledby="services-heading">
+    <p class="outline-band" aria-hidden="true"><span>Civil</span><span>Mechanical</span><span>Electrical</span></p>
     <div class="container">
       <div class="section-head">
         <h2 id="services-heading">Civil, mechanical and electrical, under one roof.</h2>
@@ -100,7 +101,7 @@
         {% for s in services %}
           <li class="service-row">
             <a href="{{ s.url }}">
-              <h3>{{ s.name }}</h3>
+              <span class="service-row__name">{{ ui.service_icon(s.slug) }}<h3>{{ s.name }}</h3></span>
               <p>{{ s.summary }}</p>
               <svg class="service-row__art" viewBox="0 0 120 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
                 {% if loop.index == 1 %}<path d="M4 60L40 8M116 60L80 8M60 60v-10M60 42v-8M60 28v-6M2 4h116M2 0v8M118 0v8"/>
@@ -112,7 +113,7 @@
         {% endfor %}
         <li class="service-row">
           <a href="/supplies">
-            <h3>Supplies</h3>
+            <span class="service-row__name">{{ ui.service_icon('supplies') }}<h3>Supplies</h3></span>
             <p>Valves, HDPE, galvanised and stainless steel pipes, and electric motors.</p>
             <svg class="service-row__art" viewBox="0 0 120 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 32h40M76 32h40M44 14v36M76 14v36M44 14l32 36M44 50l32-36M60 14V4M52 4h16"/></svg>
           </a>
@@ -152,25 +153,44 @@
     </section>
   {% endif %}
 
-  {# 5. Clients and registrations #}
-  <section class="section section--cloud" aria-labelledby="clients-heading">
-    <div class="container two-col">
-      <div class="stack-lg">
-        <h2 id="clients-heading">Trusted by Botswana's mines and public bodies</h2>
-        <ul class="client-names">
-          <li>Debswana, at Jwaneng and Orapa</li>
-          <li>Karowe Diamond Mine</li>
-          <li>Tati Nickel Mining Company</li>
-          <li>Government ministries</li>
-          <li>District and city councils</li>
+  {# 5. Clients and registrations, with the reasons procurement teams shortlist us. Every point is from the Content deck. #}
+  <section class="section section--cloud why" aria-labelledby="why-heading">
+    <div class="container why__grid">
+      <div class="why__card">
+        <h2 id="why-heading">Why procurement teams shortlist us</h2>
+        <ul class="checklist">
+          <li>{{ ui.check() }}<span><strong>100% citizen owned</strong>, established in May 2007</span></li>
+          <li>{{ ui.check() }}<span><strong>Registered with PPADB</strong> in five disciplines, and tax cleared</span></li>
+          <li>{{ ui.check() }}<span><strong>Engineers and artisans</strong> with long experience in the mining sector</span></li>
+          <li>{{ ui.check() }}<span><strong>Our own fabrication workshop</strong> at Block 8 Industrial, Gaborone</span></li>
+          <li>{{ ui.check() }}<span><strong>Our own plant</strong> for earthmoving, compaction and haulage</span></li>
         </ul>
+        <div class="call-block">
+          <span class="call-block__icon" aria-hidden="true">{{ ui.phone_icon() }}</span>
+          <div>
+            <p class="small muted">Call the office</p>
+            <a class="call-block__number" href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a>
+          </div>
+        </div>
       </div>
-      <div class="stack-lg">
-        <h3>Registered with PPADB in</h3>
-        <ul class="plain-list">
-          {% for r in registrations %}<li>{{ r }}</li>{% endfor %}
-        </ul>
-        <p class="small muted">Public Procurement and Asset Disposal Board. Registered with the tax department and tax cleared.</p>
+      <div class="why__aside">
+        <div class="stack-lg">
+          <h3>Clients include</h3>
+          <ul class="client-names">
+            <li>Debswana, at Jwaneng and Orapa</li>
+            <li>Karowe Diamond Mine</li>
+            <li>Tati Nickel Mining Company</li>
+            <li>Government ministries</li>
+            <li>District and city councils</li>
+          </ul>
+        </div>
+        <div class="stack">
+          <h3>Registered with PPADB in</h3>
+          <ul class="plain-list">
+            {% for r in registrations %}<li>{{ r }}</li>{% endfor %}
+          </ul>
+          <p class="small muted">Public Procurement and Asset Disposal Board.</p>
+        </div>
       </div>
     </div>
   </section>

@@ -10,3 +10,4 @@
 .phpunit.cache/
 /test-results/
 /storage/screenshots/
+/storage/reference/

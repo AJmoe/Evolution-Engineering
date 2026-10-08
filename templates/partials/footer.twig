@@ -1,6 +1,22 @@
 {% import 'components/macros.twig' as ui %}
 <footer class="site-footer">
-  <div class="container">
+  <div class="footer-strip">
+    <div class="container footer-strip__grid">
+      <div class="footer-strip__item">
+        <span class="footer-strip__icon">{{ ui.pin_icon() }}</span>
+        <p><span class="footer-strip__label">Head office and workshop</span>{{ settings.address_line }}</p>
+      </div>
+      <div class="footer-strip__item">
+        <span class="footer-strip__icon">{{ ui.mail_icon() }}</span>
+        <p><span class="footer-strip__label">Tenders and quotes</span><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></p>
+      </div>
+      <div class="footer-strip__item">
+        <span class="footer-strip__icon">{{ ui.phone_icon() }}</span>
+        <p><span class="footer-strip__label">Call us</span><a class="footer-strip__big" href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="container footer-main">
     <div class="footer-grid">
       <div class="stack">
         <div class="footer-plate">{{ ui.brand() }}</div>

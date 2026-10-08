@@ -28,3 +28,23 @@ Non-obvious decisions, newest last.
 - **Stills and social image are generated.** `npm run stills` renders the three stage stills (desktop and phone), the poster and `og-default.png` from the live scene in headless Edge. They are never hand-edited.
 - **Homes viewer.** Procedural models for gable, L-shaped and courtyard types, driven by `model_params`. The `.glb` path (phase 2 of model sourcing) is still to add when the client supplies models.
 - **Bundle.** Three.js and the shared helpers form one lazy chunk of about 143 KB gzipped. The hero scene adds about 5 KB and the homes viewer about 4 KB. Neither loads on the stills tier or with reduced motion.
+
+## 2026-10-08: Ideas adapted from a reference site (Buildnox theme)
+
+Adopted, in the light design and with facts from the Content deck only:
+
+- **Outlined display band.** "Civil · Mechanical · Electrical" in outlined Fraunces above the services list. Static, `aria-hidden`, falls back to `--mist` text where text-stroke is unsupported.
+- **Line icons on service rows,** in `--brand-deep`, not orange, to keep orange to three uses per screen.
+- **Overlapping "why" card.** The clients and registrations section now leads with a white card that overlaps the section above. It holds five checklist points from the Content deck and a large "call the office" number.
+- **Drawing-board column lines** behind inner page headers and the footer, aligned to a six-column split of the content width.
+- **Footer contact strip** with address, tenders email and phone above the footer columns.
+
+Not adopted, because they conflict with the brief:
+
+- Skill percentage bars ("Construction 96%"), which would be invented facts.
+- Service and testimonial carousels; the brief bans carousels. Testimonials would also need real, approved quotes.
+- Dark hero and full-bleed dark sections, stock photos of workers in hard hats, and orange eyebrow labels above every heading.
+- Newsletter sign-up and social icons; the client has no newsletter or confirmed social accounts.
+- Client logo strip; logos need the client's permission (open question).
+
+Deviation to confirm with the client: section 5 of the homepage is now headed "Why procurement teams shortlist us" rather than a plain clients list. The content is the same facts plus the phone number.
