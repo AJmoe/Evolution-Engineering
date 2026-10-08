@@ -70,7 +70,10 @@ final class Bootstrap
                 'strict_variables' => $debug,
                 'autoescape' => 'html',
             ]);
-            $twig->addExtension(new TwigExtension($c->get(Manifest::class)));
+            $twig->addExtension(new TwigExtension(
+                $c->get(Manifest::class),
+                new ImageCatalog($root . '/resources/images/stock/credits.json', $root . '/public/images/stock')
+            ));
 
             return $twig;
         });
@@ -165,6 +168,7 @@ final class Bootstrap
         $app->post('/contact', [ContactController::class, 'submit']);
         $app->get('/privacy', [PageController::class, 'privacy']);
         $app->get('/terms', [PageController::class, 'terms']);
+        $app->get('/credits', [PageController::class, 'credits']);
         $app->get('/sitemap.xml', [SeoController::class, 'sitemap']);
         $app->get('/robots.txt', [SeoController::class, 'robots']);
     }

@@ -9,6 +9,14 @@
 {% block content %}
   {{ ui.page_header(service.name, service.summary, crumbs) }}
 
+  {% if service.photo %}
+    <div class="container">
+      <figure class="wide-photo">
+        <div class="photo-frame photo-frame--wide">{{ ui.photo(service.photo, service.photo_alt, '(min-width: 1380px) 1320px, 100vw', true, true) }}</div>
+      </figure>
+    </div>
+  {% endif %}
+
   <section class="section" aria-labelledby="scope-heading">
     <div class="container detail">
       <div class="stack-lg">

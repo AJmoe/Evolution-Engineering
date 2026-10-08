@@ -1934,3 +1934,61 @@ html[data-env='local'] [data-placeholder] {
   font-size: 1.5rem;
   line-height: 1.2;
 }
+
+/* Photos (interim stock until the client's photography is approved) */
+.photo,
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.photo img {
+  object-fit: cover;
+}
+.card__media,
+.photo-frame,
+.machine__media {
+  position: relative;
+}
+.photo-frame {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--mist);
+}
+.photo-frame--wide {
+  aspect-ratio: 21 / 9;
+}
+.wide-photo {
+  margin-top: clamp(32px, 5vw, 64px);
+}
+.detail-photo {
+  display: grid;
+  gap: var(--s-2);
+}
+.photo-tag {
+  position: absolute;
+  left: var(--s-3);
+  bottom: var(--s-3);
+  padding: 2px var(--s-2);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--slate);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.machine__media--photo {
+  display: block;
+}
+.card:hover .photo img {
+  transform: scale(1.03);
+}
+.photo img {
+  transition: transform 400ms var(--ease);
+}
+
+.card__media > .photo-tag {
+  width: auto;
+  height: auto;
+}

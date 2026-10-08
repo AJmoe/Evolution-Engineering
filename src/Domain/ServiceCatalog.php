@@ -12,7 +12,7 @@ final class ServiceCatalog
 {
     /**
      * @return array<string, array{slug: string, name: string, url: string, summary: string,
-     *     scope: list<string>, clients: string, project_categories: list<string>}>
+     *     scope: list<string>, clients: string, project_categories: list<string>, photo: string, photo_alt: string}>
      */
     public static function all(): array
     {
@@ -32,6 +32,8 @@ final class ServiceCatalog
                 'clients' => 'Government ministries, district and city councils, utilities, mines and private '
                     . 'developers.',
                 'project_categories' => ['roads', 'water_sewerage', 'civil_building', 'design_build'],
+                'photo' => 'road-new',
+                'photo_alt' => 'A newly surfaced road running through open, dry countryside',
             ],
             'mechanical-engineering' => [
                 'slug' => 'mechanical-engineering',
@@ -46,6 +48,8 @@ final class ServiceCatalog
                 ],
                 'clients' => 'Mining operations, including Debswana at Jwaneng and Orapa, and utilities.',
                 'project_categories' => ['mechanical'],
+                'photo' => 'pipe-welding',
+                'photo_alt' => 'A welder working inside a large steel pipe',
             ],
             'electrical-engineering' => [
                 'slug' => 'electrical-engineering',
@@ -55,13 +59,15 @@ final class ServiceCatalog
                 'scope' => ['Electrical installations'],
                 'clients' => 'Public and private sector clients.',
                 'project_categories' => [],
+                'photo' => 'substation',
+                'photo_alt' => 'Electrical switchgear and pylons at a substation',
             ],
         ];
     }
 
     /**
      * @return array{slug: string, name: string, url: string, summary: string, scope: list<string>,
-     *     clients: string, project_categories: list<string>}|null
+     *     clients: string, project_categories: list<string>, photo: string, photo_alt: string}|null
      */
     public static function find(string $slug): ?array
     {

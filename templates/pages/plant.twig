@@ -16,7 +16,7 @@
         <ul class="card-grid" role="list">
           {% for m in g.items %}
             <li class="card">
-              <div class="machine__media" data-placeholder="plant-photo">{{ ui.machine(key) }}</div>
+              {{ ui.machine_media(m) }}
               <div class="card__body">
                 <h3 class="card__title">{{ m.make }} {{ m.model }}</h3>
                 <p class="card__meta"><span>{{ m.role }}</span>{% if m.quantity_label %}<span>{{ m.quantity_label }}</span>{% endif %}</p>

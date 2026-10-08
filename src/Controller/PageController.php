@@ -88,6 +88,11 @@ final class PageController
         return $this->view->render($request, $response, 'pages/privacy.twig');
     }
 
+    public function credits(Request $request, Response $response): Response
+    {
+        return $this->view->render($request, $response, 'pages/credits.twig');
+    }
+
     public function terms(Request $request, Response $response): Response
     {
         return $this->view->render($request, $response, 'pages/terms.twig');

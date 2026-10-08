@@ -84,13 +84,22 @@
 
 {% macro project_card(p, hidden) %}
   <article class="card" data-category="{{ p.category }}" data-year="{{ p.year }}"{% if hidden %} hidden{% endif %}>
-    <div class="card__media">{{ _self.drawing(p.category) }}</div>
+    <div class="card__media">{{ _self.project_media(p, '(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw', false) }}</div>
     <div class="card__body">
       <h3 class="card__title"><a href="/projects/{{ p.slug }}">{{ p.title }}</a></h3>
       <p class="card__meta"><span>{{ p.client_name }}</span><span>{{ p.year_label }}</span></p>
       <p class="card__meta"><span>{{ p.category_label }}</span><span>{{ p.role_label }}</span></p>
     </div>
   </article>
+{% endmacro %}
+
+{% macro machine_media(m) %}
+  {% set key = m.image_path starts with 'stock/' ? m.image_path|slice(6) : null %}
+  {% if key and photo_meta(key) %}
+    <div class="machine__media machine__media--photo">{{ _self.photo(key, 'A ' ~ m.role|lower ~ ' machine of the same type as the ' ~ m.make ~ ' ' ~ m.model, '(min-width: 900px) 300px, 70vw', false, true) }}</div>
+  {% else %}
+    <div class="machine__media" data-placeholder="plant-photo">{{ _self.machine(m.group_name) }}</div>
+  {% endif %}
 {% endmacro %}
 
 {% macro machine(group) %}
@@ -212,4 +221,31 @@
 
 {% macro mail_icon() %}
   <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 7 8.5-7"/></svg>
+{% endmacro %}
+
+{#
+  Responsive photo. key is an interim stock key (public/images/stock) until the admin image pipeline
+  serves the client's own photos. Interim photos are marked so they can be found and replaced.
+#}
+{% macro photo(key, alt, sizes, eager, tag) %}
+  {% set m = photo_meta(key) %}
+  {% if m %}
+    {% set base = '/images/stock/' ~ m.key %}
+    {% set largest = m.widths|last %}
+    <picture class="photo" data-placeholder="stock-photo">
+      <source type="image/avif" srcset="{% for w in m.widths %}{{ base }}-{{ w }}.avif {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="{{ sizes }}">
+      <source type="image/webp" srcset="{% for w in m.widths %}{{ base }}-{{ w }}.webp {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="{{ sizes }}">
+      <img src="{{ base }}-{{ m.widths[1] ?? largest }}.webp" alt="{{ alt }}" width="{{ m.width }}" height="{{ m.height }}"{% if eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+    </picture>
+    {% if tag %}<span class="photo-tag">Illustrative photo</span>{% endif %}
+  {% endif %}
+{% endmacro %}
+
+{# Key and alt text for each project's interim photo. Removed once real photography is uploaded. #}
+{% macro project_media(p, sizes, eager) %}
+  {% if p.photo_key and photo_meta(p.photo_key) %}
+    {{ _self.photo(p.photo_key, p.photo_alt, sizes, eager, true) }}
+  {% else %}
+    {{ _self.drawing(p.category) }}
+  {% endif %}
 {% endmacro %}

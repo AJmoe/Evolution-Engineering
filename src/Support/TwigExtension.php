@@ -10,7 +10,7 @@ use Twig\TwigFunction;
 
 final class TwigExtension extends AbstractExtension
 {
-    public function __construct(private readonly Manifest $manifest)
+    public function __construct(private readonly Manifest $manifest, private readonly ?ImageCatalog $images = null)
     {
     }
 
@@ -23,6 +23,8 @@ final class TwigExtension extends AbstractExtension
             new TwigFunction('vite_inline_css', [$this->manifest, 'inlineCss'], ['is_safe' => ['html']]),
             new TwigFunction('vite_dev', [$this->manifest, 'isDev']),
             new TwigFunction('vite_preload_fonts', [$this, 'preloadFonts'], ['is_safe' => ['html']]),
+            new TwigFunction('photo_meta', fn (?string $key): ?array => $key ? $this->images?->get($key) : null),
+            new TwigFunction('photo_credits', fn (): array => $this->images?->all() ?? []),
         ];
     }
 

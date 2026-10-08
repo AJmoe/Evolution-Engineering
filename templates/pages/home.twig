@@ -208,7 +208,7 @@
       <ul class="scroller plain" role="list" aria-label="Plant highlights" tabindex="0">
         {% for m in equipment %}
           <li class="card">
-            <div class="machine__media" data-placeholder="plant-photo">{{ ui.machine(m.group_name) }}</div>
+            {{ ui.machine_media(m) }}
             <div class="card__body">
               <h3 class="card__title">{{ m.make }} {{ m.model }}</h3>
               <p class="card__meta">{{ m.role }}{% if m.quantity_label %}<span>{{ m.quantity_label }}</span>{% endif %}</p>

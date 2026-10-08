@@ -1,0 +1,31 @@
+{% extends 'layout.twig' %}
+{% import 'components/macros.twig' as ui %}
+{% set crumbs = [{ label: 'Image credits', href: '/credits' }] %}
+
+{% block title %}Image credits{% endblock %}
+{% block description %}Credits and licences for the openly licensed photographs used on the Evolution Engineers website while our own project photography is prepared.{% endblock %}
+{% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
+
+{% block content %}
+  {{ ui.page_header('Image credits', 'Some photos on this site are openly licensed images of similar work, shown until our own project photography is ready. We thank their authors.', crumbs) }}
+  <section class="section">
+    <div class="container">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Photo</th><th scope="col">Author</th><th scope="col">Licence</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+            {% for key, c in photo_credits() %}
+              <tr>
+                <td><a href="{{ c.page }}" rel="noopener">{{ c.title|default('Untitled')|replace({'File:': ''})|split('.')|first }}</a></td>
+                <td>{% if c.creator_url %}<a href="{{ c.creator_url }}" rel="noopener">{{ c.creator|default('Unknown') }}</a>{% else %}{{ c.creator|default('Unknown') }}{% endif %}</td>
+                <td>{% if c.license_url %}<a href="{{ c.license_url }}" rel="noopener license">{{ c.license }}</a>{% else %}{{ c.license }}{% endif %}</td>
+                <td>{{ c.source|capitalize }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">Photos have been resized and cropped for this website.</p>
+    </div>
+  </section>
+{% endblock %}

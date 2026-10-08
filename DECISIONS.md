@@ -48,3 +48,13 @@ Not adopted, because they conflict with the brief:
 - Client logo strip; logos need the client's permission (open question).
 
 Deviation to confirm with the client: section 5 of the homepage is now headed "Why procurement teams shortlist us" rather than a plain clients list. The content is the same facts plus the phone number.
+
+## 2026-10-08: Interim openly licensed photography
+
+- **Why.** The client asked for real photos across the site while their own approved photography is prepared. The brief prefers 3D scenes and marked placeholders until then, so these photos are treated as placeholders, not content.
+- **Source.** Openverse search across Wikimedia Commons and other open collections, filtered to CC0, public domain and CC BY. Unsplash and Pexels were not used because their search needs an API key. Every photo was chosen by eye from contact sheets (`tools/stock-candidates.mjs`).
+- **Honesty.** No stock photo is presented as a named project. Each carries an "Illustrative photo" tag, project pages add "Illustrative photo of similar work", and alt text describes what the photo shows rather than the project name. Plant photos show the same type of machine, and their alt text says so.
+- **Licences.** CC BY photos are credited on `/credits`, linked from the footer, and in `IMAGE_CREDITS.md`. CC0 and public-domain photos are credited there too.
+- **Pipeline.** `tools/stock-download.mjs` strips metadata (including location), caps originals at 2400 px, and writes AVIF and WebP at 400, 800, 1200 and 1600 px with `sharp`. Templates use `srcset`, `sizes`, explicit dimensions and lazy loading below the first screen. This becomes the basis of the admin image pipeline in phase 4.
+- **Storage.** Project photos live in `project_images` with a `stock/` path prefix, so the admin can replace them the same way as real photos later.
+- **Gaps.** No suitable open photos were found for site vehicles, haulage trucks other than tippers, or the Hydromek A4 specifically; those keep their line drawings.

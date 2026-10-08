@@ -14,4 +14,8 @@
 | Playwright | Apache-2.0 | Screenshots and end-to-end tests, development only |
 | Three.js | MIT | 3D hero and homes viewer, added in phase 3 |
 
-Images: all current imagery is original SVG drawn for this project. Record the source and licence of every photograph as it is added.
+Images: drawings and 3D renders are original to this project. Interim photographs are openly licensed (CC0, public domain or CC BY); each one's author, licence and source is in `IMAGE_CREDITS.md` and on the site's `/credits` page.
+
+| Component | Licence | Use |
+|---|---|---|
+| sharp | Apache-2.0 | Image resizing and AVIF/WebP encoding, development only |

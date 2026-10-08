@@ -7,9 +7,11 @@ Everything here is marked in code with `data-placeholder` or `TODO-CLIENT`. None
 | Logo | `templates/components/macros.twig`, macro `brand` | `evolution-engineers-logo-clean.png`, plus vector and white reversed versions |
 | Email addresses | `settings` table (`emails_are_placeholders = 1`) | Confirm the domain and create info@, tenders@ and homes@ |
 | Fax number | `settings.fax` is empty, so hidden | Is 392 3086 still in use? |
-| Project photography | macro `drawing` on cards and project pages | Daylight photos, and permission to show named clients |
-| Plant photography | macro `machine` | Photos of the current fleet, and confirmation the list is current |
-| Facility photo | About page | Photo of the Block 8 premises |
+| Project photography | `project_images` rows with paths starting `stock/`, shown with an "Illustrative photo" tag; projects without one show a drawing | Daylight photos of each project, and permission to show named clients |
+| Plant photography | `equipment.image_path` values starting `stock/` (same machine type, not their units); others show a drawing | Photos of the current fleet, and confirmation the list is current |
+| Facility photo | About page, interim workshop photo | Photo of the Block 8 premises |
+| Service and supplies photos | `ServiceCatalog` photo keys and `supplies.twig` | Photos of the client's own work, workshop and stock |
+| Interim photo credits | `/credits` page, `IMAGE_CREDITS.md` | None. Remove each credit when its photo is replaced; delete the page when none remain |
 | Home designs and floor plans | `homes` table, `resources/js/homes-viewer.js`, macros `home_poster` and `floorplan` | Final designs, the designer's SVG plans, and optionally a `.glb` model per design |
 | Small homes FAQ answers | `templates/pages/small-homes.twig` | Inclusions, changes, build times, approvals |
 | How we work copy | `templates/pages/home.twig`, section 7 | Confirm the four steps |

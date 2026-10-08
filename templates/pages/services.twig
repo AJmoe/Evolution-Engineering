@@ -19,6 +19,7 @@
           </ul>
         </div>
         <div class="stack">
+          {% if s.photo %}<div class="photo-frame">{{ ui.photo(s.photo, s.photo_alt, '(min-width: 900px) 33vw, 100vw', false, true) }}</div>{% endif %}
           <p class="muted">{{ s.clients }}</p>
           <a class="link-arrow" href="{{ s.url }}">More on {{ s.name|lower }} {{ ui.arrow() }}</a>
         </div>

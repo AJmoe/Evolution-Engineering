@@ -23,7 +23,10 @@
   <section class="section" aria-labelledby="overview-heading">
     <div class="container detail">
       <div class="stack-lg">
-        <div class="viewer-frame">{{ ui.drawing(project.category) }}</div>
+        <figure class="detail-photo">
+          <div class="photo-frame">{{ ui.project_media(project, '(min-width: 900px) 60vw, 100vw', true) }}</div>
+          {% if project.photo_key %}<figcaption class="small muted">Illustrative photo of similar work. Photography of this project will follow.</figcaption>{% endif %}
+        </figure>
         <h2 id="overview-heading" class="h3">Scope</h2>
         <p>{{ project.scope }}</p>
       </div>
@@ -37,7 +40,6 @@
           {% for label, value in project.key_facts %}<dt>{{ label }}</dt><dd>{{ value }}</dd>{% endfor %}
           {% if project.value_pula %}<dt>Contract value</dt><dd>P {{ project.value_pula|number_format(2, '.', ',') }}</dd>{% endif %}
         </dl>
-        <p class="small muted" data-placeholder="project-photos">Project photography to follow.</p>
       </aside>
     </div>
   </section>

@@ -21,6 +21,8 @@
           </ul>
         </div>
         <aside class="detail__aside stack">
+          {% set sup_photo = {valves: ['gate-valve', 'A large industrial gate valve in a workshop'], pipes: ['hdpe-pipes', 'Stacked plastic pipes'], electric_motors: ['pump-motor', 'An industrial motor driving a pump']}[key] ?? null %}
+          {% if sup_photo %}<div class="photo-frame">{{ ui.photo(sup_photo[0], sup_photo[1], '(min-width: 900px) 33vw, 100vw', false, true) }}</div>{% endif %}
           <p class="muted">No cart and no online prices. We quote for each order.</p>
           <div><a class="btn btn--secondary" href="/contact?type=supplies&amp;item={{ g.label|url_encode }}">Request a price</a></div>
         </aside>

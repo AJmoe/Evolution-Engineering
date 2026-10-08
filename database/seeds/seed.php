@@ -107,6 +107,42 @@ function seed(PDO $pdo): void
             json_encode($facts, JSON_UNESCAPED_UNICODE), $featured, $scope, $scope, $i]);
     }
 
+    // Interim openly licensed photos, until the client's own project photography is approved.
+    // Alt text describes what the photo shows, not the named project.
+    $photos = [
+        'masama-mmamashia-transmission-pipeline' => ['pipeline-trench', 'Large steel pipes laid out beside a pipeline trench'],
+        'mahalapye-radisele-road-overlay' => ['road-new', 'A newly surfaced road running through open, dry countryside'],
+        'morupule-coal-mine-clinic' => ['building-glass', 'A glass-fronted building under construction with tower cranes'],
+        'palapye-internal-roads-overlay' => ['road-paving', 'A paving crew and roller laying fresh asphalt'],
+        'mochudi-malotwana-earthworks' => ['excavator', 'An excavator moving earth on a road site'],
+        'tsau-habu-junction-overlay' => ['road-paving', 'A paving crew and roller laying fresh asphalt'],
+        'mmashoro-failed-section-rehabilitation' => ['road-new', 'A newly surfaced road running through open, dry countryside'],
+        'jwaneng-dewatering-pipeline' => ['pipeline-forest', 'A pipeline laid along a cleared trench'],
+        'gaborone-sludge-drying-beds' => ['treatment-plant', 'Tanks at a wastewater treatment works'],
+        'bdc-warehouse-gaborone-west' => ['steel-frame', 'A steel-framed building going up beside a crane'],
+        'kazungula-ferry-border-external-works' => ['building-site', 'A large building under construction with scaffolding and a crane'],
+        'ntimbale-ablutions-sewer-upgrade' => ['sewer-works', 'Workers repairing pipes in an open street excavation'],
+        'broadhurst-sewer-pipeline-reconstruction' => ['water-main', 'An excavator digging a trench for a pipe in a street'],
+        'glen-valley-notwane-sewer-upgrade' => ['treatment-plant', 'Tanks at a wastewater treatment works'],
+        'damtshaa-stormwater-drainage' => ['water-main', 'An excavator digging a trench for a pipe in a street'],
+        'machaneng-prisons-sewage-upgrade' => ['sewer-works', 'Workers repairing pipes in an open street excavation'],
+        'molepolole-sewage-ponds' => ['treatment-plant', 'Tanks at a wastewater treatment works'],
+        'francistown-sewer-cleaning' => ['sewer-works', 'Workers repairing pipes in an open street excavation'],
+        'shakawe-elevated-water-tank' => ['water-tower', 'An elevated water tank on a steel tower'],
+        'orapa-conveyor-relocation' => ['conveyor', 'A long conveyor crossing a dry, sandy industrial site'],
+        'jwaneng-discharge-chutes' => ['cutting-torch', 'Steel being cut with a gas torch in a workshop'],
+        'jwaneng-mine-wide-maintenance-labour' => ['pipe-welding', 'A welder working inside a large steel pipe'],
+        'jwaneng-concrete-column-crushing' => ['dump-truck', 'A tipper truck working on a construction site'],
+        'orapa-water-delivery-lines' => ['water-main', 'An excavator digging a trench for a pipe in a street'],
+    ];
+    $ids = $pdo->query('SELECT slug, id FROM projects')->fetchAll(PDO::FETCH_KEY_PAIR);
+    $stmt = $pdo->prepare('INSERT INTO project_images (project_id, path, alt, caption, sort) VALUES (?, ?, ?, ?, 0)');
+    foreach ($photos as $slug => [$key, $alt]) {
+        if (isset($ids[$slug])) {
+            $stmt->execute([$ids[$slug], 'stock/' . $key, $alt, 'Illustrative photo']);
+        }
+    }
+
     // Concept homes from the prototype. Placeholders until the client's designs arrive.
     $homes = [
         ['the-compact', 'The Compact',
@@ -159,11 +195,27 @@ function seed(PDO $pdo): void
         ['vehicles', 'Volkswagen', 'Polo', 'Pool vehicle', null],
         ['vehicles', 'Nissan', 'UG780', 'Heavy vehicle', null],
     ];
+    // Interim photos of the same type of machine, not the client's own units.
+    $machinePhoto = [
+        '3CX backhoe loader' => 'backhoe',
+        'A4' => 'backhoe',
+        'JS305LC excavator' => 'excavator',
+        'ZX200 excavator (20 ton)' => 'excavator',
+        'ZX330 excavator (33 ton)' => 'excavator',
+        '432ZX loader' => 'wheel-loader',
+        'Skid steer' => 'skid-steer',
+        '260-120 roller' => 'roller',
+        'GRW18 pneumatic roller' => 'roller',
+        'HD8VV sit-on roller' => 'roller',
+        'Trucks' => 'dump-truck',
+    ];
     $stmt = $pdo->prepare(
-        'INSERT INTO equipment (group_name, make, model, role, quantity_label, sort, published) VALUES (?,?,?,?,?,?,1)'
+        'INSERT INTO equipment (group_name, make, model, role, quantity_label, image_path, sort, published)
+         VALUES (?,?,?,?,?,?,?,1)'
     );
     foreach ($equipment as $i => $e) {
-        $stmt->execute([$e[0], $e[1], $e[2], $e[3], $e[4], $i]);
+        $photo = isset($machinePhoto[$e[2]]) ? 'stock/' . $machinePhoto[$e[2]] : null;
+        $stmt->execute([$e[0], $e[1], $e[2], $e[3], $e[4], $photo, $i]);
     }
 
     // [category, name, description, placeholder]

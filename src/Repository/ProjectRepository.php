@@ -16,6 +16,12 @@ final class ProjectRepository
         'mechanical' => 'Mechanical',
     ];
 
+    /** Each project with its first image, if any. */
+    private const SELECT = 'SELECT p.*,
+        (SELECT i.path FROM project_images i WHERE i.project_id = p.id ORDER BY i.sort LIMIT 1) AS photo_path,
+        (SELECT i.alt FROM project_images i WHERE i.project_id = p.id ORDER BY i.sort LIMIT 1) AS photo_alt
+        FROM projects p';
+
     public function __construct(private readonly PDO $pdo)
     {
     }
@@ -25,7 +31,7 @@ final class ProjectRepository
      */
     public function published(?string $category = null, ?int $year = null): array
     {
-        $sql = 'SELECT * FROM projects WHERE status = \'published\' AND deleted_at IS NULL';
+        $sql = self::SELECT . ' WHERE status = \'published\' AND deleted_at IS NULL';
         $params = [];
         if ($category !== null) {
             $sql .= ' AND category = ?';
@@ -48,7 +54,7 @@ final class ProjectRepository
     public function featured(int $limit = 3): array
     {
         $stmt = $this->pdo->prepare(
-            'SELECT * FROM projects WHERE status = \'published\' AND deleted_at IS NULL AND featured = 1
+            self::SELECT . ' WHERE status = \'published\' AND deleted_at IS NULL AND featured = 1
              ORDER BY sort ASC LIMIT ' . max(1, $limit)
         );
         $stmt->execute();
@@ -62,7 +68,7 @@ final class ProjectRepository
     public function findBySlug(string $slug): ?array
     {
         $stmt = $this->pdo->prepare(
-            'SELECT * FROM projects WHERE slug = ? AND status = \'published\' AND deleted_at IS NULL'
+            self::SELECT . ' WHERE slug = ? AND status = \'published\' AND deleted_at IS NULL'
         );
         $stmt->execute([$slug]);
         $row = $stmt->fetch();
@@ -81,7 +87,7 @@ final class ProjectRepository
         }
         $marks = implode(',', array_fill(0, count($categories), '?'));
         $params = $categories;
-        $sql = "SELECT * FROM projects WHERE status = 'published' AND deleted_at IS NULL AND category IN ($marks)";
+        $sql = self::SELECT . " WHERE status = 'published' AND deleted_at IS NULL AND category IN ($marks)";
         if ($excludeSlug !== null) {
             $sql .= ' AND slug <> ?';
             $params[] = $excludeSlug;
@@ -127,6 +133,8 @@ final class ProjectRepository
         $row['category_label'] = self::CATEGORIES[$row['category']] ?? $row['category'];
         $row['role_label'] = $row['role'] === 'main_contractor' ? 'Main contractor' : 'Subcontractor';
         $row['show_value'] = (bool) $row['show_value'];
+        $path = (string) ($row['photo_path'] ?? '');
+        $row['photo_key'] = str_starts_with($path, 'stock/') ? substr($path, 6) : null;
         if (!$row['show_value']) {
             $row['value_pula'] = null;
         }
