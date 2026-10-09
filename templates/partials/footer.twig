@@ -1,61 +1,57 @@
 {% import 'components/macros.twig' as ui %}
-<footer class="site-footer">
-  <div class="footer-strip">
-    <div class="container footer-strip__grid">
-      <div class="footer-strip__item">
-        <span class="footer-strip__icon">{{ ui.pin_icon() }}</span>
-        <p><span class="footer-strip__label">Head office and workshop</span>{{ settings.address_line }}</p>
-      </div>
-      <div class="footer-strip__item">
-        <span class="footer-strip__icon">{{ ui.mail_icon() }}</span>
-        <p><span class="footer-strip__label">Tenders and quotes</span><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></p>
-      </div>
-      <div class="footer-strip__item">
-        <span class="footer-strip__icon">{{ ui.phone_icon() }}</span>
-        <p><span class="footer-strip__label">Call us</span><a class="footer-strip__big" href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a></p>
-      </div>
-    </div>
+{% import 'components/icons.twig' as ic %}
+<footer class="bx-footer">
+  <div class="bx-footer__strip">
+    <ul class="container">
+      <li>{{ ic.icon('pin') }}<span>{{ settings.address_line }},<br>{{ settings.postal_address }}</span></li>
+      <li>{{ ic.icon('mail') }}<span>Email us :<br><a class="big" href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a></span></li>
+      <li>{{ ic.icon('phone') }}<span>Call us on :<br><a class="big" href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a></span></li>
+    </ul>
   </div>
-  <div class="container footer-main">
-    <div class="footer-grid">
-      <div class="stack">
-        <div class="footer-plate">{{ ui.brand() }}</div>
-        <p>Civil, mechanical and electrical engineering contractor. 100% citizen owned, established in May 2007.</p>
-      </div>
+  <div class="container">
+    <div class="bx-footer__main">
       <div>
-        <h2>Visit or write</h2>
-        <address>
-          {{ settings.address_line }}<br>
-          {{ settings.postal_address }}
-        </address>
+        <img src="/images/brand/logo-light.png" alt="Evolution Engineers" width="729" height="307" loading="lazy">
+        <p>Contractors in civil, mechanical and electrical engineering services. 100% citizen owned, serving Botswana's mines, utilities, ministries and councils since 2007.</p>
       </div>
-      <div>
-        <h2>Call or email</h2>
-        <ul>
-          <li>Telephone <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a></li>
-          <li>Cell <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a></li>
-          {% if settings.fax %}<li>Fax {{ settings.fax }}</li>{% endif %}
-          <li><a href="mailto:{{ settings.email_general }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_general }}</a></li>
-          <li><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></li>
-          <li><a href="mailto:{{ settings.email_homes }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_homes }}</a></li>
-        </ul>
-      </div>
-      <nav aria-label="Footer">
-        <h2>Pages</h2>
-        <ul>
-          <li><a href="/services">Services</a></li>
-          <li><a href="/supplies">Supplies</a></li>
+      <nav aria-label="Useful links">
+        <h4>Useful Links</h4>
+        <ul class="bx-footer__links">
+          <li><a href="/about">About Us</a></li>
           <li><a href="/projects">Projects</a></li>
-          <li><a href="/small-homes">Small homes</a></li>
-          <li><a href="/plant-and-equipment">Plant and equipment</a></li>
-          <li><a href="/about">About</a></li>
+          <li><a href="/plant-and-equipment">Plant &amp; Equipment</a></li>
+          <li><a href="/small-homes">Small Homes</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
+      <nav aria-label="Our services">
+        <h4>Our Services</h4>
+        <ul class="bx-footer__links">
+          <li><a href="/services/civil-engineering">Civil Engineering</a></li>
+          <li><a href="/services/mechanical-engineering">Mechanical Engineering</a></li>
+          <li><a href="/services/electrical-engineering">Electrical Engineering</a></li>
+          <li><a href="/supplies">Valves, Pipes &amp; Motors</a></li>
+          <li><a href="/projects?type=roads">Roads Works</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h4>Request A Call Back</h4>
+        <p>Leave your email and we will get back to you about your project.</p>
+        <form class="callback" action="/contact" method="get">
+          <label class="visually-hidden" for="callback-email">Your email address</label>
+          <input id="callback-email" type="email" name="email" placeholder="Enter your email address" autocomplete="email" required>
+          <button type="submit" aria-label="Continue to the enquiry form">{{ ic.icon('send') }}</button>
+        </form>
+        <div class="bx-footer__phones">
+          <a href="tel:{{ settings.phone_e164 }}">{{ ic.icon('phone') }} {{ settings.phone }}</a>
+          <a href="tel:{{ settings.cell_e164 }}">{{ ic.icon('mobile') }} {{ settings.cell }}</a>
+        </div>
+      </div>
     </div>
-    <div class="footer-bottom">
-      <p>{{ settings.registrations_line }}</p>
-      <p>&copy; {{ year_now }} Evolution Engineers. <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/credits">Image credits</a></p>
+    <div class="bx-footer__bottom">
+      <p>&copy; Copyright Evolution Engineers {{ year_now }}. All rights reserved.</p>
+      <p><a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/credits">Image credits</a></p>
     </div>
   </div>
 </footer>
+<button class="to-top" type="button" data-to-top aria-label="Back to top">{{ ic.icon('up') }}</button>

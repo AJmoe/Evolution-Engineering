@@ -8,7 +8,7 @@
   <meta name="description" content="{% block description %}A 100% citizen-owned civil, mechanical and electrical engineering contractor in Gaborone, working for mines, utilities, ministries and private clients since 2007.{% endblock %}">
   <link rel="canonical" href="{{ canonical }}">
   {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
-  <meta name="theme-color" content="#FFFFFF">
+  <meta name="theme-color" content="#0B1930">
   <meta name="color-scheme" content="light">
 
   <meta property="og:type" content="website">
@@ -19,7 +19,7 @@
   <meta property="og:image" content="{{ base_url }}/images/og-default.png" data-placeholder>
   <meta name="twitter:card" content="summary_large_image">
 
-  {{ vite_preload_fonts('resources/js/main.js', ['fraunces-latin-300', 'hanken-grotesk-latin-400']) }}
+  {{ vite_preload_fonts('resources/js/main.js', ['roboto-latin-900', 'barlow-latin-400']) }}
   {% if vite_dev() %}
     {{ vite_css('resources/js/main.js') }}
   {% else %}
@@ -35,6 +35,8 @@
     'url': base_url ~ '/',
     'foundingDate': '2007-05',
     'telephone': '+267 392 3065',
+    'email': 'info@evolutionengineers.co.bw',
+    'logo': base_url ~ '/images/brand/logo.png',
     'address': {
       '@type': 'PostalAddress',
       'streetAddress': 'Plot 61047, Block 8 Industrial',
@@ -54,7 +56,7 @@
     {% block content %}{% endblock %}
   </main>
 
-  {% block cta %}{% include 'partials/cta.twig' %}{% endblock %}
+  {% block cta %}{% endblock %}
   {% include 'partials/footer.twig' %}
 
   {{ vite_js('resources/js/main.js', csp_nonce) }}

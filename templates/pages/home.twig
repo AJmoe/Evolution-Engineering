@@ -1,217 +1,239 @@
 {% extends 'layout.twig' %}
 {% import 'components/macros.twig' as ui %}
-
-{% block skip %}<a class="skip-link" href="#main">Skip to content</a><a class="skip-link" href="#after-hero">Skip animation</a>{% endblock %}
+{% import 'components/icons.twig' as ic %}
 
 {% block content %}
-  {#
-    Hero. Without JavaScript, or with reduced motion, this is a still of the handover followed by
-    the three stage panels. With JavaScript it becomes the scroll-driven film (resources/js/hero.js).
-  #}
-  <section class="hero" data-hero aria-labelledby="hero-heading">
-    <div class="hero__track" data-hero-track>
-      <div class="hero__stage">
-        <div class="hero__media" data-hero-media>
-          <picture class="hero__poster">
-            <source media="(max-width: 899px)" srcset="/images/hero/stage-3-m.webp" width="780" height="930">
-            <img src="/images/hero/stage-3.webp" width="1600" height="1000" alt="" fetchpriority="high">
-          </picture>
-        </div>
-        <div class="hero__scrim" aria-hidden="true"></div>
-        <div class="container hero__inner">
-          <div class="hero__copy">
-            <div class="hero__texts" aria-live="off">
-              <div class="hero__text is-active" data-stage-text>
-                <h1 id="hero-heading" class="display">Engineered before it is built.</h1>
-                <p class="lede">Civil, mechanical and electrical engineering for mines, utilities, ministries and private clients across Botswana.</p>
-              </div>
-              <div class="hero__text" data-stage-text>
-                <p class="display">Foundations, frame and facade, on one team.</p>
-                <p class="lede">Concrete, steel and glass go up floor by floor, with our own plant on site and the engineers who run it.</p>
-              </div>
-              <div class="hero__text" data-stage-text>
-                <p class="display">Delivered across Botswana since 2007.</p>
-                <p class="lede">A 100% citizen-owned contractor, trusted on everything from clinics and warehouses to a 100 km water transmission pipeline.</p>
-              </div>
-            </div>
-            <div class="hero__actions">
-              <a class="btn btn--primary" href="/contact">Request a quote</a>
-              <a class="btn btn--secondary" href="/projects">See our projects</a>
-            </div>
-            <div class="stage-tracker" role="group" aria-label="Jump to a stage of the animation">
-              {% for label in ['Blueprint', 'Build', 'Handover'] %}
-                <button type="button" data-stage-go aria-current="{{ loop.first ? 'step' : 'false' }}">
-                  <span>{{ label }}</span><span class="bar"><span data-stage-bar></span></span>
-                </button>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        <p class="hero__hint" data-scroll-hint aria-hidden="true">Scroll to start building
-          <svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true"><path d="M6 1v13M1 9l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--tight" data-hero-stages aria-label="From drawing to handover">
-    <div class="container stages">
-      <article class="stage" id="stage-blueprint">
-        <span class="stage__num">Blueprint</span>
-        <h2 class="h3">Engineered before it is built.</h2>
-        <p class="muted">Civil, mechanical and electrical engineering for mines, utilities, ministries and private clients across Botswana.</p>
-      </article>
-      <article class="stage" id="stage-build">
-        <span class="stage__num">Build</span>
-        <h2 class="h3">Foundations, frame and facade, on one team.</h2>
-        <p class="muted">Concrete, steel and glass go up floor by floor, with our own plant on site and the engineers who run it.</p>
-      </article>
-      <article class="stage" id="stage-handover">
-        <span class="stage__num">Handover</span>
-        <h2 class="h3">Delivered across Botswana since 2007.</h2>
-        <p class="muted">A 100% citizen-owned contractor, trusted on everything from clinics and warehouses to a 100 km water transmission pipeline.</p>
-      </article>
-    </div>
-  </section>
-
-  {# 1. Introduction #}
-  <section class="section" id="after-hero" tabindex="-1" aria-labelledby="intro-heading">
-    <div class="container intro">
-      <div class="stack-lg">
-        <h2 id="intro-heading" class="visually-hidden">About Evolution Engineers</h2>
-        <p class="statement">We are a Gaborone engineering contractor with our own workshop, plant and engineers. Since 2007 we have built roads, pipelines, sewer networks, clinics and warehouses for Botswana's mines, utilities, ministries and councils.</p>
-        <a class="link-arrow" href="/about">About the company {{ ui.arrow() }}</a>
-      </div>
-      <ul class="facts">
-        <li><strong>May 2007</strong><span>Established</span></li>
-        <li><strong>100% citizen owned</strong><span>A Botswana company</span></li>
-        <li><strong>Five disciplines</strong><span>Registered with PPADB</span></li>
-      </ul>
-    </div>
-  </section>
-
-  {# 2. Services. The outlined band is decoration only. #}
-  <section class="section section--flush-top" aria-labelledby="services-heading">
-    <p class="outline-band" aria-hidden="true"><span>Civil</span><span>Mechanical</span><span>Electrical</span></p>
+  {# 1. Hero: kicker, oversized half-outlined word, short statement, link #}
+  <section class="bx-hero" aria-labelledby="hero-heading">
+    <div class="bx-hero__bg">{{ ui.photo('building-glass', '', '100vw', true, false) }}</div>
+    <div class="grid-lines" aria-hidden="true"></div>
     <div class="container">
-      <div class="section-head">
-        <h2 id="services-heading">Civil, mechanical and electrical, under one roof.</h2>
+      <p class="bx-hero__kicker" data-reveal>Evolution in</p>
+      <h1 id="hero-heading" data-reveal><span>Engin</span><span class="outline">eering</span></h1>
+      <p data-reveal>Civil, mechanical and electrical engineering for Botswana's mines, utilities, ministries and private clients, since 2007.</p>
+      <div class="bx-hero__actions" data-reveal>
+        <a class="btn btn--red" href="/contact">Request a quote</a>
+        <a class="text-link" href="/projects">Discover our projects {{ ic.icon('arrow') }}</a>
       </div>
-      <ul class="service-rows">
-        {% for s in services %}
-          <li class="service-row">
-            <a href="{{ s.url }}">
-              <span class="service-row__name">{{ ui.service_icon(s.slug) }}<h3>{{ s.name }}</h3></span>
-              <p>{{ s.summary }}</p>
-              <svg class="service-row__art" viewBox="0 0 120 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
-                {% if loop.index == 1 %}<path d="M4 60L40 8M116 60L80 8M60 60v-10M60 42v-8M60 28v-6M2 4h116M2 0v8M118 0v8"/>
-                {% elseif loop.index == 2 %}<circle cx="40" cy="32" r="22"/><circle cx="40" cy="32" r="8"/><path d="M62 32h54M90 20v24M106 24v16"/>
-                {% else %}<path d="M8 32h28l8-20 12 40 12-40 8 20h36M110 24v16"/>{% endif %}
-              </svg>
-            </a>
-          </li>
-        {% endfor %}
-        <li class="service-row">
-          <a href="/supplies">
-            <span class="service-row__name">{{ ui.service_icon('supplies') }}<h3>Supplies</h3></span>
-            <p>Valves, HDPE, galvanised and stainless steel pipes, and electric motors.</p>
-            <svg class="service-row__art" viewBox="0 0 120 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 32h40M76 32h40M44 14v36M76 14v36M44 14l32 36M44 50l32-36M60 14V4M52 4h16"/></svg>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  {# 3. Featured projects #}
-  <section class="section section--cloud" aria-labelledby="projects-heading">
-    <div class="container">
-      <div class="section-head section-head--split">
-        <h2 id="projects-heading">Recent work</h2>
-        <a class="link-arrow" href="/projects">View all projects {{ ui.arrow() }}</a>
-      </div>
-      <div class="tiles">
-        {% for p in featured %}{{ ui.project_card(p) }}{% endfor %}
+      <div class="bx-hero__badge" data-reveal>
+        <strong>{{ stats.projects }}</strong>
+        <span>Projects delivered<br>across Botswana</span>
       </div>
     </div>
   </section>
 
-  {# 4. Small homes #}
-  {% if homes %}
-    {% set first = homes|first %}
-    <section class="section" aria-labelledby="homes-heading">
-      <div class="container split">
-        <div class="viewer-frame" data-placeholder="home-design" data-home-viewer data-models="{{ {(first.slug): {name: first.name, params: first.model_params}}|json_encode }}" data-initial="{{ first.slug }}">
-          <div data-design-poster="{{ first.slug }}">{{ ui.home_poster(first) }}</div>
-          <span class="tag">Concept design: {{ first.name }}</span>
-        </div>
-        <div class="stack-lg">
-          <h2 id="homes-heading">Small homes, designed and built by the same team.</h2>
-          <p class="lede">Explore concept designs from one to three bedrooms. Final drawings, sizes and costs are prepared for each plot.</p>
-          <div><a class="btn btn--secondary" href="/small-homes">Explore the designs</a></div>
-        </div>
+  {# 2. Welcome: photo with brand squares, statement, director #}
+  <section class="bx-section--navy welcome" aria-labelledby="welcome-heading">
+    <div class="grid-lines" aria-hidden="true"></div>
+    <div class="container welcome__grid">
+      <div class="welcome__media" data-reveal>
+        {{ ui.photo('pipeline-trench', 'Workers laying a pipeline in a trench', '(min-width: 900px) 300px, 100vw', false, true) }}
+        <div class="squares" aria-hidden="true"><span></span><span></span><span></span></div>
       </div>
-    </section>
-  {% endif %}
-
-  {# 5. Clients and registrations, with the reasons procurement teams shortlist us. Every point is from the Content deck. #}
-  <section class="section section--cloud why" aria-labelledby="why-heading">
-    <div class="container why__grid">
-      <div class="why__card">
-        <h2 id="why-heading">Why procurement teams shortlist us</h2>
-        <ul class="checklist">
-          <li>{{ ui.check() }}<span><strong>100% citizen owned</strong>, established in May 2007</span></li>
-          <li>{{ ui.check() }}<span><strong>Registered with PPADB</strong> in five disciplines, and tax cleared</span></li>
-          <li>{{ ui.check() }}<span><strong>Engineers and artisans</strong> with long experience in the mining sector</span></li>
-          <li>{{ ui.check() }}<span><strong>Our own fabrication workshop</strong> at Block 8 Industrial, Gaborone</span></li>
-          <li>{{ ui.check() }}<span><strong>Our own plant</strong> for earthmoving, compaction and haulage</span></li>
-        </ul>
-        <div class="call-block">
-          <span class="call-block__icon" aria-hidden="true">{{ ui.phone_icon() }}</span>
+      <div class="welcome__body">
+        <p class="eyebrow">Welcome to Evolution Engineers</p>
+        <h2 id="welcome-heading">Engineering Contractor With Roots <span>In Botswana's Mining Sector</span></h2>
+        <p class="welcome__lead">Evolution Engineers is a 100% citizen-owned company specialising in civil, mechanical and electrical engineering works, established in May 2007.</p>
+        <p>We are seasoned with engineers and artisans who have vast experience in the mining sector. Our clientele includes Debswana, particularly the Jwaneng and Orapa mines, Karowe Diamond Mine, Tati Nickel Mining Company, government ministries, councils and the private sector. Our head office and fabrication workshop are in Gaborone at Plot 61047, Block 8 Industrial.</p>
+        <div class="director">
+          <span class="avatar" aria-hidden="true">TD</span>
           <div>
-            <p class="small muted">Call the office</p>
-            <a class="call-block__number" href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a>
+            <strong>Trinity Dialwa</strong>
+            <span>Director</span>
           </div>
-        </div>
-      </div>
-      <div class="why__aside">
-        <div class="stack-lg">
-          <h3>Clients include</h3>
-          <ul class="client-names">
-            <li>Debswana, at Jwaneng and Orapa</li>
-            <li>Karowe Diamond Mine</li>
-            <li>Tati Nickel Mining Company</li>
-            <li>Government ministries</li>
-            <li>District and city councils</li>
-          </ul>
-        </div>
-        <div class="stack">
-          <h3>Registered with PPADB in</h3>
-          <ul class="plain-list">
-            {% for r in registrations %}<li>{{ r }}</li>{% endfor %}
-          </ul>
-          <p class="small muted">Public Procurement and Asset Disposal Board.</p>
+          <p class="director__card">Cell <a href="tel:{{ settings.cell_e164 }}">+267 {{ settings.cell }}</a><br><a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a></p>
         </div>
       </div>
     </div>
   </section>
 
-  {# 6. Plant and equipment #}
-  <section class="section" aria-labelledby="plant-heading">
+  {# 3. Services slider #}
+  <section class="bx-section bx-section--soft" aria-labelledby="services-heading">
     <div class="container">
-      <div class="section-head section-head--split">
-        <div class="stack">
-          <h2 id="plant-heading">Our own plant, on our own sites</h2>
-          <p class="lede">Excavators, loaders, rollers and trucks, run by the people who maintain them.</p>
-        </div>
-        <a class="link-arrow" href="/plant-and-equipment">Full plant list {{ ui.arrow() }}</a>
+      <div class="sec-title" data-reveal>
+        <p class="eyebrow">What we do</p>
+        <h2 id="services-heading">Our Services That We Provide</h2>
+        <p>Three engineering disciplines, a supplies business and our own plant, run from our head office and fabrication workshop at Block 8 Industrial, Gaborone. Call or write and one of our engineers will answer your questions and arrange a site visit.</p>
       </div>
-      <ul class="scroller plain" role="list" aria-label="Plant highlights" tabindex="0">
-        {% for m in equipment %}
-          <li class="card">
-            {{ ui.machine_media(m) }}
-            <div class="card__body">
-              <h3 class="card__title">{{ m.make }} {{ m.model }}</h3>
-              <p class="card__meta">{{ m.role }}{% if m.quantity_label %}<span>{{ m.quantity_label }}</span>{% endif %}</p>
+      <div class="slider" data-slider>
+        <ul class="slider__track" aria-label="Services">
+          {% for card in service_cards %}
+            <li>
+              <a class="svc-card" href="{{ card.url }}">
+                {{ ic.picto(card.icon, 'svc-icon') }}
+                <h3>{{ card.name }}</h3>
+                <div class="svc-card__img">{{ ui.photo(card.photo, card.photo_alt, '(min-width: 1100px) 260px, (min-width: 640px) 45vw, 86vw', false, false) }}</div>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="slider__nav">
+          <button class="round-btn" type="button" data-prev aria-label="Previous services">{{ ic.icon('chev-left') }}</button>
+          <button class="round-btn" type="button" data-next aria-label="Next services">{{ ic.icon('chev-right') }}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# 4. Why choose us: real facts only. Bars are computed from the project records. #}
+  <section class="why-bx" aria-labelledby="why-heading">
+    <div class="why-bx__bg">{{ ui.photo('water-tower', '', '100vw', false, false) }}</div>
+    <div class="why-bx__grid">
+      <div class="why-bx__card" data-reveal>
+        <p class="eyebrow">Our key points</p>
+        <h2 id="why-heading">Why Choose Us</h2>
+        <p>Procurement teams at mines, utilities and ministries shortlist us because we have delivered for them since 2007, with our own engineers, our own workshop and our own plant.</p>
+        <ul class="ticks">
+          <li>{{ ic.icon('tick') }}100% citizen owned, established in May 2007</li>
+          <li>{{ ic.icon('tick') }}Registered with PPADB in five disciplines</li>
+          <li>{{ ic.icon('tick') }}Engineers and artisans from the mining sector</li>
+          <li>{{ ic.icon('tick') }}Our own fabrication workshop and plant fleet</li>
+        </ul>
+        <div class="bars">
+          <div class="bar" data-to="{{ stats.main_share }}">
+            <p class="bar__label"><span>Projects delivered as main contractor</span><span>{{ stats.main_share }}%</span></p>
+            <div class="bar__track"><span class="bar__fill"></span></div>
+          </div>
+          {% for p in stats.in_progress|slice(0, 1) %}
+            {% set pct = p.year_label|split('%')|first|split(' ')|last %}
+            {% if pct matches '/^\\d+$/' %}
+              <div class="bar" data-to="{{ pct }}">
+                <p class="bar__label"><span>{{ p.title }}</span><span>{{ pct }}%</span></p>
+                <div class="bar__track"><span class="bar__fill"></span></div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="call-row">
+          <div class="call-row__icon" aria-hidden="true"><span>{{ ic.icon('phone') }}</span></div>
+          <div>
+            <small>Call the office now</small>
+            <a href="tel:{{ settings.phone_e164 }}">+267 {{ settings.phone }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="why-bx__side">
+        <div class="why-bx__photo">{{ ui.photo('pipeline-forest', 'A large pipeline under construction through forest', '(min-width: 1000px) 600px, 100vw', false, true) }}</div>
+        <div class="feature-box" data-reveal>
+          <div class="feature-box__badge" aria-hidden="true"><span>{{ ic.icon('gear') }}</span></div>
+          <p class="eyebrow">Mines, utilities, ministries</p>
+          <h2>Trusted On Botswana's Biggest Pipelines</h2>
+          <p>Including the design and construction of the approximately 100 km transmission pipeline from Masama Wellfield to the Mmamashia Water Treatment Plant.</p>
+          <a class="text-link" href="/contact">Request a call back {{ ic.icon('arrow') }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# 5. Recent projects on navy, tiles hanging into the white below, then outlined type #}
+  <section class="work" aria-labelledby="work-heading">
+    <div class="container">
+      <div class="sec-title sec-title--split sec-title--light" data-reveal>
+        <div>
+          <p class="eyebrow">Our work</p>
+          <h2 id="work-heading">Explore Recent Projects</h2>
+        </div>
+        <a class="btn btn--red" href="/projects">View all projects {{ ic.icon('arrow-circle') }}</a>
+      </div>
+    </div>
+    <ul class="tiles-row">
+      {% for p in tiles %}
+        <li class="tile" data-reveal>
+          {{ ui.project_media(p, '(min-width: 1100px) 25vw, (min-width: 560px) 50vw, 100vw', false) }}
+          <div class="tile__overlay">
+            <p>{{ p.category_label }}</p>
+            <h3><a href="/projects/{{ p.slug }}">{{ p.title }}</a></h3>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  <div class="outline-type" aria-hidden="true">
+    <span class="outline-type__run"><span>Civil Mechanical Electrical Engineering</span><span>Civil Mechanical Electrical Engineering</span></span>
+  </div>
+
+  {# 6. About: photo, statement, two features #}
+  <section class="about-bx" aria-labelledby="about-heading">
+    <div class="container about-bx__grid">
+      <div class="about-bx__media" data-reveal>
+        {{ ui.photo('roller', 'A road roller compacting soil', '(min-width: 1000px) 400px, 100vw', false, true) }}
+      </div>
+      <div class="about-bx__body">
+        <p class="eyebrow">About company</p>
+        <h2 id="about-heading">We Provide Value-Added Construction Services</h2>
+        <p>Evolution Engineers is a leader in providing value-added construction services to our customers by creating a successful partnership with them throughout the construction process. Our pledge is to establish lasting relationships with our customers by exceeding their expectations and gaining their trust through exceptional performance by every member of the construction team.</p>
+        <div class="feats">
+          <div class="feat" data-reveal>
+            <div class="feat__head">{{ ic.picto('team') }}<h3>Seasoned{{ "\n" }}Team</h3></div>
+            <p>Engineers and artisans with vast experience in the mining sector.</p>
+          </div>
+          <div class="feat" data-reveal>
+            <div class="feat__head">{{ ic.picto('plant') }}<h3>Own Plant{{ "\n" }}&amp; Workshop</h3></div>
+            <p>Excavators, loaders, rollers and trucks, and a fabrication workshop in Gaborone.</p>
+          </div>
+        </div>
+        <p><a class="text-link" href="/about">More about us {{ ic.icon('arrow') }}</a></p>
+      </div>
+    </div>
+  </section>
+
+  {# 7. Statement cards on navy (the theme's testimonial band). Taken from the company profile, not invented quotes. #}
+  <section class="voices on-dark" aria-labelledby="voices-heading">
+    {{ ic.blueprint_art() }}
+    <div class="container voices__grid">
+      <div class="sec-title sec-title--light" data-reveal>
+        <p class="eyebrow">Mission and vision</p>
+        <h2 id="voices-heading">What Drives Our Company?</h2>
+      </div>
+      <div class="slider slider--2" data-slider>
+        <ul class="slider__track" aria-label="Mission and vision">
+          {% for q in [
+            { text: 'To be a leader in providing value-added construction services, by creating a successful partnership with our customers throughout the construction process.', who: 'Our Mission', role: 'Company profile' },
+            { text: 'To establish lasting relationships with our customers by exceeding their expectations and gaining their trust through exceptional performance by every member of the construction team.', who: 'Our Pledge', role: 'Company profile' },
+            { text: 'To create a competitive advantage by purchasing and distributing products and services which provide superior value to our customers.', who: 'Our Vision', role: 'Company profile' },
+          ] %}
+            <li class="quote-card">
+              <div class="quote-card__body">
+                {{ ic.icon('quote') }}
+                <p>{{ q.text }}</p>
+              </div>
+              <div class="quote-card__who">
+                <span class="avatar" aria-hidden="true">EE</span>
+                <div><strong>{{ q.who }}</strong><span>{{ q.role }}</span></div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="slider__nav slider__nav--left">
+          <button class="round-btn" type="button" data-prev aria-label="Previous statement">{{ ic.icon('arrow-left') }}</button>
+          <button class="round-btn" type="button" data-next aria-label="Next statement">{{ ic.icon('arrow') }}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# 8. Latest milestones (the theme's news section), from dated project records #}
+  <section class="bx-section" aria-labelledby="news-heading">
+    <div class="container">
+      <div class="sec-title sec-title--split" data-reveal>
+        <div>
+          <p class="eyebrow">From our records</p>
+          <h2 id="news-heading">Latest Milestones</h2>
+        </div>
+        <p>Recently completed contracts for Botswana's mines, utilities and government. Every project page lists the client, scope and our role.</p>
+      </div>
+      <ul class="posts">
+        {% for p in recent %}
+          {% set parts = p.year_label|split(' ') %}
+          <li class="post" data-reveal>
+            <div class="post__media">{{ ui.project_media(p, '(min-width: 1000px) 370px, 100vw', false) }}</div>
+            <div class="post__body">
+              <p class="date-badge" aria-label="Completed {{ p.year_label }}">
+                {% if parts|length > 1 %}<strong>{{ parts|first }}</strong><span>{{ parts|last }}</span>{% else %}<strong>{{ p.year }}</strong>{% endif %}
+              </p>
+              <p class="post__meta">{{ p.client_name|split(' (')|first }} / {{ p.role_label }}</p>
+              <h3><a href="/projects/{{ p.slug }}">{{ p.title }}</a></h3>
+              <a class="pill-link" href="/projects/{{ p.slug }}" aria-label="Read more about {{ p.title }}">Read more</a>
             </div>
           </li>
         {% endfor %}
@@ -219,16 +241,21 @@
     </div>
   </section>
 
-  {# 7. How we work. Draft copy for the client to confirm. #}
-  <section class="section section--cloud" aria-labelledby="process-heading">
+  {# 9. Clients, as names (logos need each client's permission) #}
+  <section class="clients" aria-labelledby="clients-heading">
     <div class="container">
-      <div class="section-head"><h2 id="process-heading">How we work</h2></div>
-      <ol class="steps" data-placeholder="process-copy">
-        <li><h3>Survey and design</h3><p class="muted">We survey the site and engineer the solution before work starts.</p></li>
-        <li><h3>Procure</h3><p class="muted">We source materials and supplies, including valves, pipes and motors.</p></li>
-        <li><h3>Build</h3><p class="muted">Our engineers, artisans and plant deliver the works on site.</p></li>
-        <li><h3>Hand over and maintain</h3><p class="muted">We commission, hand over and stay available for maintenance.</p></li>
-      </ol>
+      <h2 id="clients-heading" class="clients__title">We have worked with</h2>
+      <ul>
+        <li>Debswana<small>Jwaneng &amp; Orapa</small></li>
+        <li>Water Utilities<small>Corporation</small></li>
+        <li>Morupule<small>Coal Mine</small></li>
+        <li>BDC<small>Botswana Development Corp.</small></li>
+        <li>BURS<small>Unified Revenue Service</small></li>
+        <li>BPC<small>Power Corporation</small></li>
+      </ul>
     </div>
   </section>
+
+  {# 10. Map with office address box #}
+  {% include 'partials/map.twig' %}
 {% endblock %}

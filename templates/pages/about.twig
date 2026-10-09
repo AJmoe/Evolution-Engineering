@@ -1,5 +1,6 @@
 {% extends 'layout.twig' %}
 {% import 'components/macros.twig' as ui %}
+{% import 'components/icons.twig' as ic %}
 {% set crumbs = [{ label: 'About', href: '/about' }] %}
 
 {% block title %}About and compliance{% endblock %}
@@ -7,60 +8,112 @@
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}
-  {{ ui.page_header('A Botswana contractor since May 2007', 'Evolution Engineers is a 100% citizen-owned company specialising in civil, mechanical and electrical engineering works.', crumbs) }}
+  {{ ui.page_header('About Us', null, crumbs) }}
 
-  <section class="section" aria-labelledby="story-heading">
-    <div class="container intro">
-      <div class="stack-lg">
-        <h2 id="story-heading">Our story</h2>
-        <p class="lede">We were established in May 2007. Our engineers and artisans bring long experience from Botswana's mining sector, and our clients include Debswana, particularly at the Jwaneng and Orapa mines, Karowe Diamond Mine, Tati Nickel Mining Company, government ministries, councils and the private sector.</p>
-        <p>Our work runs from land servicing, roads and pipelines to building design and construction, mechanical maintenance and fabrication, and electrical installations.</p>
+  {# Company story with stacked photos and a years badge #}
+  <section class="bx-section" aria-labelledby="story-heading">
+    <div class="container about-bx__grid">
+      <div class="about-bx__media about-bx__media--stack" data-reveal>
+        {{ ui.photo('roller', 'A road roller compacting soil', '(min-width: 1000px) 400px, 100vw', false, true) }}
+        <div class="inset">{{ ui.photo('cutting-torch', 'Steel being cut in a fabrication workshop', '240px', false, false) }}</div>
+        <p class="years-badge"><strong>{{ stats.years }}</strong><span>Years<br>Experience</span></p>
       </div>
-      <ul class="facts">
-        <li><strong>May 2007</strong><span>Established</span></li>
-        <li><strong>100%</strong><span>Citizen owned</span></li>
-        <li><strong>Block 8 Industrial</strong><span>Head office and workshop, Gaborone</span></li>
+      <div class="about-bx__body">
+        <p class="eyebrow">About company</p>
+        <h2 id="story-heading">A Botswana Contractor Since May 2007</h2>
+        <p class="lede">Evolution Engineers is a 100% citizen-owned company specialising in civil, mechanical and electrical engineering works.</p>
+        <p>We are seasoned with engineers and artisans who have vast experience in the mining sector. Our clientele includes Debswana, particularly the Jwaneng and Orapa mines, Karowe Diamond Mine, Tati Nickel Mining Company, government ministries, councils and the private sector. Our head office and workshop for fabrication are in Gaborone at Plot 61047, Block 8 Industrial. The premises have been extensively renovated to provide an enhanced working environment for technical and administrative staff.</p>
+        <div class="director">
+          <span class="avatar" aria-hidden="true">TD</span>
+          <div class="director__name">
+            <strong>Trinity Dialwa</strong>
+            <span>Director</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# Why choose us, with bars computed from the project records #}
+  <section class="bx-section bx-section--soft" aria-labelledby="why-heading">
+    <div class="container split-bx">
+      <div>
+        <p class="eyebrow">Our key points</p>
+        <h2 id="why-heading">Why Choose Us</h2>
+        <p>Mines, utilities, ministries and councils have trusted us with roads, pipelines, sewer networks, buildings and plant works across Botswana.</p>
+        <ul class="ticks">
+          <li>{{ ic.icon('tick') }}100% citizen owned, established in May 2007</li>
+          <li>{{ ic.icon('tick') }}Registered with PPADB in five disciplines</li>
+          <li>{{ ic.icon('tick') }}Registered for VAT and tax cleared</li>
+          <li>{{ ic.icon('tick') }}Our own fabrication workshop and plant fleet</li>
+        </ul>
+        <div class="bars">
+          {% set share = stats.projects ? (stats.main_contractor / stats.projects * 100)|round : 0 %}
+          <div class="bar" data-to="{{ share }}">
+            <p class="bar__label"><span>Projects delivered as main contractor</span><span>{{ share }}%</span></p>
+            <div class="bar__track"><span class="bar__fill"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="split-bx__media" data-reveal>{{ ui.photo('steel-frame', 'The steel frame of a building under construction', '(min-width: 900px) 50vw, 100vw', false, true) }}</div>
+    </div>
+  </section>
+
+  {# Mission and vision, in the theme's testimonial band #}
+  <section class="voices on-dark" aria-labelledby="mission-heading">
+    {{ ic.blueprint_art() }}
+    <div class="container voices__grid">
+      <div class="sec-title sec-title--light">
+        <p class="eyebrow">Mission and vision</p>
+        <h2 id="mission-heading">What Drives Our Company?</h2>
+      </div>
+      <ul class="quote-grid" aria-label="Mission and vision">
+        <li class="quote-card">
+          <div class="quote-card__body">{{ ic.icon('quote') }}<p>Evolution Engineers is a leader in providing value-added construction services to our customers by creating a successful partnership with them throughout the construction process.</p></div>
+          <div class="quote-card__who"><span class="avatar" aria-hidden="true">EE</span><div><strong>Our Mission</strong><span>Company profile</span></div></div>
+        </li>
+        <li class="quote-card">
+          <div class="quote-card__body">{{ ic.icon('quote') }}<p>To establish lasting relationships with our customers by exceeding their expectations, and to create a competitive advantage through products and services which provide superior value.</p></div>
+          <div class="quote-card__who"><span class="avatar" aria-hidden="true">EE</span><div><strong>Our Vision</strong><span>Company profile</span></div></div>
+        </li>
       </ul>
     </div>
   </section>
 
-  <section class="section section--cloud" aria-labelledby="mission-heading">
-    <div class="container two-col">
-      <div class="stack">
-        <h2 id="mission-heading">Mission</h2>
-        <p class="lede">To be a leader in value-added construction services, building a partnership with each customer throughout the construction process.</p>
+  {# Statistics #}
+  <section class="bx-section bx-section--soft" aria-labelledby="stats-heading">
+    <div class="container stats-bx__grid">
+      <div>
+        <p class="eyebrow">Statistics</p>
+        <h2 id="stats-heading">Know More About Our Record</h2>
+        <p class="muted">Figures from our own project records and registrations.</p>
       </div>
-      <div class="stack">
-        <h2>Vision</h2>
-        <p class="lede">Lasting relationships earned by exceeding expectations through the performance of every member of our team, and superior value from the products and services we buy and supply.</p>
-      </div>
+      <ul class="stat-cards">
+        <li class="stat-card">{{ ic.picto('projects') }}<div><strong data-count="{{ stats.projects }}">{{ stats.projects }}</strong><span>Projects listed</span></div></li>
+        <li class="stat-card">{{ ic.picto('building') }}<div><strong data-count="{{ stats.main_contractor }}">{{ stats.main_contractor }}</strong><span>As main contractor</span></div></li>
+        <li class="stat-card">{{ ic.picto('calendar') }}<div><strong data-count="{{ stats.years }}">{{ stats.years }}</strong><span>Years in business</span></div></li>
+        <li class="stat-card">{{ ic.picto('certificate') }}<div><strong data-count="{{ stats.disciplines }}">{{ stats.disciplines }}</strong><span>PPADB disciplines</span></div></li>
+      </ul>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="facilities-heading">
-    <div class="container detail">
-      <div class="stack-lg">
-        <h2 id="facilities-heading">Facilities</h2>
-        <p>Our head office and fabrication workshop are at Plot 61047, Block 8 Industrial, Gaborone. The premises have been extensively renovated.</p>
-      </div>
-      <figure class="detail-photo">
-        <div class="photo-frame">{{ ui.photo('cutting-torch', 'Steel being cut with a gas torch in a fabrication workshop', '(min-width: 900px) 40vw, 100vw', false, true) }}</div>
-        <figcaption class="small muted">Illustrative photo. Photography of our Block 8 workshop will follow.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="section section--cloud" aria-labelledby="compliance-heading">
-    <div class="container two-col">
-      <div class="stack-lg">
-        <h2 id="compliance-heading">Registrations</h2>
-        <p>We are registered for various grades with the Public Procurement and Asset Disposal Board (PPADB) in:</p>
-      </div>
-      <div class="stack-lg">
-        <ul class="plain-list" data-placeholder="TODO-CLIENT: confirm grades and registration period">
-          {% for r in registrations %}<li>{{ r }}</li>{% endfor %}
+  {# Registrations and facilities #}
+  <section class="bx-section" aria-labelledby="compliance-heading">
+    <div class="container split-bx split-bx--top">
+      <div>
+        <p class="eyebrow">Registrations</p>
+        <h2 id="compliance-heading">Registered And Tax Cleared</h2>
+        <p>We are registered for various grades with the Public Procurement and Asset Disposal Board (PPADB) in the following disciplines:</p>
+        <ul class="ticks" data-placeholder="TODO-CLIENT: confirm grades and registration period">
+          {% for r in registrations %}<li>{{ ic.icon('tick') }}{{ r }}</li>{% endfor %}
         </ul>
-        <p>We are registered with the tax department and tax cleared.</p>
+        <p>We are duly registered with the tax department and tax cleared.</p>
+      </div>
+      <div>
+        <p class="eyebrow">Facilities</p>
+        <h2>Our Head Office And Workshop</h2>
+        <p>The firm has operated in Botswana since 2007 from premises at Plot 61047, Block 8 Industrial, Gaborone, with a fabrication workshop on site. Our plant fleet covers earthmoving, compaction and haulage, with fully equipped off-road vehicles for field inspections and reconnaissance surveys.</p>
+        <p class="sidebar-cta"><a class="btn btn--red" href="/plant-and-equipment">See our plant {{ ic.icon('arrow-circle') }}</a></p>
       </div>
     </div>
   </section>

@@ -12,8 +12,10 @@
     "lint": "eslint resources/js && prettier --check \"resources/**/*.{js,css}\""
   },
   "devDependencies": {
+    "@fontsource/barlow": "^5.3.0",
     "@fontsource/fraunces": "^5.1.0",
     "@fontsource/hanken-grotesk": "^5.1.0",
+    "@fontsource/roboto": "^5.3.0",
     "@playwright/test": "^1.63.0",
     "eslint": "^9.10.0",
     "prettier": "^3.3.0",

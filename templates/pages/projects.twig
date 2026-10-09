@@ -7,11 +7,17 @@
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}
-  {{ ui.page_header('Projects', 'Roads, water, sewerage, buildings and mine works for public and private clients across Botswana.', crumbs) }}
+  {{ ui.page_header('Our Projects', null, crumbs) }}
 
-  <section class="section" aria-labelledby="project-list-heading">
+  <section class="bx-section" aria-labelledby="project-list-heading">
     <div class="container">
-      <h2 id="project-list-heading" class="visually-hidden">Project list</h2>
+      <div class="sec-title sec-title--split">
+        <div>
+          <p class="eyebrow">Our work</p>
+          <h2 id="project-list-heading">{% if search %}Results For &ldquo;{{ search }}&rdquo;{% else %}Explore Our Projects{% endif %}</h2>
+        </div>
+        <p>{% if search %}<a href="/projects">Clear the search</a> to see every project.{% else %}Roads, water, sewerage, buildings and mine works for public and private clients across Botswana.{% endif %}</p>
+      </div>
       <div class="filters" role="group" aria-label="Filter projects">
         <div class="filter-row">
           <span>Type</span>
@@ -30,13 +36,15 @@
         <p class="results-count" data-results-count aria-live="polite">{{ projects|length }} {{ projects|length == 1 ? 'project' : 'projects' }}</p>
       </div>
 
-      <div class="card-grid" data-project-grid>
+      <div class="tiles-grid" data-project-grid>
         {% for p in all_projects %}
           {% set visible = (active_type is null or p.category == active_type) and (active_year is null or p.year == active_year) %}
-          {{ ui.project_card(p, not visible) }}
+          {{ ui.project_tile(p, not visible) }}
         {% endfor %}
       </div>
-      <p class="notice" data-empty{% if projects|length > 0 %} hidden{% endif %}>No projects match these filters. <a href="/projects">Show all projects</a>.</p>
+      <p class="notice" data-empty{% if projects|length > 0 %} hidden{% endif %}>No projects match. <a href="/projects">Show all projects</a>.</p>
     </div>
   </section>
 {% endblock %}
+
+{% block cta %}{% include 'partials/feature-band.twig' %}{% endblock %}

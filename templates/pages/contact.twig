@@ -12,11 +12,29 @@
 
 {% block content %}
   {% import _self as f %}
-  {{ ui.page_header('Request a quote', 'Tell us what you need. We reply to every enquiry, and tender invitations go straight to our tenders team.', crumbs) }}
+  {% import 'components/icons.twig' as ic %}
+  {{ ui.page_header('Contact Us', null, crumbs) }}
 
-  <section class="section" aria-label="Enquiry form and contact details">
+  <section class="bx-section" aria-labelledby="routes-heading">
+    <div class="container">
+      <div class="sec-title sec-title--center">
+        <p class="eyebrow">Get in touch</p>
+        <h2 id="routes-heading">Request A Quote Or Invite Us To Tender</h2>
+        <p>Tell us what you need. We reply to every enquiry, and tender invitations go straight to our tenders team.</p>
+      </div>
+      <ul class="contact-cards">
+        <li class="contact-card" data-reveal>{{ ic.icon('pin') }}<h3>Visit Us</h3><p>{{ settings.address_line }}<br>{{ settings.postal_address }}</p></li>
+        <li class="contact-card" data-reveal>{{ ic.icon('phone') }}<h3>Call Us</h3><p>Tel <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a><br>Cell <a href="tel:{{ settings.cell_e164 }}">+267 {{ settings.cell }}</a>{% if settings.fax %}<br>Fax {{ settings.fax }}{% endif %}</p></li>
+        <li class="contact-card" data-reveal>{{ ic.icon('mail') }}<h3>Email Us</h3><p><a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a><br><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="bx-section bx-section--flush" aria-label="Enquiry form and contact details">
     <div class="container contact-grid">
-      <div>
+      <div class="form-panel">
+        <p class="eyebrow">Send a message</p>
+        <h2 class="form-panel__title">Tell Us About Your Project</h2>
         {% if sent %}
           <div class="notice notice--success" role="status" tabindex="-1" id="form-result">
             <h2>Thank you. Your enquiry has been sent.</h2>
@@ -90,34 +108,19 @@
         {% endif %}
       </div>
 
-      <aside class="contact-routes">
-        <div class="stack">
-          <h2>Call</h2>
-          <p>Telephone <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a><br>Cell <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a></p>
-        </div>
-        <div class="stack">
-          <h2>Email</h2>
-          <dl class="spec">
-            <dt>Tenders and quotes</dt><dd><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></dd>
-            <dt>Small homes</dt><dd><a href="mailto:{{ settings.email_homes }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_homes }}</a></dd>
-            <dt>General</dt><dd><a href="mailto:{{ settings.email_general }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_general }}</a></dd>
-          </dl>
-        </div>
-        <div class="stack">
-          <h2>Visit</h2>
-          <address>{{ settings.address_line }}<br>{{ settings.postal_address }}</address>
-          <a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query={{ ('Block 8 Industrial, Gaborone, Botswana')|url_encode }}" rel="noopener" data-placeholder="static-map">
-            <svg viewBox="0 0 400 240" aria-hidden="true" fill="none">
-              <rect width="400" height="240" fill="#F4F8FB"/>
-              <g stroke="#D3DFEA" stroke-width="10"><path d="M0 70h400M0 170h400M120 0v240M290 0v240"/></g>
-              <g stroke="#E6EEF5" stroke-width="4"><path d="M0 120h400M200 0v240M60 0v240"/></g>
-              <circle cx="200" cy="118" r="10" fill="#F26A21"/><circle cx="200" cy="118" r="22" stroke="#F26A21" stroke-width="1.5"/>
-            </svg>
-            <span class="visually-hidden">Open Block 8 Industrial, Gaborone in your maps app</span>
-          </a>
-          <p class="small"><a href="https://www.google.com/maps/search/?api=1&amp;query={{ ('Block 8 Industrial, Gaborone, Botswana')|url_encode }}" rel="noopener">Open in your maps app</a></p>
+      <aside class="contact-aside">
+        <div class="help-card">
+          {{ ui.photo('excavator', '', '360px', false, false) }}
+          <div class="help-card__body">
+            <h3>Tenders And Quotes</h3>
+            <p>Send tender invitations and drawings to <a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a>.</p>
+            <h3>Small Homes</h3>
+            <p>Ask about a design at <a href="mailto:{{ settings.email_homes }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_homes }}</a>.</p>
+            <p class="sidebar-cta"><a class="btn btn--red" href="tel:{{ settings.phone_e164 }}">{{ ic.icon('phone') }} {{ settings.phone }}</a></p>
+          </div>
         </div>
       </aside>
     </div>
   </section>
+  {% include 'partials/map.twig' %}
 {% endblock %}

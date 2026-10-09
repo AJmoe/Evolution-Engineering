@@ -11,4 +11,7 @@ From the brief, plus questions raised during the build.
 - Is the plant list current, and is the fax number still in use?
 - Should the sludge drying beds project be dated 2008 or 2009? It is seeded as 2009.
 - Is the Palapye internal roads overlay now complete? It is shown as "In progress, 97% complete".
-- Can you send the original logo file? The developer copy of `evolution-engineers-logo-clean.png` and the 3D prototype `evolution-engineers-sample-v2.html` were not in the handover; both are needed for phase 3.
+- Logo PNG received 2026-10-09. A vector version would still help. The 3D prototype `evolution-engineers-sample-v2.html` was never supplied and is no longer needed for the Buildnox layout.
+- The two business card designs give Ms. Monica different titles ("Administration Officer" and "Adminstration Manager", misspelt). Which is right? The site does not show her yet.
+- Should the homepage keep Trinity Dialwa's name and cell number, and is a photo available?
+- Is the fax number 392 3086 on business card option 1 still in use? It is not shown.

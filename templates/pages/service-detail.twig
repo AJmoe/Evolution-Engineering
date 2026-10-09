@@ -1,59 +1,91 @@
 {% extends 'layout.twig' %}
 {% import 'components/macros.twig' as ui %}
+{% import 'components/icons.twig' as ic %}
 {% set crumbs = [{ label: 'Services', href: '/services' }, { label: service.name, href: service.url }] %}
+{% set quote_type = service.slug == 'civil-engineering' ? 'civil' : (service.slug == 'mechanical-engineering' ? 'mechanical' : 'electrical') %}
+{# Second and gallery photos per service, from the interim stock set. #}
+{% set extra = {
+  'civil-engineering': [['road-paving', 'Asphalt being laid on a highway'], ['sewer-works', 'Workers laying a large sewer pipe in a trench'], ['water-main', 'A water main being installed'], ['building-site', 'A warehouse under construction']],
+  'mechanical-engineering': [['cutting-torch', 'Steel being cut in a fabrication workshop'], ['pump-motor', 'A centrifugal pump and motor'], ['conveyor', 'Belt conveyors at a works site'], ['hdpe-pipes', 'Stacked plastic pipes on a construction site']],
+  'electrical-engineering': [['substation', 'Switchgear and pylons at a substation'], ['pump-motor', 'A centrifugal pump and motor'], ['conveyor', 'Belt conveyors at a works site'], ['treatment-plant', 'Equipment at a waste water treatment plant']],
+}[service.slug] %}
 
 {% block title %}{{ service.name }}{% endblock %}
 {% block description %}{{ service.name }} from Evolution Engineers, Gaborone: {{ service.summary|lower|trim('.') }}. Request a quote for your project.{% endblock %}
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}
-  {{ ui.page_header(service.name, service.summary, crumbs) }}
+  {{ ui.page_header(service.name|title, null, crumbs) }}
 
-  {% if service.photo %}
-    <div class="container">
-      <figure class="wide-photo">
-        <div class="photo-frame photo-frame--wide">{{ ui.photo(service.photo, service.photo_alt, '(min-width: 1380px) 1320px, 100vw', true, true) }}</div>
-      </figure>
-    </div>
-  {% endif %}
-
-  <section class="section" aria-labelledby="scope-heading">
-    <div class="container detail">
-      <div class="stack-lg">
-        <h2 id="scope-heading">What we offer</h2>
-        <ul class="scope-list">
-          {% for item in service.scope %}<li>{{ item }}</li>{% endfor %}
+  <section class="bx-section" aria-labelledby="scope-heading">
+    <div class="container split-bx">
+      <div class="split-bx__media" data-reveal>{{ ui.photo(service.photo, service.photo_alt, '(min-width: 900px) 50vw, 100vw', true, true) }}</div>
+      <div>
+        <p class="eyebrow">Service details</p>
+        <h2 id="scope-heading">{{ service.name|title }}</h2>
+        <p>{{ service.summary }}</p>
+        <ul class="ticks">
+          {% for item in service.scope %}<li>{{ ic.icon('tick') }}{{ item }}</li>{% endfor %}
         </ul>
+        <p>{{ service.clients }}</p>
       </div>
-      <aside class="detail__aside stack">
-        <h3>Who we work for</h3>
-        <p class="muted">{{ service.clients }}</p>
-        <div><a class="btn btn--primary" href="/contact?type={{ service.slug == 'civil-engineering' ? 'civil' : (service.slug == 'mechanical-engineering' ? 'mechanical' : 'electrical') }}">Request a quote</a></div>
-      </aside>
     </div>
   </section>
 
-  {% if related %}
-    <section class="section section--cloud" aria-labelledby="related-heading">
-      <div class="container">
-        <div class="section-head section-head--split">
-          <h2 id="related-heading">Related projects</h2>
-          <a class="link-arrow" href="/projects">All projects {{ ui.arrow() }}</a>
-        </div>
-        <div class="card-grid">{% for p in related %}{{ ui.project_card(p) }}{% endfor %}</div>
+  <section class="bx-section bx-section--soft" aria-labelledby="quality-heading">
+    <div class="container split-bx">
+      <div class="split-bx__media" data-reveal>{{ ui.photo(extra[0][0], extra[0][1], '(min-width: 900px) 40vw, 100vw', false, true) }}</div>
+      <div>
+        <p class="eyebrow">How we deliver</p>
+        <h2 id="quality-heading">One Team From Drawing To Handover</h2>
+        <p>We are a leader in providing value-added construction services by creating a successful partnership with our customers throughout the construction process. Our engineers, artisans, workshop and plant work on the same job, so there is one point of contact from start to finish.</p>
+        <ul class="ticks ticks--arrow">
+          <li>{{ ic.icon('arrow-circle') }}Site survey and engineering before work starts</li>
+          <li>{{ ic.icon('arrow-circle') }}Our own fabrication workshop in Gaborone</li>
+          <li>{{ ic.icon('arrow-circle') }}Our own plant for earthmoving, compaction and haulage</li>
+          <li>{{ ic.icon('arrow-circle') }}Supply of valves, pipes and electric motors</li>
+        </ul>
       </div>
-    </section>
-  {% endif %}
+    </div>
+  </section>
 
-  <section class="section" aria-labelledby="other-heading">
-    <div class="container">
-      <h2 id="other-heading" class="h3">Other services</h2>
-      <ul class="service-rows">
-        {% for s in others %}
-          <li class="service-row"><a href="{{ s.url }}"><h3>{{ s.name }}</h3><p>{{ s.summary }}</p></a></li>
-        {% endfor %}
-        <li class="service-row"><a href="/supplies"><h3>Supplies</h3><p>Valves, pipes and electric motors.</p></a></li>
-      </ul>
+  <section class="bx-section" aria-labelledby="images-heading">
+    <div class="container with-side">
+      <div>
+        <h2 id="images-heading">Images &amp; Related Work</h2>
+        <p class="muted">Illustrative photos of similar work. Photography of our own sites will follow.</p>
+        <ul class="gallery">
+          {% for ph in extra|slice(1, 3) %}
+            <li class="split-bx__media">{{ ui.photo(ph[0], ph[1], '(min-width: 1000px) 260px, 100vw', false, false) }}</li>
+          {% endfor %}
+        </ul>
+
+        {% if related %}
+          <h2 class="h3">Related Projects</h2>
+          <ul class="ticks ticks--2 sidebar-cta">
+            {% for p in related %}<li>{{ ic.icon('tick') }}<a href="/projects/{{ p.slug }}">{{ p.title }}</a></li>{% endfor %}
+          </ul>
+        {% endif %}
+
+        <h2 class="h3 side-title">Other Services</h2>
+        <ul class="ticks ticks--2">
+          {% for s in others %}<li>{{ ic.icon('tick') }}<a href="{{ s.url }}">{{ s.name }}</a></li>{% endfor %}
+          <li>{{ ic.icon('tick') }}<a href="/supplies">Valves, pipes and motors</a></li>
+        </ul>
+      </div>
+      <aside>
+        <div class="help-card">
+          {{ ui.photo('excavator', '', '300px', false, false) }}
+          <div class="help-card__body">
+            <h3>Available</h3>
+            <p>For any type of engineering work</p>
+            <h3>We Can Help</h3>
+            <p class="sidebar-cta"><a class="btn btn--red" href="/contact?type={{ quote_type }}">Contact us {{ ic.icon('arrow-circle') }}</a></p>
+          </div>
+        </div>
+        <h3 class="side-title">Call The Office</h3>
+        <a class="btn btn--secondary" href="tel:{{ settings.phone_e164 }}">{{ ic.icon('phone') }} {{ settings.phone }}</a>
+      </aside>
     </div>
   </section>
 {% endblock %}

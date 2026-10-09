@@ -4,7 +4,7 @@ import { chromium } from '@playwright/test';
 
 const base = process.argv[2] || 'http://127.0.0.1:8080';
 const out = process.argv[3] || 'storage/screenshots';
-const pages = ['/', '/projects', '/small-homes', '/contact', '/services/civil-engineering', '/plant-and-equipment'];
+const pages = ['/', '/about', '/services', '/services/civil-engineering', '/projects', '/projects/masama-mmamashia-transmission-pipeline', '/supplies', '/plant-and-equipment', '/small-homes', '/contact'];
 const sizes = [
   { name: 'desktop', width: 1440, height: 900 },
   { name: 'phone', width: 390, height: 844 },
@@ -26,7 +26,9 @@ for (const size of sizes) {
       problems += 1;
       console.log(`[pageerror ${size.name} ${path}] ${e.message}`);
     });
-    await page.goto(base + path, { waitUntil: 'networkidle' });
+    // Not 'networkidle' or 'load': the Google Maps embed can keep both waiting.
+    await page.goto(base + path, { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1500);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     if (overflow > 0) {
       problems += 1;

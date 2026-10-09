@@ -75,6 +75,34 @@ final class ServiceCatalog
     }
 
     /**
+     * Service cards for the homepage and services slider: the three disciplines, supplies, and the
+     * project types from the company profile. Each links to the page that covers it.
+     *
+     * @return list<array{name: string, icon: string, url: string, photo: string, photo_alt: string}>
+     */
+    public static function cards(): array
+    {
+        return [
+            ['name' => "Civil\nEngineering", 'icon' => 'civil', 'url' => '/services/civil-engineering',
+                'photo' => 'road-new', 'photo_alt' => 'A road under construction in open countryside'],
+            ['name' => "Mechanical\nEngineering", 'icon' => 'mechanical', 'url' => '/services/mechanical-engineering',
+                'photo' => 'pipe-welding', 'photo_alt' => 'A welder working inside a large steel pipe'],
+            ['name' => "Electrical\nEngineering", 'icon' => 'electrical', 'url' => '/services/electrical-engineering',
+                'photo' => 'substation', 'photo_alt' => 'Switchgear and pylons at a substation'],
+            ['name' => "Valves, Pipes\n& Motors", 'icon' => 'supplies', 'url' => '/supplies',
+                'photo' => 'gate-valve', 'photo_alt' => 'A large industrial gate valve'],
+            ['name' => "Roads\nWorks", 'icon' => 'roads', 'url' => '/projects?type=roads',
+                'photo' => 'road-paving', 'photo_alt' => 'Asphalt being laid on a highway'],
+            ['name' => "Water\n& Sewerage", 'icon' => 'water', 'url' => '/projects?type=water_sewerage',
+                'photo' => 'sewer-works', 'photo_alt' => 'Workers laying a large sewer pipe in a trench'],
+            ['name' => "Design\n& Build", 'icon' => 'design', 'url' => '/projects?type=design_build',
+                'photo' => 'pipeline-forest', 'photo_alt' => 'A large pipeline under construction through forest'],
+            ['name' => "Building\nConstruction", 'icon' => 'building', 'url' => '/projects?type=civil_building',
+                'photo' => 'steel-frame', 'photo_alt' => 'The steel frame of a building under construction'],
+        ];
+    }
+
+    /**
      * @return list<string>
      */
     public static function registrations(): array

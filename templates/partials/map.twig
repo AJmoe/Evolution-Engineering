@@ -1,0 +1,12 @@
+{# Google Maps embed with the office address box. The map loads lazily and the address stays readable without it. #}
+<section class="map-bx" aria-labelledby="office-heading">
+  <p class="map-bx__fallback">Block 8 Industrial, Gaborone</p>
+  <iframe title="Map of Block 8 Industrial, Gaborone" src="https://maps.google.com/maps?q={{ 'Block 8 Industrial, Gaborone, Botswana'|url_encode }}&amp;z=14&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <div class="container">
+    <div class="office-box">
+      <h4 id="office-heading">Office Address</h4>
+      <p>{{ settings.address_line }}<br>{{ settings.postal_address }}</p>
+      <p>Phone : <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a><br>Cell : <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a></p>
+    </div>
+  </div>
+</section>

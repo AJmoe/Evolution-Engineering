@@ -2,8 +2,8 @@
 
 | Component | Licence | Use |
 |---|---|---|
-| Fraunces (via Fontsource) | SIL Open Font License 1.1 | Display and headings, self-hosted |
-| Hanken Grotesk (via Fontsource) | SIL Open Font License 1.1 | Body text, self-hosted |
+| Roboto (via Fontsource) | SIL Open Font License 1.1 | Headings, self-hosted |
+| Barlow (via Fontsource) | SIL Open Font License 1.1 | Body text, self-hosted |
 | Slim 4, Slim PSR-7, Slim Twig View | MIT | Routing and HTTP |
 | PHP-DI | MIT | Dependency injection |
 | Twig 3 | BSD-3-Clause | Templates |
@@ -12,7 +12,7 @@
 | Monolog | MIT | Logging |
 | Vite | MIT | Front-end build, development only |
 | Playwright | Apache-2.0 | Screenshots and end-to-end tests, development only |
-| Three.js | MIT | 3D hero and homes viewer, added in phase 3 |
+| Three.js | MIT | Homes viewer (and the parked 3D hero) |
 
 Images: drawings and 3D renders are original to this project. Interim photographs are openly licensed (CC0, public domain or CC BY); each one's author, licence and source is in `IMAGE_CREDITS.md` and on the site's `/credits` page.
 

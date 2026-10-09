@@ -18,40 +18,49 @@
 {% endblock %}
 
 {% block content %}
-  {{ ui.page_header(project.title, project.client_name ~ ', ' ~ project.year_label, crumbs) }}
+  {% import 'components/icons.twig' as ic %}
+  {{ ui.page_header(project.title, null, crumbs) }}
 
-  <section class="section" aria-labelledby="overview-heading">
-    <div class="container detail">
-      <div class="stack-lg">
-        <figure class="detail-photo">
-          <div class="photo-frame">{{ ui.project_media(project, '(min-width: 900px) 60vw, 100vw', true) }}</div>
-          {% if project.photo_key %}<figcaption class="small muted">Illustrative photo of similar work. Photography of this project will follow.</figcaption>{% endif %}
-        </figure>
-        <h2 id="overview-heading" class="h3">Scope</h2>
-        <p>{{ project.scope }}</p>
-      </div>
-      <aside class="detail__aside">
-        <h2 class="visually-hidden">Key facts</h2>
+  <section class="bx-section" aria-labelledby="overview-heading">
+    <div class="container project-bx">
+      <div>
+        <h2 id="overview-heading">Project Description</h2>
+        <p>{{ project.summary }}</p>
+        {% if project.scope and project.scope != project.summary %}
+          <h3>Scope Of Works</h3>
+          <p>{{ project.scope }}</p>
+        {% endif %}
+        <h3>Key Facts</h3>
         <dl class="spec">
           <dt>Client</dt><dd>{{ project.client_name }}</dd>
           <dt>Type</dt><dd>{{ project.category_label }}</dd>
-          <dt>Year</dt><dd>{{ project.year_label }}</dd>
-          <dt>Role</dt><dd>{{ project.role_label }}</dd>
+          <dt>Completed</dt><dd>{{ project.year_label }}</dd>
+          <dt>Our role</dt><dd>{{ project.role_label }}</dd>
           {% for label, value in project.key_facts %}<dt>{{ label }}</dt><dd>{{ value }}</dd>{% endfor %}
           {% if project.value_pula %}<dt>Contract value</dt><dd>P {{ project.value_pula|number_format(2, '.', ',') }}</dd>{% endif %}
         </dl>
-      </aside>
+        <p class="sidebar-cta"><a class="btn btn--red" href="/contact">Discuss a similar project {{ ic.icon('arrow-circle') }}</a></p>
+      </div>
+      <div class="project-bx__photos">
+        <figure>
+          <div class="split-bx__media">{{ ui.project_media(project, '(min-width: 900px) 50vw, 100vw', true) }}</div>
+          {% if project.photo_key %}<figcaption class="small muted">Illustrative photo of similar work. Photography of this project will follow.</figcaption>{% endif %}
+        </figure>
+      </div>
     </div>
   </section>
 
   {% if related %}
-    <section class="section section--cloud" aria-labelledby="related-heading">
+    <section class="bx-section bx-section--soft" aria-labelledby="related-heading">
       <div class="container">
-        <div class="section-head section-head--split">
-          <h2 id="related-heading">Related projects</h2>
-          <a class="link-arrow" href="/projects?type={{ project.category }}">More {{ project.category_label|lower }} work {{ ui.arrow() }}</a>
+        <div class="sec-title sec-title--split">
+          <div>
+            <p class="eyebrow">{{ project.category_label }}</p>
+            <h2 id="related-heading">Related Projects</h2>
+          </div>
+          <a class="btn btn--red" href="/projects?type={{ project.category }}">View all {{ ic.icon('arrow-circle') }}</a>
         </div>
-        <div class="card-grid">{% for p in related %}{{ ui.project_card(p) }}{% endfor %}</div>
+        <div class="tiles-grid">{% for p in related %}{{ ui.project_tile(p) }}{% endfor %}</div>
       </div>
     </section>
   {% endif %}

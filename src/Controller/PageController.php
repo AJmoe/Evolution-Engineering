@@ -25,9 +25,21 @@ final class PageController
 
     public function home(Request $request, Response $response): Response
     {
+        $all = $this->projects->published();
+        $main = count(array_filter($all, static fn (array $p): bool => $p['role'] === 'main_contractor'));
+        $dated = array_values(array_filter($all, static fn (array $p): bool => $p['year'] !== null));
+
         return $this->view->render($request, $response, 'pages/home.twig', [
             'services' => ServiceCatalog::all(),
-            'featured' => $this->projects->featured(3),
+            'service_cards' => ServiceCatalog::cards(),
+            'tiles' => $this->tiles($all, 4),
+            'recent' => array_slice($dated, 0, 3),
+            'stats' => [
+                'projects' => count($all),
+                'main_contractor' => $main,
+                'main_share' => $all ? (int) round($main / count($all) * 100) : 0,
+                'in_progress' => array_values(array_filter($all, static fn (array $p): bool => $p['year'] === null)),
+            ],
             'homes' => $this->homes->published(),
             'registrations' => ServiceCatalog::registrations(),
             'equipment' => $this->catalogue->equipmentHighlights(8),
@@ -38,6 +50,7 @@ final class PageController
     {
         return $this->view->render($request, $response, 'pages/services.twig', [
             'services' => ServiceCatalog::all(),
+            'service_cards' => ServiceCatalog::cards(),
             'supplies' => $this->catalogue->suppliesByCategory(),
         ]);
     }
@@ -78,9 +91,34 @@ final class PageController
 
     public function about(Request $request, Response $response): Response
     {
+        $all = $this->projects->published();
+
         return $this->view->render($request, $response, 'pages/about.twig', [
             'registrations' => ServiceCatalog::registrations(),
+            'stats' => [
+                'projects' => count($all),
+                'main_contractor' => count(array_filter(
+                    $all,
+                    static fn (array $p): bool => $p['role'] === 'main_contractor'
+                )),
+                'years' => (int) date('Y') - 2007,
+                'disciplines' => count(ServiceCatalog::registrations()),
+            ],
         ]);
+    }
+
+    /**
+     * Featured projects first, then the most recent ones with a photo, for the homepage tiles.
+     *
+     * @param list<array<string, mixed>> $all
+     * @return list<array<string, mixed>>
+     */
+    private function tiles(array $all, int $count): array
+    {
+        $featured = array_filter($all, static fn (array $p): bool => (bool) $p['featured']);
+        $others = array_filter($all, static fn (array $p): bool => !$p['featured'] && $p['photo_key'] !== null);
+
+        return array_slice([...$featured, ...$others], 0, $count);
     }
 
     public function privacy(Request $request, Response $response): Response

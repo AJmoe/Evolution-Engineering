@@ -58,3 +58,20 @@ Deviation to confirm with the client: section 5 of the homepage is now headed "W
 - **Pipeline.** `tools/stock-download.mjs` strips metadata (including location), caps originals at 2400 px, and writes AVIF and WebP at 400, 800, 1200 and 1600 px with `sharp`. Templates use `srcset`, `sizes`, explicit dimensions and lazy loading below the first screen. This becomes the basis of the admin image pipeline in phase 4.
 - **Storage.** Project photos live in `project_images` with a `stock/` path prefix, so the admin can replace them the same way as real photos later.
 - **Gaps.** No suitable open photos were found for site vehicles, haulage trucks other than tippers, or the Hydromek A4 specifically; those keep their line drawings.
+
+## 2026-10-09: Full Buildnox 2 layout (branch `buildnox-layout`)
+
+The client asked for the site to match the Buildnox 2 theme (wp1.themevibrant.com/newwp/buildnox2) in layout and type, customised to Evolution Engineers. This replaces the "ideas only" approach of 2026-10-08 and overrides the brief's design rules (no carousels, light hero, no dark bands). The previous design stays on `main` and is tagged `classic-design`.
+
+- **Recreated, not copied.** Layout, spacing and type were measured from the live theme with `tools/reference-capture.mjs` and `tools/reference-styles.mjs`. No theme code, images or icon fonts were copied; icons are our own SVGs.
+- **Fonts.** Roboto 400/500/700/900 for headings and Barlow 400/500/600/700 for text, as on the theme. Latin subsets from Fontsource, self-hosted in `resources/fonts`. Fraunces and Hanken Grotesk are removed.
+- **Colours.** The theme's navy (#0b1930, #172b56) and section greys; its orange-red accent becomes the red of "engineers" in the logo (#e3262f). The hero squares use the logo's red, blue and green.
+- **Logo.** The client's logo PNG (white background) is in `resources/images/logo-source.png`. `tools/logo-variants.mjs` knocks out the white and writes `public/images/brand/logo.png` and a reversed `logo-light.png` for the navy header and footer, without the tagline.
+- **Homepage sections, in the theme's order:** hero with half-outlined word, welcome with director, services slider (8 cards), why choose us with progress bars and a navy feature box, recent projects strip with outlined marquee text, about block, statement cards, latest items with date badges, client strip, map with office box, footer.
+- **No invented content in the theme's slots.** Progress bars show computed facts (share of projects as main contractor; the Palapye overlay's 97%). Testimonials become mission, pledge and vision from the company profile. The blog becomes "Latest milestones" from dated project records. The client strip shows names, not logos. The founder slot shows Trinity Dialwa, Director, from the business cards, with initials instead of a photo and no signature. The newsletter box becomes a "request a call back" field that opens the contact form with the email filled in.
+- **3D hero parked.** The homepage no longer renders the scroll-driven Three.js hero. `hero.js`, `hero-scene.js` and the stills tools stay in the repo and load only if a page has `[data-hero]`.
+- **Sliders** are native scroll-snap lists with arrow buttons; they work by swipe and keyboard scroll without JavaScript.
+- **Search.** The header search sends `q` to `/projects`, which filters by title, client and summary.
+- **Map.** Google Maps embed by address query, so `frame-src` now allows google.com. It could not be checked in headless Edge (tiles never finish loading there); check it in a normal browser.
+- **CSP.** Inline `style` attributes stay blocked, so bar widths are set through CSSOM from `data-to`.
+- **CSS.** `resources/css/theme.css` holds the theme; the old header, hero, footer, CTA band and reference-idea blocks were removed from `main.css`.

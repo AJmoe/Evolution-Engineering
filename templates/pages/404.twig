@@ -1,19 +1,24 @@
 {% extends 'layout.twig' %}
 {% import 'components/macros.twig' as ui %}
+{% import 'components/icons.twig' as ic %}
 
 {% block title %}Page not found{% endblock %}
 {% block description %}The page you asked for is not on the Evolution Engineers website. Use the links on this page to find our services, projects and contact details.{% endblock %}
 {% block head %}<meta name="robots" content="noindex">{% endblock %}
 
 {% block content %}
-  {{ ui.page_header('We could not find that page.', 'It may have moved, or the address may have a typing mistake. These pages are a good place to start.', []) }}
-  <section class="section">
+  {{ ui.page_header('Page Not Found', 'It may have moved, or the address may have a typing mistake. These pages are a good place to start.', []) }}
+  <section class="bx-section">
     <div class="container">
-      <ul class="service-rows">
-        <li class="service-row"><a href="/services"><h3>Services</h3><p>Civil, mechanical and electrical engineering, and supplies.</p></a></li>
-        <li class="service-row"><a href="/projects"><h3>Projects</h3><p>Roads, pipelines, sewerage, buildings and mine works.</p></a></li>
-        <li class="service-row"><a href="/small-homes"><h3>Small homes</h3><p>Concept designs from one to three bedrooms.</p></a></li>
-        <li class="service-row"><a href="/contact"><h3>Contact</h3><p>Request a quote or ask a question.</p></a></li>
+      <ul class="svc-grid">
+        {% for l in [
+          { href: '/services', name: "Our\nServices", icon: 'civil' },
+          { href: '/projects', name: "Our\nProjects", icon: 'projects' },
+          { href: '/small-homes', name: "Small\nHomes", icon: 'building' },
+          { href: '/contact', name: "Contact\nUs", icon: 'team' },
+        ] %}
+          <li><a class="svc-card" href="{{ l.href }}">{{ ic.picto(l.icon, 'svc-icon') }}<h3>{{ l.name }}</h3></a></li>
+        {% endfor %}
       </ul>
     </div>
   </section>

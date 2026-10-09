@@ -13,7 +13,8 @@ for (const [name, viewport] of [
   ['phone', { width: 390, height: 844 }],
 ]) {
   const page = await browser.newPage({ viewport });
-  await page.goto(url, { waitUntil: 'networkidle', timeout: 90000 });
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
+  await page.waitForTimeout(1500);
   // Scroll through so lazy content and scroll animations trigger.
   await page.evaluate(async () => {
     for (let y = 0; y < document.body.scrollHeight; y += 600) {

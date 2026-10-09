@@ -1,5 +1,6 @@
 // Site-wide enhancements. Every page works without this file.
 import '../css/main.css';
+import '../css/theme.css';
 
 const doc = document.documentElement;
 doc.classList.add('js');
@@ -60,12 +61,15 @@ if (viewerFrames.length) {
   });
 }
 
-/* Header gains a shadow after 8 px of scroll */
-const header = document.querySelector('.site-header');
+/* Header becomes a fixed navy bar once the hero has scrolled away; the back-to-top button appears with it */
+const header = document.querySelector('.bx-header');
+const toTop = document.querySelector('[data-to-top]');
 if (header) {
   let ticking = false;
   const update = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 8);
+    const past = window.scrollY > 220;
+    header.classList.toggle('is-sticky', past);
+    toTop?.classList.toggle('is-on', window.scrollY > 600);
     ticking = false;
   };
   window.addEventListener(
@@ -229,3 +233,117 @@ if (homesViewer) {
     });
   });
 }
+
+toTop?.addEventListener('click', () => {
+  const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+  document.getElementById('main')?.focus({ preventScroll: true });
+});
+
+/* Overlays: the search screen and the information sidebar. Escape or the close button dismisses them. */
+const overlay = (panel, openers, onOpen) => {
+  if (!panel) return;
+  let lastOpener = null;
+  const isSidebar = panel.classList.contains('bx-sidebar');
+  const open = (opener) => {
+    lastOpener = opener;
+    panel.hidden = false;
+    panel.classList.add('is-open');
+    panel.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('menu-open');
+    document.addEventListener('keydown', onKey);
+    // Focus once the panel is visible; a visibility:hidden element cannot take focus.
+    requestAnimationFrame(() => onOpen?.());
+  };
+  const close = () => {
+    panel.classList.remove('is-open');
+    panel.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('menu-open');
+    document.removeEventListener('keydown', onKey);
+    window.setTimeout(
+      () => {
+        if (!panel.classList.contains('is-open')) panel.hidden = true;
+      },
+      isSidebar ? 450 : 0,
+    );
+    lastOpener?.focus();
+  };
+  function onKey(e) {
+    if (e.key === 'Escape') close();
+  }
+  openers.forEach((b) => b.addEventListener('click', () => open(b)));
+  panel.querySelectorAll('[data-overlay-close]').forEach((b) => b.addEventListener('click', close));
+};
+const search = document.querySelector('[data-search]');
+overlay(search, document.querySelectorAll('[data-search-open]'), () => search.querySelector('input')?.focus());
+const sidebar = document.querySelector('[data-sidebar]');
+overlay(sidebar, document.querySelectorAll('[data-sidebar-open]'), () => sidebar.querySelector('.bx-close')?.focus());
+
+/* Sliders: native scroll-snap lists; the arrow buttons scroll one card at a time. */
+document.querySelectorAll('[data-slider]').forEach((slider) => {
+  const track = slider.querySelector('.slider__track');
+  const prev = slider.querySelector('[data-prev]');
+  const next = slider.querySelector('[data-next]');
+  if (!track || !prev || !next) return;
+  const step = () => {
+    const item = track.firstElementChild;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    return item ? item.getBoundingClientRect().width + gap : track.clientWidth;
+  };
+  const sync = () => {
+    const max = track.scrollWidth - track.clientWidth - 2;
+    prev.disabled = track.scrollLeft <= 2;
+    next.disabled = track.scrollLeft >= max;
+    slider.querySelector('.slider__nav').hidden = max <= 0;
+  };
+  const smooth = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: smooth }));
+  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: smooth }));
+  track.addEventListener('scroll', () => requestAnimationFrame(sync), {
+    passive: true,
+  });
+  window.addEventListener('resize', sync);
+  sync();
+});
+
+/* Fade-up reveals, progress bars and counters start when they scroll into view. */
+const counters = document.querySelectorAll('[data-count]');
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const countUp = (el) => {
+  const to = Number(el.dataset.count);
+  if (reduce || !to) {
+    el.textContent = String(to);
+    return;
+  }
+  const start = performance.now();
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / 1600);
+    el.textContent = String(Math.round(to * (1 - Math.pow(1 - t, 3))));
+    if (t < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+};
+const watched = document.querySelectorAll('[data-reveal], .bar, [data-count]');
+if ('IntersectionObserver' in window && watched.length) {
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        io.unobserve(entry.target);
+        entry.target.classList.add('is-in');
+        if (entry.target.dataset.count) countUp(entry.target);
+      }
+    },
+    { rootMargin: '0px 0px -8% 0px' },
+  );
+  if (!reduce) counters.forEach((el) => (el.textContent = '0'));
+  watched.forEach((el) => io.observe(el));
+} else {
+  watched.forEach((el) => el.classList.add('is-in'));
+  counters.forEach((el) => (el.textContent = el.dataset.count));
+}
+
+/* Progress bars take their value from data-to (inline styles are blocked by the CSP; CSSOM is not). */
+document.querySelectorAll('.bar[data-to]').forEach((bar) => {
+  bar.querySelector('.bar__fill')?.style.setProperty('--to', `${Number(bar.dataset.to)}%`);
+});

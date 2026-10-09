@@ -1,9 +1,8 @@
 {# Shared UI macros. #}
 
-{% macro brand() %}
-  {# TODO-CLIENT: replace this wordmark with evolution-engineers-logo-clean.png (or the vector logo) once supplied. #}
-  <a class="brand" href="/" aria-label="Evolution Engineers, home" data-placeholder="logo">
-    <span class="brand__name">Evolution Engineers</span>
+{% macro brand(variant) %}
+  <a class="bx-logo" href="/" aria-label="Evolution Engineers, home">
+    <img src="/images/brand/{{ variant == 'dark' ? 'logo' : 'logo-light' }}.png" alt="Evolution Engineers" width="729" height="307">
   </a>
 {% endmacro %}
 
@@ -11,14 +10,12 @@
   <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6h14M9 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
 {% endmacro %}
 
-{% macro page_header(title, intro, crumbs) %}
-  <header class="page-header">
-    <svg class="blueprint-motif" viewBox="0 0 520 320" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
-      <path d="M20 300V60h300v240M20 60l150-50 150 50M80 300V140h80v160M220 300V140h60v160"/>
-      <path d="M20 316h300M20 310v12M320 310v12M360 60v240M354 60h12M354 300h12" stroke-width="1"/>
-      <circle cx="430" cy="120" r="44"/><path d="M430 60v120M370 120h120" stroke-dasharray="4 6"/>
-    </svg>
-    <div class="container page-header__inner">
+{% macro page_header(title, intro, crumbs, bg) %}
+  <header class="page-banner">
+    <div class="page-banner__bg">{{ _self.photo(bg ?: 'building-glass', '', '100vw', true, false) }}</div>
+    <div class="grid-lines" aria-hidden="true"></div>
+    <div class="container">
+      <h1>{{ title }}</h1>
       {% if crumbs %}
         <nav class="breadcrumbs" aria-label="Breadcrumb">
           <ol>
@@ -29,8 +26,7 @@
           </ol>
         </nav>
       {% endif %}
-      <h1>{{ title }}</h1>
-      {% if intro %}<p class="lede">{{ intro }}</p>{% endif %}
+      {% if intro %}<p class="page-banner__intro">{{ intro }}</p>{% endif %}
     </div>
   </header>
 {% endmacro %}
@@ -248,4 +244,16 @@
   {% else %}
     {{ _self.drawing(p.category) }}
   {% endif %}
+{% endmacro %}
+
+{# Photo tile with a hover overlay (the theme's project card). Carries filter data for the projects page. #}
+{% macro project_tile(p, hidden) %}
+  <article class="tile tile--card" data-category="{{ p.category }}" data-year="{{ p.year }}"{% if hidden %} hidden{% endif %}>
+    {{ _self.project_media(p, '(min-width: 1100px) 33vw, (min-width: 560px) 50vw, 100vw', false) }}
+    <div class="tile__overlay">
+      <p>{{ p.category_label }} &middot; {{ p.year_label }}</p>
+      <h3><a href="/projects/{{ p.slug }}">{{ p.title }}</a></h3>
+      <p class="tile__client">{{ p.client_name }}</p>
+    </div>
+  </article>
 {% endmacro %}

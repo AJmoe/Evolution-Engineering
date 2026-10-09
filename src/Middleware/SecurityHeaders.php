@@ -47,6 +47,8 @@ final class SecurityHeaders implements MiddlewareInterface
             "base-uri 'self'",
             "form-action 'self'",
             "frame-ancestors 'none'",
+            // The contact map on the homepage and contact page is a Google Maps embed.
+            'frame-src https://www.google.com https://maps.google.com',
         ]);
 
         $response = $response

@@ -43,6 +43,10 @@ final class ContactController
                 $values['message'] = 'Please send a price for: ' . $query['item'] . '.';
             }
         }
+        // The footer "call back" box sends only an email address; carry it into the form.
+        if (is_string($query['email'] ?? null) && filter_var($query['email'], FILTER_VALIDATE_EMAIL)) {
+            $values['email'] = mb_substr($query['email'], 0, 254);
+        }
 
         return $this->render($request, $response, $values, [], false);
     }

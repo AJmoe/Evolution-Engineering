@@ -1,29 +1,82 @@
 {% import 'components/macros.twig' as ui %}
+{% import 'components/icons.twig' as ic %}
 {% set nav = [
-  { href: '/services', label: 'Services' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/small-homes', label: 'Small homes' },
-  { href: '/plant-and-equipment', label: 'Plant' },
-  { href: '/about', label: 'About' },
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About', children: [
+    { href: '/about', label: 'About the company' },
+    { href: '/plant-and-equipment', label: 'Plant and equipment' },
+  ] },
+  { href: '/services', label: 'Services', children: [
+    { href: '/services', label: 'All services' },
+    { href: '/services/civil-engineering', label: 'Civil engineering' },
+    { href: '/services/mechanical-engineering', label: 'Mechanical engineering' },
+    { href: '/services/electrical-engineering', label: 'Electrical engineering' },
+    { href: '/supplies', label: 'Valves, pipes and motors' },
+  ] },
+  { href: '/projects', label: 'Projects', children: [
+    { href: '/projects', label: 'All projects' },
+    { href: '/projects?type=roads', label: 'Roads works' },
+    { href: '/projects?type=design_build', label: 'Design and build' },
+    { href: '/projects?type=civil_building', label: 'Civil and building works' },
+    { href: '/projects?type=water_sewerage', label: 'Water and sewerage' },
+    { href: '/projects?type=mechanical', label: 'Mechanical works' },
+  ] },
+  { href: '/small-homes', label: 'Small Homes' },
   { href: '/contact', label: 'Contact' },
 ] %}
-<header class="site-header">
-  <div class="container">
-    <nav class="nav-pill" aria-label="Main">
-      {{ ui.brand() }}
-      <ul class="nav-links">
+{% set active = section in ['/supplies'] ? '/services' : (section == '/plant-and-equipment' ? '/about' : section) %}
+<header class="bx-header">
+  <div class="bx-header__inner">
+    {{ ui.brand() }}
+    <nav class="bx-nav" aria-label="Main">
+      <ul>
         {% for item in nav %}
-          <li><a href="{{ item.href }}"{% if section == item.href or (item.href == '/services' and section == '/supplies') %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+          {% set current = item.href == '/' ? current_path == '/' : active == item.href %}
+          <li>
+            <a href="{{ item.href }}"{% if current %} aria-current="page"{% endif %}>{{ item.label }}{% if item.children is defined %}{{ ic.icon('caret', 'caret') }}{% endif %}</a>
+            {% if item.children is defined %}
+              <ul class="bx-sub">
+                {% for c in item.children %}<li><a href="{{ c.href }}">{{ c.label }}</a></li>{% endfor %}
+              </ul>
+            {% endif %}
+          </li>
         {% endfor %}
       </ul>
-      <a class="btn btn--primary btn--small nav-cta" href="/contact">Request a quote</a>
-      <button class="menu-toggle" type="button" data-menu-open aria-expanded="false" aria-controls="menu-sheet">
-        <svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="1.6"/></svg>
-        Menu
-      </button>
     </nav>
+    <div class="bx-header__tools">
+      <button class="circle-btn" type="button" data-search-open aria-label="Search projects">{{ ic.icon('search') }}</button>
+      <button class="circle-btn" type="button" data-sidebar-open aria-label="Company information">{{ ic.icon('dots') }}</button>
+      <button class="circle-btn bx-burger" type="button" data-menu-open aria-expanded="false" aria-controls="menu-sheet" aria-label="Menu">{{ ic.icon('menu') }}</button>
+    </div>
+    <a class="btn btn--red btn--pill" href="/contact">Request a quote</a>
   </div>
 </header>
+
+<div class="bx-search" data-search role="dialog" aria-modal="true" aria-label="Search projects" aria-hidden="true" hidden>
+  <button class="circle-btn bx-close" type="button" data-overlay-close aria-label="Close search">{{ ic.icon('close') }}</button>
+  <form action="/projects" method="get" role="search">
+    <label for="site-search">Search our projects</label>
+    <input id="site-search" type="search" name="q" placeholder="Pipeline, Jwaneng, clinic..." maxlength="80" autocomplete="off">
+    <button type="submit" aria-label="Search">{{ ic.icon('search') }}</button>
+  </form>
+</div>
+
+<aside class="bx-sidebar" data-sidebar role="dialog" aria-modal="true" aria-label="Company information" aria-hidden="true" hidden>
+  <div class="bx-sidebar__shade" data-overlay-close></div>
+  <div class="bx-sidebar__panel">
+    <button class="circle-btn bx-close" type="button" data-overlay-close aria-label="Close">{{ ic.icon('close') }}</button>
+    <img src="/images/brand/logo.png" alt="Evolution Engineers" width="729" height="307" loading="lazy">
+    <h3>Contractors In Civil, Mechanical &amp; Electrical Engineering</h3>
+    <p>A 100% citizen-owned Botswana company, established in May 2007. Our engineers and artisans bring long experience from the mining sector, and our head office and fabrication workshop are at Block 8 Industrial, Gaborone.</p>
+    <h4>Contact Us</h4>
+    <ul class="contact-list">
+      <li>{{ ic.icon('pin') }}<span>{{ settings.address_line }}<br>{{ settings.postal_address }}</span></li>
+      <li>{{ ic.icon('phone') }}<span>Tel <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a><br>Cell <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a></span></li>
+      <li>{{ ic.icon('mail') }}<span><a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a></span></li>
+    </ul>
+    <p class="sidebar-cta"><a class="btn btn--red" href="/contact">Request a quote {{ ic.icon('arrow-circle') }}</a></p>
+  </div>
+</aside>
 
 <div class="menu-sheet" id="menu-sheet" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" hidden>
   <div class="menu-sheet__top">
@@ -34,9 +87,13 @@
     </button>
   </div>
   <ul>
-    <li><a href="/"{% if current_path == '/' %} aria-current="page"{% endif %}>Home</a></li>
     {% for item in nav %}
-      <li><a href="{{ item.href }}"{% if section == item.href %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+      <li>
+        <a href="{{ item.href }}">{{ item.label }}</a>
+        {% if item.children is defined %}
+          <ul class="sub-links">{% for c in item.children|slice(1) %}<li><a href="{{ c.href }}">{{ c.label }}</a></li>{% endfor %}</ul>
+        {% endif %}
+      </li>
     {% endfor %}
   </ul>
   <a class="btn btn--primary" href="/contact">Request a quote</a>

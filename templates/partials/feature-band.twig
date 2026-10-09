@@ -1,0 +1,15 @@
+{# The theme's "Leading way" band: a navy box with a red badge beside a full-height photo. Used above the footer on inner pages. #}
+{% import 'components/macros.twig' as ui %}
+{% import 'components/icons.twig' as ic %}
+<section class="feature-band" aria-labelledby="band-heading">
+  <div class="feature-band__photo">{{ ui.photo('pipeline-forest', '', '100vw', false, false) }}</div>
+  <div class="container">
+    <div class="feature-box">
+      <div class="feature-box__badge" aria-hidden="true"><span>{{ ic.icon('gear') }}</span></div>
+      <p class="eyebrow">Mines, utilities, ministries</p>
+      <h2 id="band-heading">Send Us Your Drawings Or Tender</h2>
+      <p>Tell us what you are planning. We will reply with a price, a programme, or the questions we need answered first.</p>
+      <a class="text-link" href="/contact">Request a call back {{ ic.icon('arrow') }}</a>
+    </div>
+  </div>
+</section>
