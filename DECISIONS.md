@@ -76,3 +76,15 @@ The client asked for the site to match the Buildnox 2 theme (wp1.themevibrant.co
 - **Map.** Google Maps embed by address query, so `frame-src` now allows google.com. It could not be checked in headless Edge (tiles never finish loading there); check it in a normal browser.
 - **CSP.** Inline `style` attributes stay blocked, so bar widths are set through CSSOM from `data-to`.
 - **CSS.** `resources/css/theme.css` holds the theme; the old header, hero, footer, CTA band and reference-idea blocks were removed from `main.css`.
+
+## 2026-10-09: Finishing touches and client instructions
+
+- **Removed on the client's instruction:** the director (name, initials and cell) from every page; the testimonial-style band on the homepage (mission and vision now sit plainly on the About page); the tenders and homes email addresses. Every enquiry routes to info@ through the existing `EnquiryRouter`, by pointing all three settings at info@. No fax is shown, and staff titles are not used.
+- **Client logos** were taken from each organisation's own website (BDC from the Botswana embassy's site, Water Utilities Corporation from Wikipedia), normalised by `tools/client-logos.mjs`, and shown grey until hovered. Sources are in `IMAGE_CREDITS.md`.
+- **More interim photos.** Ten more openly licensed photos (Openverse) so no two projects share a photo. `tools/stock-download.mjs` now keeps hand-written sections of `IMAGE_CREDITS.md`.
+- **Small homes.** One spec (`resources/js/home-designs.js`) drives the 3D models, the floor plans and the blueprint elevations, so they always agree. The 3D models use procedural textures (plaster, face brick, roof tiles, iron sheeting, paving, sand, lawn) and sit on a walled plot with acacias, a driveway and a water tank. Each home shows a slideshow: 3D model, floor plan, blueprint. Stills for posters and cards come from `tools/home-stills.mjs`. The Courtyard's listed area changed from 90 to 101 m² to match its drawing.
+- **Map loads on request**, so the privacy notice's "no third-party trackers" stays true; the notice now mentions Google Maps.
+- **Accessibility.** The red darkened slightly (#d4202a) for 4.5:1 contrast on the pale sections; eyebrows on navy use a lighter red; links inside text are underlined. `tools/a11y-check.mjs` runs axe on 11 pages at two widths with no violations.
+- **Roboto 700/900** had overlapping contours that showed as stray lines in outlined text; `tools/font-remove-overlaps.py` merges them.
+- **Icons and sharing.** A gear favicon from the logo, an Apple touch icon, and a new social image (`npm run og`).
+- **WhatsApp button** for the cell number, above which the back-to-top button now sits.

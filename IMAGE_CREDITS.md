@@ -29,3 +29,26 @@ These openly licensed photos stand in until the client's own photography is appr
 | roller | [664Ammann ASC 150 Road Roller Soil Compactor](https://commons.wikimedia.org/w/index.php?curid=64085752) | Judgefloro | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en) | wikimedia |
 | dump-truck | [Mercedes-Benz Actros 4148 Dump truck near Neptunbrunnen in Berlin. Spielvogel 2013 2](https://commons.wikimedia.org/w/index.php?curid=30561054) | For a gallery of some more of my uploaded pictures see: here. | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en) | wikimedia |
 | skid-steer | [Case skid-steer loader - Arlington, MA](https://commons.wikimedia.org/w/index.php?curid=113496353) | Daderot | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en/) | wikimedia |
+| asphalt-laying | [Road resurfacing, Newport Harbour, Isle of Wight, England](https://commons.wikimedia.org/w/index.php?curid=142936166) | ITookSomePhotos | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en/) | wikimedia |
+| asphalt-crew | [Road Resurfacing at the junction of Queens Road and South Terrace, Hastings. c.1990 (6608302717)](https://commons.wikimedia.org/w/index.php?curid=85796563) | Phil Sellens from East Sussex | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
+| sewer-jetting | [File:LKW zur Kanalreinigung in Deutschland (1).JPG](https://commons.wikimedia.org/w/index.php?curid=16300232) | High Contrast | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/de/deed.en) | wikimedia |
+| manhole-rings | [Precast concrete manholes](https://commons.wikimedia.org/w/index.php?curid=150260324) | Sindugab | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en/) | wikimedia |
+| sludge-pond | [Primary sludge drying bed (was reed bed) (3231557031)](https://commons.wikimedia.org/w/index.php?curid=36545198) | SuSanA Secretariat | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
+| drying-beds | [Sludge Drying Bed](https://commons.wikimedia.org/w/index.php?curid=180062251) | Ventrovert | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | wikimedia |
+| treatment-aerial | [Daugavgrīva wastewater treatment plant, 2022](https://commons.wikimedia.org/w/index.php?curid=154537303) | Photographer: Mosbatho | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | wikimedia |
+| culvert-pipe | [Town Creek Culvert construction, September](https://www.rawpixel.com/image/9657867/image-people-public-domain-construction) | Unknown | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | rawpixel |
+| concrete-pipe | [Town Creek Culvert construction site](https://www.rawpixel.com/image/9657971/image-person-public-domain-construction) | Unknown | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | rawpixel |
+| pipe-laying | [Town Creek Culvert Construction crews](https://www.rawpixel.com/image/9677055/image-person-public-domain-circle) | Unknown | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | rawpixel |
+
+## Client logos (homepage "We have worked with")
+
+Trademarks of their owners, shown to name past clients. Replace with files supplied by each client, or remove, if permission is withheld.
+
+| Logo | Source |
+|---|---|
+| Debswana | debswana.com (wordmark cropped from the site logo and recoloured navy) |
+| Water Utilities Corporation | Wikipedia, File:Water_Utilities_Corporation_logo.png |
+| Morupule Coal Mine | mcm.co.bw |
+| Botswana Development Corporation | embassyofbotswana.de (state-owned enterprises page) |
+| Botswana Unified Revenue Service | burs.org.bw |
+| Botswana Power Corporation | bpc.bw |

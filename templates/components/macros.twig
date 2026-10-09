@@ -179,7 +179,7 @@
 
 {% macro home_card(h) %}
   <article class="card">
-    <div class="card__media">{{ _self.home_poster(h) }}</div>
+    <div class="card__media"><img src="/images/homes/{{ h.slug }}-3d-sm.webp" width="600" height="450" alt="Rendered view of {{ h.name }}" loading="lazy"></div>
     <div class="card__body">
       <span class="tag">Concept design</span>
       <h3 class="card__title"><a href="/small-homes/{{ h.slug }}">{{ h.name }}</a></h3>
@@ -256,4 +256,43 @@
       <p class="tile__client">{{ p.client_name }}</p>
     </div>
   </article>
+{% endmacro %}
+
+{#
+  Slideshow for one concept home: the 3D model, the floor plan and the blueprint elevations.
+  Without JavaScript all three slides show one after another; with it, the thumbnails switch slides.
+  Drawings come from tools/home-drawings.mjs and stills from tools/home-stills.mjs.
+#}
+{% macro home_gallery(h, eager) %}
+  {% set base = '/images/homes/' ~ h.slug %}
+  <div class="home-gallery" data-gallery>
+    <div class="home-gallery__stage">
+      <figure class="gslide is-active" data-slide id="slide-{{ h.slug }}-3d">
+        <div class="viewer-frame" data-home-viewer data-models="{{ {(h.slug): {name: h.name, params: h.model_params}}|json_encode }}" data-initial="{{ h.slug }}">
+          <img class="viewer-poster" src="{{ base }}-3d.webp" width="1200" height="900" alt="Rendered view of {{ h.name }}, a concept design" {% if eager %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+          <span class="tag">Concept design</span>
+          <div class="mood-toggle" role="group" aria-label="Lighting" data-mood-toggle hidden>
+            <button type="button" data-mood="day" aria-pressed="true">Day</button>
+            <button type="button" data-mood="evening" aria-pressed="false">Evening</button>
+          </div>
+        </div>
+        <figcaption>3D model. Drag to turn it.</figcaption>
+      </figure>
+      <figure class="gslide" data-slide id="slide-{{ h.slug }}-plan">
+        <a class="drawing-frame" href="{{ base }}-plan.svg" target="_blank" rel="noopener"><img src="{{ base }}-plan.svg" alt="Floor plan of {{ h.name }}: room layout with furniture and dimensions" loading="lazy"></a>
+        <figcaption>Floor plan. Open it full size for detail.</figcaption>
+      </figure>
+      <figure class="gslide" data-slide id="slide-{{ h.slug }}-blueprint">
+        <a class="drawing-frame drawing-frame--blue" href="{{ base }}-blueprint.svg" target="_blank" rel="noopener"><img src="{{ base }}-blueprint.svg" alt="Blueprint of {{ h.name }}: front and side elevations with heights" loading="lazy"></a>
+        <figcaption>Blueprint: front and side elevations.</figcaption>
+      </figure>
+      <button class="round-btn gallery-prev" type="button" data-gallery-prev aria-label="Previous view" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="round-btn gallery-next" type="button" data-gallery-next aria-label="Next view" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="home-gallery__thumbs" role="group" aria-label="Views of {{ h.name }}" hidden>
+      <button type="button" data-thumb="0" aria-pressed="true" aria-controls="slide-{{ h.slug }}-3d"><img src="{{ base }}-3d-sm.webp" alt="" width="600" height="450" loading="lazy"><span>3D model</span></button>
+      <button type="button" data-thumb="1" aria-pressed="false" aria-controls="slide-{{ h.slug }}-plan"><img src="{{ base }}-plan.svg" alt="" loading="lazy"><span>Floor plan</span></button>
+      <button type="button" data-thumb="2" aria-pressed="false" aria-controls="slide-{{ h.slug }}-blueprint"><img src="{{ base }}-blueprint.svg" alt="" loading="lazy"><span>Blueprint</span></button>
+    </div>
+  </div>
 {% endmacro %}

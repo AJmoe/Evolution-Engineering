@@ -7,12 +7,13 @@
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}
-  {{ ui.page_header('Valves, pipes and electric motors', 'We supply the products we install. Ask for a price on any group below and we will reply by email.', crumbs) }}
+  {{ ui.page_header('Valves, Pipes And Electric Motors', 'We supply the products we install. Ask for a price on any group below and we will reply by email.', crumbs) }}
 
   {% for key, g in groups %}
-    <section class="section{% if loop.index is even %} section--cloud{% endif %}" aria-labelledby="sup-{{ key }}">
+    <section class="bx-section{% if loop.index is even %} bx-section--soft{% endif %}" aria-labelledby="sup-{{ key }}">
       <div class="container detail">
         <div class="stack-lg">
+          <p class="eyebrow">Supplies</p>
           <h2 id="sup-{{ key }}">{{ g.label }}</h2>
           <ul class="scope-list">
             {% for item in g.items %}
@@ -24,7 +25,7 @@
           {% set sup_photo = {valves: ['gate-valve', 'A large industrial gate valve in a workshop'], pipes: ['hdpe-pipes', 'Stacked plastic pipes'], electric_motors: ['pump-motor', 'An industrial motor driving a pump']}[key] ?? null %}
           {% if sup_photo %}<div class="photo-frame">{{ ui.photo(sup_photo[0], sup_photo[1], '(min-width: 900px) 33vw, 100vw', false, true) }}</div>{% endif %}
           <p class="muted">No cart and no online prices. We quote for each order.</p>
-          <div><a class="btn btn--secondary" href="/contact?type=supplies&amp;item={{ g.label|url_encode }}">Request a price</a></div>
+          <div><a class="btn btn--red" href="/contact?type=supplies&amp;item={{ g.label|url_encode }}">Request a price</a></div>
         </aside>
       </div>
     </section>

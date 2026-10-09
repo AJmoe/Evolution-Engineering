@@ -7,12 +7,12 @@
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}
-  {{ ui.page_header('Plant and equipment', 'Our own earthmoving, compaction and haulage fleet, with fully equipped off-road vehicles for field inspections and reconnaissance surveys.', crumbs) }}
+  {{ ui.page_header('Plant And Equipment', 'Our own earthmoving, compaction and haulage fleet, with fully equipped off-road vehicles for field inspections and reconnaissance surveys.', crumbs) }}
 
   {% for key, g in groups %}
-    <section class="section{% if loop.index is even %} section--cloud{% endif %}" aria-labelledby="grp-{{ key }}">
+    <section class="bx-section{% if loop.index is even %} bx-section--soft{% endif %}" aria-labelledby="grp-{{ key }}">
       <div class="container">
-        <div class="section-head"><h2 id="grp-{{ key }}">{{ g.label }}</h2></div>
+        <div class="sec-title"><p class="eyebrow">Our own fleet</p><h2 id="grp-{{ key }}">{{ g.label }}</h2></div>
         <ul class="card-grid" role="list">
           {% for m in g.items %}
             <li class="card">

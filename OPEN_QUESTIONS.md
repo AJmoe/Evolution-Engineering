@@ -5,13 +5,10 @@ From the brief, plus questions raised during the build.
 - Which domain should the site use, and who controls its DNS?
 - Can contract values be shown on project pages, or kept hidden?
 - Which three projects have the best photography for the homepage? The site currently features the Masama to Mmamashia pipeline, the Mahalapye to Radisele road and the Morupule clinic.
-- Are there leadership names and photos, or safety, quality or environmental certificates to show?
+- Are there safety, quality or environmental certificates to show?
 - What are the real home designs, floor plans and any starting prices?
 - Is there an existing site whose addresses need redirecting?
-- Is the plant list current, and is the fax number still in use?
+- Is the plant list current?
 - Should the sludge drying beds project be dated 2008 or 2009? It is seeded as 2009.
 - Is the Palapye internal roads overlay now complete? It is shown as "In progress, 97% complete".
-- Logo PNG received 2026-10-09. A vector version would still help. The 3D prototype `evolution-engineers-sample-v2.html` was never supplied and is no longer needed for the Buildnox layout.
-- The two business card designs give Ms. Monica different titles ("Administration Officer" and "Adminstration Manager", misspelt). Which is right? The site does not show her yet.
-- Should the homepage keep Trinity Dialwa's name and cell number, and is a photo available?
-- Is the fax number 392 3086 on business card option 1 still in use? It is not shown.
+- Can the client supply their own logo files for Debswana, Water Utilities Corporation, Morupule Coal Mine, BDC, BURS and BPC, or confirm the ones taken from public sources?

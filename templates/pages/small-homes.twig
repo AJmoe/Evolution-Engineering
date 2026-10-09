@@ -7,47 +7,39 @@
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}
-  {{ ui.page_header('Small homes, designed and built by the same team.', 'Concept designs from one to three bedrooms. Choose a design, turn it around, and ask us about building it on your plot.', crumbs) }}
+  {{ ui.page_header('Small Homes', 'Concept designs from one to three bedrooms. Choose a design, turn it around, and ask us about building it on your plot.', crumbs) }}
 
   {% if active %}
-  <section class="section" aria-labelledby="viewer-heading">
+  <section class="bx-section" aria-labelledby="viewer-heading">
     <div class="container">
-      <h2 id="viewer-heading" class="visually-hidden">Design viewer</h2>
+      <div class="sec-title"><p class="eyebrow">Designed and built by one team</p><h2 id="viewer-heading">Explore Our Concept Designs</h2></div>
       <div class="design-tabs" role="tablist" aria-label="Designs">
         {% for h in homes %}
           <a class="chip" role="tab" href="/small-homes?design={{ h.slug }}" data-design-tab="{{ h.slug }}" aria-controls="panel-{{ h.slug }}" aria-selected="{{ h.slug == active.slug ? 'true' : 'false' }}" aria-current="{{ h.slug == active.slug ? 'true' : 'false' }}" tabindex="{{ h.slug == active.slug ? '0' : '-1' }}">{{ h.name }}</a>
         {% endfor %}
       </div>
-      <div class="homes-viewer" data-homes-viewer>
-        {% set models = {} %}{% for h in homes %}{% set models = models|merge({(h.slug): {name: h.name, params: h.model_params}}) %}{% endfor %}
-        <div class="viewer-frame" data-placeholder="home-design" data-home-viewer data-models="{{ models|json_encode }}" data-initial="{{ active.slug }}">
-          {% for h in homes %}
-            <div class="poster" data-design-poster="{{ h.slug }}"{% if h.slug != active.slug %} hidden{% endif %}>{{ ui.home_poster(h) }}</div>
-          {% endfor %}
-          <span class="tag">Concept design</span>
-          <div class="mood-toggle" role="group" aria-label="Lighting" data-mood-toggle hidden>
-            <button type="button" data-mood="day" aria-pressed="true">Day</button>
-            <button type="button" data-mood="evening" aria-pressed="false">Evening</button>
-          </div>
-        </div>
+      <div data-homes-viewer>
         {% for h in homes %}
-          <div class="stack-lg" role="tabpanel" id="panel-{{ h.slug }}" data-design-panel="{{ h.slug }}"{% if h.slug != active.slug %} hidden{% endif %}>
-            <div class="stack">
-              <h3>{{ h.name }}</h3>
-              <p>{{ h.blurb }}</p>
+          <div class="homes-viewer" role="tabpanel" id="panel-{{ h.slug }}" data-design-panel="{{ h.slug }}"{% if h.slug != active.slug %} hidden{% endif %}>
+            {{ ui.home_gallery(h, h.slug == active.slug) }}
+            <div class="stack-lg">
+              <div class="stack">
+                <p class="eyebrow">{{ h.bedrooms }} bedroom{{ h.bedrooms > 1 ? 's' }}</p>
+                <h3>{{ h.name }}</h3>
+                <p>{{ h.blurb }}</p>
+              </div>
+              <dl class="spec">
+                <dt>Bedrooms</dt><dd>{{ h.bedrooms }}</dd>
+                <dt>Bathrooms</dt><dd>{{ h.bathrooms }}</dd>
+                <dt>Floor area</dt><dd>{{ h.area_m2 }} m² {{ h.outdoor_label }}</dd>
+              </dl>
+              <ul class="features" aria-label="Features">{% for feat in h.features %}<li>{{ feat }}</li>{% endfor %}</ul>
+              <div class="btn-row">
+                <a class="btn btn--red" href="/contact?design={{ h.slug }}">Ask about this design</a>
+                <a class="btn btn--secondary" href="/small-homes/{{ h.slug }}">Design details</a>
+              </div>
+              <p class="concept-note">Concept design. Final drawings, sizes and costs are prepared for each plot.</p>
             </div>
-            <dl class="spec">
-              <dt>Bedrooms</dt><dd>{{ h.bedrooms }}</dd>
-              <dt>Bathrooms</dt><dd>{{ h.bathrooms }}</dd>
-              <dt>Floor area</dt><dd>{{ h.area_m2 }} m² {{ h.outdoor_label }}</dd>
-            </dl>
-            <ul class="features" aria-label="Features">{% for feat in h.features %}<li>{{ feat }}</li>{% endfor %}</ul>
-            {{ ui.floorplan(h) }}
-            <div class="hero__actions">
-              <a class="btn btn--primary" href="/contact?design={{ h.slug }}">Ask about this design</a>
-              <a class="btn btn--secondary" href="/small-homes/{{ h.slug }}">Design details</a>
-            </div>
-            <p class="concept-note">Concept design. Final drawings, sizes and costs are prepared for each plot.</p>
           </div>
         {% endfor %}
       </div>
@@ -55,21 +47,22 @@
   </section>
   {% endif %}
 
-  <section class="section section--cloud" aria-labelledby="designs-heading">
+  <section class="bx-section bx-section--soft" aria-labelledby="designs-heading">
     <div class="container">
-      <div class="section-head"><h2 id="designs-heading">All designs</h2></div>
+      <div class="sec-title"><p class="eyebrow">One to three bedrooms</p><h2 id="designs-heading">All Designs</h2></div>
       <div class="card-grid">{% for h in homes %}{{ ui.home_card(h) }}{% endfor %}</div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="faq-heading">
+  <section class="bx-section" aria-labelledby="faq-heading">
     <div class="container detail">
-      <h2 id="faq-heading">Questions</h2>
-      <div class="faq" data-placeholder="TODO-CLIENT: FAQ answers">
-        <details><summary>What is included?</summary><div><p>We are confirming what each build includes. Ask us and we will explain it for your plot.</p></div></details>
-        <details><summary>Can a design be changed?</summary><div><p>We are confirming how far designs can be adapted. Ask us about the changes you have in mind.</p></div></details>
-        <details><summary>How long does a build take?</summary><div><p>Build times depend on the design and the plot. Ask us for a programme.</p></div></details>
-        <details><summary>Who handles approvals?</summary><div><p>We are confirming how approvals are handled. Ask us and we will explain the process.</p></div></details>
+      <div class="sec-title"><p class="eyebrow">Good to know</p><h2 id="faq-heading">Questions</h2></div>
+      <div class="faq" data-placeholder="TODO-CLIENT: draft FAQ answers, to be cleared with the client's lawyers">
+        <details><summary>What is included in the price?</summary><div><p>Each quote is prepared for your plot and lists exactly what is included. A typical build covers the foundations, walls, roof, windows and doors, plumbing, electrical installation and internal finishes. Boundary walls, paving and landscaping can be added on request.</p></div></details>
+        <details><summary>Can a design be changed?</summary><div><p>Yes. Room sizes, finishes and layouts can be adapted to your plot and budget. Our engineers update the drawings and the quote before any work starts.</p></div></details>
+        <details><summary>How long does a build take?</summary><div><p>It depends on the design, the plot and the time of year. We give you a programme with the quote, and keep you updated from foundations to handover.</p></div></details>
+        <details><summary>Who handles plans and approvals?</summary><div><p>We prepare the drawings and can guide you through submitting them for approval to your local authority. Your quote explains what we handle and what we need from you, such as proof of plot ownership.</p></div></details>
+        <details><summary>Do I need to own a plot first?</summary><div><p>Yes, the home is built on your own serviced plot. Send us the plot number and location and we will advise which design fits.</p></div></details>
       </div>
     </div>
   </section>

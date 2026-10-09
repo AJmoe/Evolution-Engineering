@@ -25,7 +25,7 @@
       <ul class="contact-cards">
         <li class="contact-card" data-reveal>{{ ic.icon('pin') }}<h3>Visit Us</h3><p>{{ settings.address_line }}<br>{{ settings.postal_address }}</p></li>
         <li class="contact-card" data-reveal>{{ ic.icon('phone') }}<h3>Call Us</h3><p>Tel <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a><br>Cell <a href="tel:{{ settings.cell_e164 }}">+267 {{ settings.cell }}</a>{% if settings.fax %}<br>Fax {{ settings.fax }}{% endif %}</p></li>
-        <li class="contact-card" data-reveal>{{ ic.icon('mail') }}<h3>Email Us</h3><p><a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a><br><a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a></p></li>
+        <li class="contact-card" data-reveal>{{ ic.icon('mail') }}<h3>Email Us</h3><p><a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a><br>Quotes, tenders and small homes</p></li>
       </ul>
     </div>
   </section>
@@ -38,7 +38,7 @@
         {% if sent %}
           <div class="notice notice--success" role="status" tabindex="-1" id="form-result">
             <h2>Thank you. Your enquiry has been sent.</h2>
-            <p>We have emailed you a copy. If your project is urgent, call us on <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a>.</p>
+            <p>We will reply as soon as we can. If your project is urgent, call us on <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a>.</p>
           </div>
         {% else %}
           {% if errors %}
@@ -113,9 +113,9 @@
           {{ ui.photo('excavator', '', '360px', false, false) }}
           <div class="help-card__body">
             <h3>Tenders And Quotes</h3>
-            <p>Send tender invitations and drawings to <a href="mailto:{{ settings.email_tenders }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_tenders }}</a>.</p>
+            <p>Send tender invitations and drawings to <a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a>.</p>
             <h3>Small Homes</h3>
-            <p>Ask about a design at <a href="mailto:{{ settings.email_homes }}"{% if settings.emails_are_placeholders %} data-placeholder{% endif %}>{{ settings.email_homes }}</a>.</p>
+            <p>Ask about a design through the form, or call us.</p>
             <p class="sidebar-cta"><a class="btn btn--red" href="tel:{{ settings.phone_e164 }}">{{ ic.icon('phone') }} {{ settings.phone }}</a></p>
           </div>
         </div>

@@ -1,234 +1,474 @@
 // Small-homes 3D viewer. One small scene per canvas: drag or arrow keys to turn,
 // slow auto-rotate, day and evening moods, and rendering only when visible and changed.
+// Models are built from the same spec as the floor plans (home-designs.js), with procedural
+// textures for plaster, face brick, roof tiles, iron sheeting, paving, sand and lawn.
 import {
   BoxGeometry,
   CircleGeometry,
-  Fog,
   Color,
   CylinderGeometry,
   DirectionalLight,
+  DodecahedronGeometry,
   ExtrudeGeometry,
+  Fog,
   Group,
   HemisphereLight,
+  IcosahedronGeometry,
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
   PerspectiveCamera,
   PlaneGeometry,
+  PointLight,
   Scene,
   Shape,
   Vector3,
 } from 'three';
-import { contactShadowTexture, createRenderer, disposeTree, skyDome, skyEnvironment } from './three-common.js';
+import {
+  canvasTexture,
+  contactShadowTexture,
+  createRenderer,
+  disposeTree,
+  skyDome,
+  skyEnvironment,
+} from './three-common.js';
+import { DESIGNS, PLINTH, WALL_H } from './home-designs.js';
 
 const PAUSE_MS = 3500;
-const AUTO_SPEED = 0.18; // radians per second
+const AUTO_SPEED = 0.16; // radians per second
 
 const MOODS = {
   day: {
-    sky: { top: '#93C5EC', mid: '#C8E0F3', horizon: '#EEF4F9' },
-    hemi: 1.15,
-    sun: 2.3,
-    sunColor: 0xfff1dc,
-    env: 0.9,
+    sky: { top: '#7FB6E6', mid: '#BFDBF2', horizon: '#F1EBDD' },
+    hemi: 1.05,
+    sun: 2.6,
+    sunColor: 0xfff0d6,
+    env: 0.85,
     glow: 0,
+    lamp: 0,
     exposure: 1.0,
-    fog: 0xeef4f9,
+    fog: 0xf1ebdd,
   },
   evening: {
-    sky: { top: '#1B3657', mid: '#506F94', horizon: '#C9A58E' },
-    hemi: 0.35,
-    sun: 0.55,
-    sunColor: 0xffb47a,
-    env: 0.35,
-    glow: 2.2,
+    sky: { top: '#16304F', mid: '#4C6A90', horizon: '#D9A27E' },
+    hemi: 0.3,
+    sun: 0.5,
+    sunColor: 0xffa865,
+    env: 0.3,
+    glow: 1.8,
+    lamp: 6,
     exposure: 1.05,
-    fog: 0xc9a58e,
+    fog: 0xc99a7e,
   },
 };
 
-/* Materials shared by every home in one viewer */
-function materials() {
+/* ---------- Procedural textures ---------- */
+
+const rand = (seed) => {
+  let s = seed;
+  return () => (s = (s * 16807) % 2147483647) / 2147483647;
+};
+function speckle(ctx, w, h, base, spread, count, size, seed) {
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, w, h);
+  const r = rand(seed);
+  for (let i = 0; i < count; i++) {
+    const v = (r() - 0.5) * spread;
+    ctx.fillStyle = v > 0 ? `rgba(255,255,255,${v})` : `rgba(0,0,0,${-v})`;
+    ctx.fillRect(r() * w, r() * h, size * (0.5 + r()), size * (0.5 + r()));
+  }
+}
+
+function textures() {
+  // Each texture tile covers `tile` metres; box UVs are scaled to metres (see box()).
   return {
-    wall: new MeshStandardMaterial({ color: 0xf6f3ee, roughness: 0.92 }),
-    plinth: new MeshStandardMaterial({ color: 0xc9cfd5, roughness: 0.95 }),
-    roof: new MeshStandardMaterial({ color: 0x7f8c9a, roughness: 0.55, metalness: 0.35 }),
-    flatRoof: new MeshStandardMaterial({ color: 0xdfe4e8, roughness: 0.8 }),
-    glass: new MeshStandardMaterial({
-      color: 0x5f8fb5,
-      roughness: 0.08,
-      metalness: 0.6,
-      emissive: new Color(0xffc98a),
-      emissiveIntensity: 0,
+    plaster: canvasTexture(256, 256, (c, w, h) => speckle(c, w, h, '#efe8dc', 0.07, 5000, 2, 7)),
+    brick: canvasTexture(256, 128, (c, w, h) => {
+      c.fillStyle = '#d8d2c8';
+      c.fillRect(0, 0, w, h);
+      const r = rand(11);
+      for (let row = 0; row < 8; row++) {
+        for (let col = -1; col < 5; col++) {
+          const x = col * 56 + (row % 2 ? 28 : 0) + 2;
+          const t = 0.85 + r() * 0.3;
+          c.fillStyle = `rgb(${Math.round(150 * t)},${Math.round(78 * t)},${Math.round(52 * t)})`;
+          c.fillRect(x, row * 16 + 2, 52, 13);
+        }
+      }
     }),
-    frame: new MeshStandardMaterial({ color: 0x0b2a4a, roughness: 0.6 }),
-    door: new MeshStandardMaterial({ color: 0xa8825a, roughness: 0.7 }),
-    deck: new MeshStandardMaterial({ color: 0xc8b49a, roughness: 0.9 }),
-    post: new MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 }),
-    paving: new MeshStandardMaterial({ color: 0xe1e5e8, roughness: 0.95 }),
-    tank: new MeshStandardMaterial({ color: 0xd3dfea, roughness: 0.5 }),
-    lawn: new MeshStandardMaterial({ color: 0xbfdc9f, roughness: 1 }),
-    plant: new MeshStandardMaterial({ color: 0x7fb24a, roughness: 0.9, flatShading: true }),
+    tiles: canvasTexture(256, 256, (c, w, h) => {
+      const r = rand(5);
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          const t = 0.85 + r() * 0.25;
+          const g = c.createLinearGradient(0, row * 32, 0, row * 32 + 32);
+          g.addColorStop(0, `rgb(${Math.round(70 * t)},${Math.round(74 * t)},${Math.round(80 * t)})`);
+          g.addColorStop(1, `rgb(${Math.round(40 * t)},${Math.round(43 * t)},${Math.round(48 * t)})`);
+          c.fillStyle = g;
+          c.fillRect(col * 32 + (row % 2 ? 16 : 0), row * 32, 32, 32);
+          c.fillRect(col * 32 + (row % 2 ? 16 : 0) - 256, row * 32, 32, 32);
+        }
+      }
+      c.fillStyle = 'rgba(0,0,0,.35)';
+      for (let row = 0; row < 8; row++) c.fillRect(0, row * 32 + 30, w, 2);
+    }),
+    sheeting: canvasTexture(128, 128, (c, w, h) => {
+      for (let x = 0; x < w; x++) {
+        const v = 0.5 + 0.5 * Math.sin((x / w) * Math.PI * 2 * 8);
+        const l = Math.round(150 + v * 60);
+        c.fillStyle = `rgb(${l - 10},${l - 4},${l})`;
+        c.fillRect(x, 0, 1, h);
+      }
+    }),
+    paving: canvasTexture(256, 256, (c, w, h) => {
+      speckle(c, w, h, '#b9b4ab', 0.08, 2500, 2, 3);
+      c.strokeStyle = 'rgba(70,64,56,.45)';
+      c.lineWidth = 2;
+      for (let i = 0; i <= 8; i++) {
+        c.beginPath();
+        c.moveTo(0, i * 32);
+        c.lineTo(w, i * 32);
+        c.stroke();
+        for (let j = 0; j < 4; j++) {
+          const x = j * 64 + (i % 2 ? 32 : 0);
+          c.beginPath();
+          c.moveTo(x, i * 32);
+          c.lineTo(x, i * 32 + 32);
+          c.stroke();
+        }
+      }
+    }),
+    sand: canvasTexture(256, 256, (c, w, h) => speckle(c, w, h, '#d9c6a0', 0.12, 9000, 2, 17)),
+    lawn: canvasTexture(256, 256, (c, w, h) => {
+      speckle(c, w, h, '#86a957', 0.16, 12000, 2, 23);
+    }),
+    wood: canvasTexture(128, 256, (c, w, h) => {
+      c.fillStyle = '#8a5f3c';
+      c.fillRect(0, 0, w, h);
+      const r = rand(31);
+      for (let i = 0; i < 40; i++) {
+        c.strokeStyle = `rgba(40,20,8,${0.08 + r() * 0.12})`;
+        c.beginPath();
+        const x = r() * w;
+        c.moveTo(x, 0);
+        c.bezierCurveTo(x + 6, h / 3, x - 6, (2 * h) / 3, x + 3, h);
+        c.stroke();
+      }
+    }),
   };
 }
 
-const box = (w, h, d, mat, x, y, z) => {
-  const m = new Mesh(new BoxGeometry(w, h, d), mat);
+function materials() {
+  const T = textures();
+  const std = (opts) => new MeshStandardMaterial(opts);
+  return {
+    wall: std({ map: T.plaster, roughness: 0.95 }),
+    trim: std({ color: 0xf7f7f4, roughness: 0.7 }),
+    brick: std({ map: T.brick, roughness: 0.9 }),
+    tiles: std({ map: T.tiles, roughness: 0.75, metalness: 0.05 }),
+    sheet: std({ map: T.sheeting, roughness: 0.4, metalness: 0.6 }),
+    slab: std({ color: 0xcfd2d4, roughness: 0.9 }),
+    glass: std({
+      color: 0x40607c,
+      roughness: 0.05,
+      metalness: 0.9,
+      emissive: new Color(0xffc583),
+      emissiveIntensity: 0,
+    }),
+    frame: std({ color: 0x2b2f35, roughness: 0.5, metalness: 0.4 }),
+    door: std({ map: T.wood, roughness: 0.6 }),
+    timber: std({ map: T.wood, roughness: 0.75 }),
+    steel: std({ color: 0x3a3f46, roughness: 0.45, metalness: 0.5 }),
+    gutter: std({ color: 0x9aa1a8, roughness: 0.4, metalness: 0.5 }),
+    paving: std({ map: T.paving, roughness: 0.95 }),
+    sand: std({ map: T.sand, roughness: 1 }),
+    lawn: std({ map: T.lawn, roughness: 1 }),
+    tank: std({ color: 0x2f6b3a, roughness: 0.55 }),
+    bark: std({ color: 0x5a4632, roughness: 1 }),
+    leaf: std({ color: 0x5f7f35, roughness: 0.9, flatShading: true }),
+    leafDark: std({ color: 0x45612a, roughness: 0.9, flatShading: true }),
+    boundary: std({ map: T.plaster, color: 0xe6dccb, roughness: 0.95 }),
+  };
+}
+
+/* ---------- Geometry helpers ---------- */
+
+/** A box whose UVs are in metres divided by `tile`, so textures keep their real scale on every face. */
+function box(w, h, d, mat, x, y, z, tile = 1.5) {
+  const geo = new BoxGeometry(w, h, d);
+  const uv = geo.attributes.uv;
+  // Face order: +x, -x, +y, -y, +z, -z; four vertices each.
+  const dims = [
+    [d, h],
+    [d, h],
+    [w, d],
+    [w, d],
+    [w, h],
+    [w, h],
+  ];
+  for (let face = 0; face < 6; face++) {
+    for (let v = 0; v < 4; v++) {
+      const i = face * 4 + v;
+      uv.setXY(i, (uv.getX(i) * dims[face][0]) / tile, (uv.getY(i) * dims[face][1]) / tile);
+    }
+  }
+  const m = new Mesh(geo, mat);
   m.position.set(x, y, z);
   m.castShadow = true;
   m.receiveShadow = true;
   return m;
-};
+}
 
-/** A gable roof as an extruded triangle running along z. */
-function gableRoof(width, depth, rise, overhang, mat) {
+/** A flat panel (thin box) rotated about x or z, for roof planes. */
+function panel(w, d, mat, tile) {
+  return box(w, 0.06, d, mat, 0, 0, 0, tile);
+}
+
+/** Gable roof over a wing. Ridge along x ('gable-x') or z ('gable-y'), with fascia, gutters and gable ends. */
+function gableRoof(wing, rise, M, cx, cz) {
+  const g = new Group();
+  const over = 0.45;
+  const alongX = wing.roof === 'gable-x';
+  const len = (alongX ? wing.w : wing.d) + over * 2;
+  const span = alongX ? wing.d : wing.w;
+  const half = span / 2 + over;
+  const slope = Math.hypot(half, rise);
+  const angle = Math.atan2(rise, half);
+  const top = PLINTH + WALL_H;
+  const midX = wing.x + wing.w / 2 - cx;
+  const midZ = wing.y + wing.d / 2 - cz;
+  for (const sgn of [-1, 1]) {
+    const p = panel(alongX ? len : slope, alongX ? slope : len, M.tiles, 1.2);
+    if (alongX) {
+      p.rotation.x = sgn * angle;
+      p.position.set(midX, top + rise / 2 + 0.05, midZ + (sgn * half) / 2);
+    } else {
+      p.rotation.z = -sgn * angle;
+      p.position.set(midX + (sgn * half) / 2, top + rise / 2 + 0.05, midZ);
+    }
+    g.add(p);
+    // fascia and gutter along the eave
+    const eaveOff = sgn * (half - 0.02);
+    const fascia = alongX
+      ? box(len, 0.22, 0.04, M.trim, midX, top - 0.05, midZ + eaveOff)
+      : box(0.04, 0.22, len, M.trim, midX + eaveOff, top - 0.05, midZ);
+    g.add(fascia);
+    const gutter = new Mesh(new CylinderGeometry(0.07, 0.07, len, 10), M.gutter);
+    if (alongX) gutter.rotation.z = Math.PI / 2;
+    else gutter.rotation.x = Math.PI / 2;
+    gutter.position.set(
+      alongX ? midX : midX + eaveOff + sgn * 0.08,
+      top - 0.12,
+      alongX ? midZ + eaveOff + sgn * 0.08 : midZ,
+    );
+    g.add(gutter);
+  }
+  // ridge capping
+  g.add(
+    alongX
+      ? box(len, 0.1, 0.25, M.tiles, midX, top + rise + 0.06, midZ)
+      : box(0.25, 0.1, len, M.tiles, midX, top + rise + 0.06, midZ),
+  );
+  // plastered gable ends
   const s = new Shape();
-  const hw = width / 2 + overhang;
-  s.moveTo(-hw, 0);
-  s.lineTo(hw, 0);
+  s.moveTo(-span / 2, 0);
+  s.lineTo(span / 2, 0);
   s.lineTo(0, rise);
   s.closePath();
-  const geo = new ExtrudeGeometry(s, { depth: depth + overhang * 2, bevelEnabled: false });
-  geo.translate(0, 0, -(depth + overhang * 2) / 2);
-  const m = new Mesh(geo, mat);
+  for (const sgn of [-1, 1]) {
+    const geo = new ExtrudeGeometry(s, { depth: 0.2, bevelEnabled: false });
+    const end = new Mesh(geo, M.wall);
+    end.castShadow = true;
+    if (alongX) {
+      end.rotation.y = Math.PI / 2;
+      end.position.set(midX + sgn * (wing.w / 2) - (sgn > 0 ? 0.2 : 0), top, midZ);
+    } else {
+      end.position.set(midX, top, midZ + sgn * (wing.d / 2) - (sgn > 0 ? 0.2 : 0));
+    }
+    g.add(end);
+  }
+  return g;
+}
+
+/** Window or door unit facing `out`, centred on the wall line. */
+function opening(o, M, cx, cz) {
+  const g = new Group();
+  const horiz = o.y1 === o.y2;
+  const len = horiz ? Math.abs(o.x2 - o.x1) : Math.abs(o.y2 - o.y1);
+  const mx = (o.x1 + o.x2) / 2 - cx;
+  const mz = (o.y1 + o.y2) / 2 - cz;
+  const face = { s: [0, 0], n: [0, Math.PI], e: [0, Math.PI / 2], w: [0, -Math.PI / 2] }[o.out][1];
+  const isDoor = o.type === 'door' || o.type === 'slider';
+  const h = isDoor ? 2.1 : (o.h ?? 1.2);
+  const sill = isDoor ? 0 : (o.sill ?? 0.95);
+  const y0 = PLINTH + sill;
+  const t = 0.06;
+  // reveal (dark recess), frame, glazing or door leaf
+  g.add(box(len, h, 0.04, M.frame, 0, y0 + h / 2, 0.01));
+  if (o.type === 'door') {
+    g.add(box(len - 0.12, h - 0.08, 0.06, M.door, 0, y0 + h / 2 - 0.02, 0.05));
+    g.add(box(0.03, 0.18, 0.05, M.steel, len / 2 - 0.16, y0 + 1.0, 0.1));
+  } else {
+    const glass = box(len - 0.08, h - 0.08, 0.02, M.glass, 0, y0 + h / 2, 0.03);
+    glass.castShadow = false;
+    g.add(glass);
+    const bars = o.type === 'slider' ? Math.max(2, Math.round(len / 1.2)) : len > 1.3 ? 2 : 1;
+    for (let i = 1; i < bars; i++) g.add(box(0.05, h, t, M.frame, -len / 2 + (i * len) / bars, y0 + h / 2, 0.05));
+    if (o.type !== 'slider') g.add(box(len, 0.05, t, M.frame, 0, y0 + h * 0.62, 0.05));
+    for (const sx of [-1, 1]) g.add(box(0.05, h, t, M.frame, (sx * (len - 0.05)) / 2, y0 + h / 2, 0.05));
+    g.add(box(len, 0.05, t, M.frame, 0, y0 + h - 0.025, 0.05));
+    if (o.type !== 'slider') g.add(box(len + 0.12, 0.05, 0.16, M.slab, 0, y0 - 0.03, 0.08));
+  }
+  if (!isDoor || o.type === 'door') g.add(box(len + 0.1, 0.12, 0.08, M.trim, 0, y0 + h + 0.06, 0.04));
+  g.position.set(mx, 0, mz);
+  g.rotation.y = face;
+  // Walls are the wing rectangles, so the plan line is the wall face; units sit just proud of it.
+  return g;
+}
+
+function tree(M, x, z, scale = 1, seed = 1) {
+  const r = rand(seed * 977);
+  const g = new Group();
+  const trunk = new Mesh(new CylinderGeometry(0.1 * scale, 0.16 * scale, 2.2 * scale, 7), M.bark);
+  trunk.position.y = 1.1 * scale;
+  trunk.rotation.z = (r() - 0.5) * 0.2;
+  trunk.castShadow = true;
+  g.add(trunk);
+  // Flat-topped acacia canopy made of a few squashed blobs
+  for (let i = 0; i < 4; i++) {
+    const blob = new Mesh(new IcosahedronGeometry(1.1 * scale, 0), i % 2 ? M.leaf : M.leafDark);
+    blob.scale.set(1.4 + r() * 0.5, 0.45, 1.2 + r() * 0.5);
+    blob.position.set((r() - 0.5) * 1.6 * scale, 2.3 * scale + r() * 0.3 * scale, (r() - 0.5) * 1.6 * scale);
+    blob.castShadow = true;
+    g.add(blob);
+  }
+  g.position.set(x, 0, z);
+  return g;
+}
+
+function shrub(M, x, z, s = 0.5) {
+  const m = new Mesh(new DodecahedronGeometry(s, 0), M.leaf);
+  m.scale.y = 0.75;
+  m.position.set(x, s * 0.6, z);
   m.castShadow = true;
   return m;
 }
 
-/** Window: frame plus glass, set into a wall that faces +z (rotate the group for other walls). */
-function windowUnit(w, h, M) {
+/** Builds a home and its plot from a design spec. Plan (x, y) maps to world (x - W/2, z = y - D/2). */
+function buildHome(d, M) {
   const g = new Group();
-  g.add(box(w + 0.14, h + 0.14, 0.08, M.frame, 0, 0, 0.0));
-  const glass = new Mesh(new BoxGeometry(w, h, 0.1), M.glass);
-  glass.position.z = 0.02;
-  g.add(glass);
-  return g;
-}
+  const [W, D] = d.size;
+  const cx = W / 2;
+  const cz = D / 2;
+  const top = PLINTH + WALL_H;
 
-function placeOnWall(unit, x, y, z, rotY = 0) {
-  unit.position.set(x, y, z);
-  unit.rotation.y = rotY;
-  return unit;
-}
+  for (const w of d.wings) {
+    const x = w.x + w.w / 2 - cx;
+    const z = w.y + w.d / 2 - cz;
+    g.add(box(w.w + 0.12, PLINTH, w.d + 0.12, M.brick, x, PLINTH / 2, z, 1.2));
+    g.add(box(w.w, WALL_H, w.d, M.wall, x, PLINTH + WALL_H / 2, z));
+    if (w.roof === 'flat') {
+      g.add(box(w.w + 0.06, 0.5, w.d + 0.06, M.wall, x, top + 0.25, z));
+      g.add(box(w.w + 0.16, 0.08, w.d + 0.16, M.trim, x, top + 0.54, z));
+      g.add(box(w.w - 0.3, 0.06, w.d - 0.3, M.slab, x, top + 0.4, z));
+    } else {
+      g.add(gableRoof(w, d.roofRise, M, cx, cz));
+    }
+  }
+  for (const o of d.openings) g.add(opening(o, M, cx, cz));
 
-/* Procedural models, driven by model_params from the database */
-function buildGable(p, M) {
-  const g = new Group();
-  const w = p.width ?? 7;
-  const d = p.depth ?? 6;
-  const h = 2.8;
-  g.add(box(w + 0.4, 0.35, d + 0.4, M.plinth, 0, 0.175, 0));
-  g.add(box(w, h, d, M.wall, 0, 0.35 + h / 2, 0));
-  const roof = gableRoof(d, w, 1.9, 0.45, M.roof);
-  roof.rotation.y = Math.PI / 2;
-  roof.position.y = 0.35 + h;
-  g.add(roof);
-  // front (+z) windows and door
-  g.add(placeOnWall(windowUnit(1.5, 1.2, M), -w / 4 - 0.4, 1.95, d / 2 + 0.02));
-  g.add(placeOnWall(windowUnit(1.5, 1.2, M), w / 4 + 0.4, 1.95, d / 2 + 0.02));
-  g.add(box(0.95, 2.1, 0.08, M.door, 0, 0.35 + 1.05, d / 2 + 0.04));
-  // side and back windows
-  g.add(placeOnWall(windowUnit(1.1, 1.0, M), w / 2 + 0.02, 1.95, 0, Math.PI / 2));
-  g.add(placeOnWall(windowUnit(1.6, 1.0, M), 0, 1.95, -d / 2 - 0.02, Math.PI));
-  // covered veranda
-  const vd = p.veranda ?? 2.2;
-  g.add(box(w, 0.2, vd, M.deck, 0, 0.3, d / 2 + vd / 2));
-  const vroof = box(w + 0.6, 0.12, vd + 0.4, M.roof, 0, 0.35 + h - 0.15, d / 2 + vd / 2 + 0.1);
-  vroof.rotation.x = 0.08;
-  g.add(vroof);
-  for (const x of [-w / 2 + 0.15, 0, w / 2 - 0.15]) g.add(box(0.14, h - 0.3, 0.14, M.post, x, 0.4 + (h - 0.3) / 2, d / 2 + vd - 0.1));
-  // rainwater tank
-  const tank = new Mesh(new CylinderGeometry(0.75, 0.75, 1.9, 24), M.tank);
-  tank.position.set(w / 2 + 1.3, 0.95, -d / 4);
-  tank.castShadow = true;
-  g.add(tank);
-  return g;
-}
+  if (d.veranda) {
+    const [vx, vy, vw, vd] = d.veranda.rect;
+    const x = vx + vw / 2 - cx;
+    const z = vy + vd / 2 - cz;
+    g.add(box(vw, 0.2, vd, M.paving, x, 0.1, z, 2));
+    const roof = box(vw + 0.5, 0.06, vd + 0.35, M.sheet, x, top - 0.18, z + 0.1, 0.9);
+    roof.rotation.x = 0.07;
+    g.add(roof);
+    g.add(box(vw + 0.5, 0.18, 0.04, M.trim, x, top - 0.33, vy + vd - cz + 0.27));
+    for (const px of d.veranda.posts)
+      g.add(box(0.12, top - 0.4, 0.12, M.steel, px - cx, 0.2 + (top - 0.4) / 2, vy + vd - cz - 0.1));
+  }
+  if (d.pergola) {
+    const [gx, gy, gw, gd] = d.pergola.rect;
+    for (let i = 0; i <= 8; i++)
+      g.add(box(0.08, 0.2, gd + 0.4, M.timber, gx - cx + 0.15 + (i * (gw - 0.3)) / 8, top - 0.05, gy + gd / 2 - cz, 1));
+    g.add(box(gw, 0.22, 0.14, M.timber, gx + gw / 2 - cx, top - 0.25, gy + gd - cz));
+    for (const px of [gx + 0.12, gx + gw - 0.12])
+      g.add(box(0.14, top - 0.3, 0.14, M.timber, px - cx, (top - 0.3) / 2, gy + gd - cz));
+  }
+  if (d.carport) {
+    const [px, py, pw, pd] = d.carport.rect;
+    g.add(box(pw + 0.3, 0.08, pd + 0.3, M.sheet, px + pw / 2 - cx, 2.6, py + pd / 2 - cz, 0.9));
+    for (const ax of [px + 0.08, px + pw - 0.08])
+      for (const az of [py + 0.1, py + pd - 0.1]) g.add(box(0.1, 2.6, 0.1, M.steel, ax - cx, 1.3, az - cz));
+  }
+  if (d.tank) {
+    const tank = new Mesh(new CylinderGeometry(d.tank.r, d.tank.r, 2.0, 28), M.tank);
+    tank.position.set(d.tank.x - cx, 1.25, d.tank.y - cz);
+    tank.castShadow = true;
+    g.add(tank);
+    g.add(box(d.tank.r * 2.1, 0.25, d.tank.r * 2.1, M.slab, d.tank.x - cx, 0.12, d.tank.y - cz));
+    const lid = new Mesh(new CylinderGeometry(d.tank.r * 0.3, d.tank.r * 0.3, 0.12, 16), M.tank);
+    lid.position.set(d.tank.x - cx, 2.3, d.tank.y - cz);
+    g.add(lid);
+  }
 
-function buildLShape(p, M) {
-  const g = new Group();
-  const h = 2.8;
-  // Living wing along x at the back, bedroom wing along z on the right.
-  const lw = 7;
-  const ld = 5;
-  const bw = 4.6;
-  const bd = 9;
-  const lx = -2.2;
-  const lz = -2;
-  const bx = lx + lw / 2 + bw / 2;
-  const bz = lz - ld / 2 + bd / 2;
-  g.add(box(lw + 0.4, 0.35, ld + 0.4, M.plinth, lx, 0.175, lz));
-  g.add(box(bw + 0.4, 0.35, bd + 0.4, M.plinth, bx, 0.175, bz));
-  g.add(box(lw, h, ld, M.wall, lx, 0.35 + h / 2, lz));
-  g.add(box(bw, h, bd, M.wall, bx, 0.35 + h / 2, bz));
-  const r1 = gableRoof(ld, lw, 1.6, 0.4, M.roof);
-  r1.rotation.y = Math.PI / 2;
-  r1.position.set(lx - 0.2, 0.35 + h, lz);
-  g.add(r1);
-  const r2 = gableRoof(bw, bd, 1.6, 0.4, M.roof);
-  r2.position.set(bx, 0.35 + h, bz);
-  g.add(r2);
-  g.add(placeOnWall(windowUnit(2.2, 1.3, M), lx - 1.2, 1.9, lz + ld / 2 + 0.02));
-  g.add(box(0.95, 2.1, 0.08, M.door, lx + 1.6, 0.35 + 1.05, lz + ld / 2 + 0.04));
-  g.add(placeOnWall(windowUnit(1.3, 1.1, M), bx - bw / 2 - 0.02, 1.95, bz + 1.6, -Math.PI / 2));
-  g.add(placeOnWall(windowUnit(1.3, 1.1, M), bx, 1.95, bz + bd / 2 + 0.02));
-  g.add(placeOnWall(windowUnit(1.3, 1.1, M), bx + bw / 2 + 0.02, 1.95, bz - 1.5, Math.PI / 2));
-  g.add(placeOnWall(windowUnit(1.3, 1.1, M), bx + bw / 2 + 0.02, 1.95, bz + 2.2, Math.PI / 2));
-  // veranda in the corner of the L
-  const vw = lw;
-  const vd = p.veranda ?? 2;
-  g.add(box(vw, 0.2, vd, M.deck, lx, 0.3, lz + ld / 2 + vd / 2));
-  g.add(box(vw + 0.3, 0.12, vd + 0.3, M.roof, lx, 0.35 + h - 0.1, lz + ld / 2 + vd / 2));
-  for (const x of [lx - vw / 2 + 0.15, lx + vw / 2 - 0.4]) g.add(box(0.14, h - 0.2, 0.14, M.post, x, 0.4 + (h - 0.2) / 2, lz + ld / 2 + vd - 0.1));
-  return g;
-}
-
-function buildCourtyard(p, M) {
-  const g = new Group();
-  const h = 3.0;
-  const W = p.width ?? 12;
-  const D = p.depth ?? 11;
-  const t = 4.2; // wing depth
-  const wings = [
-    [0, -D / 2 + t / 2, W, t], // back wing
-    [-W / 2 + t / 2, 0.6, t, D - t + 1.2], // left wing
-    [W / 2 - t / 2, 0.6, t, D - t + 1.2], // right wing
+  /* Plot: lawn and paving around the house, driveway, low boundary wall with a gate gap, trees */
+  const ext = Math.max(W + (d.carport ? 4 : 0) + (d.tank ? 2 : 0), D + (d.veranda ? 2.2 : 0));
+  const plotW = ext + 9;
+  const plotD = ext + 9;
+  const shiftX = d.carport ? 1.6 : d.tank ? 0.8 : 0;
+  const lawn = new Mesh(new PlaneGeometry(plotW, plotD), M.lawn);
+  lawn.rotation.x = -Math.PI / 2;
+  lawn.position.set(shiftX, 0.015, 0.5);
+  lawn.receiveShadow = true;
+  lawn.material.map.repeat.set(plotW / 4, plotD / 4);
+  g.add(lawn);
+  // driveway from the gate to the front of the house (or the carport)
+  const driveX = d.carport ? d.carport.rect[0] + d.carport.rect[2] / 2 - cx : 0;
+  const driveFrom = d.carport
+    ? d.carport.rect[1] + d.carport.rect[3] - cz
+    : (d.veranda ? d.veranda.rect[1] + d.veranda.rect[3] : D) - cz;
+  const driveTo = plotD / 2 + 0.5;
+  g.add(box(d.carport ? 3.2 : 1.6, 0.04, driveTo - driveFrom, M.paving, driveX, 0.03, (driveFrom + driveTo) / 2, 2));
+  // boundary wall: three sides plus the front with a gap for the gate
+  const wallH = 1.2;
+  const bx = shiftX;
+  const bz = 0.5;
+  const sides = [
+    [bx, bz - plotD / 2, plotW, 0.2],
+    [bx - plotW / 2, bz, 0.2, plotD],
+    [bx + plotW / 2, bz, 0.2, plotD],
   ];
-  for (const [x, z, w, d] of wings) {
-    g.add(box(w + 0.3, 0.35, d + 0.3, M.plinth, x, 0.175, z));
-    g.add(box(w, h, d, M.wall, x, 0.35 + h / 2, z));
-    g.add(box(w + 0.5, 0.35, d + 0.5, M.flatRoof, x, 0.35 + h + 0.17, z));
-  }
-  // courtyard paving and planting
-  g.add(box(W - 2 * t, 0.12, D - t, M.paving, 0, 0.06, t / 2 - 0.2 + 0.4));
-  const tree = new Mesh(new CylinderGeometry(0.9, 1.3, 1.6, 7), M.plant);
-  tree.position.set(0, 1.2, 1.2);
-  tree.castShadow = true;
-  g.add(tree);
-  // pergola across the courtyard opening
-  const pz = D / 2 - 0.4;
-  for (let i = 0; i < 9; i++) {
-    const x = -W / 2 + t + 0.3 + (i * (W - 2 * t - 0.6)) / 8;
-    g.add(box(0.12, 0.18, 3.2, M.door, x, 0.35 + h - 0.2, pz - 1.2));
-  }
-  g.add(box(W - 2 * t, 0.18, 0.18, M.door, 0, 0.35 + h - 0.35, pz + 0.3));
-  for (const x of [-W / 2 + t + 0.2, W / 2 - t - 0.2]) g.add(box(0.16, h - 0.4, 0.16, M.door, x, 0.35 + (h - 0.4) / 2, pz + 0.3));
-  // windows facing out
-  for (const x of [-W / 2 + t / 2, W / 2 - t / 2]) g.add(placeOnWall(windowUnit(2.2, 1.3, M), x, 2.0, D / 2 - t / 2 + 1.2 + 0.62));
-  g.add(placeOnWall(windowUnit(1.4, 1.1, M), -W / 2 - 0.02, 2.0, -1, -Math.PI / 2));
-  g.add(placeOnWall(windowUnit(1.4, 1.1, M), W / 2 + 0.02, 2.0, 1.5, Math.PI / 2));
-  g.add(placeOnWall(windowUnit(2.6, 1.1, M), 0, 2.0, -D / 2 - 0.02, Math.PI));
-  g.add(placeOnWall(windowUnit(3, 2.0, M), 0, 1.5, -D / 2 + t + 0.02));
-  // carport on the right
-  const cw = p.carport ?? 3.2;
-  const cx = W / 2 + cw / 2 + 0.2;
-  g.add(box(cw, 0.1, 5.6, M.paving, cx, 0.05, 1.4));
-  g.add(box(cw + 0.3, 0.16, 5.8, M.flatRoof, cx, 2.6, 1.4));
-  for (const z of [-1.2, 4.0]) g.add(box(0.14, 2.5, 0.14, M.post, cx + cw / 2, 1.3, z));
+  for (const [x, z, w, dd] of sides) g.add(box(w, wallH, dd, M.boundary, x, wallH / 2, z));
+  const gap = (d.carport ? 4 : 2.6) / 2;
+  const frontZ = bz + plotD / 2;
+  const leftLen = driveX - gap - (bx - plotW / 2);
+  const rightLen = bx + plotW / 2 - (driveX + gap);
+  g.add(box(leftLen, wallH, 0.2, M.boundary, bx - plotW / 2 + leftLen / 2, wallH / 2, frontZ));
+  g.add(box(rightLen, wallH, 0.2, M.boundary, driveX + gap + rightLen / 2, wallH / 2, frontZ));
+  for (const px of [driveX - gap, driveX + gap])
+    g.add(box(0.4, wallH + 0.3, 0.4, M.boundary, px, (wallH + 0.3) / 2, frontZ));
+  // planting
+  g.add(tree(M, bx - plotW / 2 + 2.2, bz - plotD / 2 + 2.4, 1.15, 1));
+  g.add(tree(M, bx + plotW / 2 - 2.0, bz + plotD / 2 - 2.6, 0.95, 2));
+  g.add(tree(M, bx - plotW / 2 + 2.0, bz + plotD / 2 - 2.2, 0.8, 3));
+  for (let i = 0; i < 5; i++)
+    if (Math.abs(-W / 2 + 0.6 + i * 0.9 - driveX) > 1.3)
+      g.add(
+        shrub(
+          M,
+          -W / 2 + 0.6 + i * 0.9,
+          (d.veranda ? d.veranda.rect[1] + d.veranda.rect[3] : D) - cz + 0.7,
+          0.35 + (i % 2) * 0.12,
+        ),
+      );
+  g.userData.radius = Math.max(plotW, plotD) / 2;
   return g;
 }
 
-const BUILDERS = { gable: buildGable, lshape: buildLShape, courtyard: buildCourtyard };
+/* ---------- Viewer ---------- */
 
 export function createHomesViewer(frame, { models, initial, autoRotate = true }) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -239,37 +479,42 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
   frame.appendChild(canvas);
 
   const mobile = window.matchMedia('(pointer: coarse)').matches;
-  const renderer = createRenderer(canvas, { pixelRatio: Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2), shadows: true });
+  const renderer = createRenderer(canvas, {
+    pixelRatio: Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2),
+    shadows: true,
+  });
   const scene = new Scene();
-  scene.environment = skyEnvironment(renderer, { sun: false });
-  const skies = { day: skyDome(220, MOODS.day.sky), evening: skyDome(220, MOODS.evening.sky) };
+  scene.environment = skyEnvironment(renderer, { sun: false, horizon: '#F1EBDD', ground: '#CDBB98' });
+  const skies = { day: skyDome(260, MOODS.day.sky), evening: skyDome(260, MOODS.evening.sky) };
   scene.add(skies.day, skies.evening);
 
-  const camera = new PerspectiveCamera(30, 4 / 3, 2, 300);
-  const hemi = new HemisphereLight(0xdcebfa, 0xe7e1d4, 1);
-  const sun = new DirectionalLight(0xfff1dc, 2.3);
-  sun.position.set(-14, 22, 16);
+  const camera = new PerspectiveCamera(30, 4 / 3, 1, 400);
+  const hemi = new HemisphereLight(0xdcebfa, 0xcdb894, 1);
+  const sun = new DirectionalLight(0xfff0d6, 2.6);
+  sun.position.set(-16, 24, 14);
   sun.castShadow = true;
   sun.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
-  Object.assign(sun.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 5, far: 70 });
-  sun.shadow.bias = -0.0005;
+  Object.assign(sun.shadow.camera, { left: -20, right: 20, top: 20, bottom: -20, near: 5, far: 80 });
+  sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.04;
-  sun.shadow.radius = 4;
+  sun.shadow.radius = 3;
   scene.add(hemi, sun);
+  const porch = new PointLight(0xffb469, 0, 9, 1.6);
+  scene.add(porch);
 
-  // ground disc, lawn and a soft contact shadow
   const M = materials();
-  scene.fog = new Fog(0xeef4f9, 45, 110);
-  const ground = new Mesh(new CircleGeometry(160, 64), M.lawn);
+  M.sand.map.repeat.set(60, 60);
+  scene.fog = new Fog(0xf1ebdd, 60, 160);
+  const ground = new Mesh(new CircleGeometry(200, 64), M.sand);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
   scene.add(ground);
   const contact = new Mesh(
-    new PlaneGeometry(22, 22),
-    new MeshBasicMaterial({ map: contactShadowTexture(), transparent: true, depthWrite: false, opacity: 0.6 }),
+    new PlaneGeometry(26, 26),
+    new MeshBasicMaterial({ map: contactShadowTexture(), transparent: true, depthWrite: false, opacity: 0.45 }),
   );
   contact.rotation.x = -Math.PI / 2;
-  contact.position.y = 0.02;
+  contact.position.y = 0.03;
   scene.add(contact);
 
   const turntable = new Group();
@@ -277,8 +522,9 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
   let model = null;
   let slug = null;
   let mood = 'day';
-  let yaw = -0.6;
-  let pitch = 0.2;
+  let yaw = -0.55;
+  let pitch = 0.24;
+  let dist = 40;
   let dirty = true;
   let visible = false;
   let raf = 0;
@@ -301,9 +547,12 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
       turntable.remove(model);
       model.traverse((o) => o.geometry && o.geometry.dispose());
     }
-    const build = BUILDERS[def.params?.type] || buildGable;
-    model = build(def.params || {}, M);
+    const design = DESIGNS[def.params?.type] || DESIGNS.gable;
+    model = buildHome(design, M);
     turntable.add(model);
+    dist = model.userData.radius * 2.6 + 6;
+    const front = design.veranda ? design.veranda.rect[1] + design.veranda.rect[3] : design.size[1];
+    porch.position.set(0, PLINTH + WALL_H - 0.4, front - design.size[1] / 2 - 0.4);
     slug = nextSlug;
     setLabel();
     frame.classList.add('is-3d');
@@ -322,6 +571,7 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
     sun.color.setHex(m.sunColor);
     scene.environmentIntensity = m.env;
     M.glass.emissiveIntensity = m.glow;
+    porch.intensity = m.lamp;
     renderer.toneMappingExposure = m.exposure;
     dirty = true;
     kick();
@@ -337,9 +587,14 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
   };
 
   const placeCamera = () => {
-    const dist = 34;
-    camera.position.set(Math.sin(yaw) * Math.cos(pitch) * dist, Math.sin(pitch) * dist + 1, Math.cos(yaw) * Math.cos(pitch) * dist);
-    camera.lookAt(new Vector3(0, 1.6, 0));
+    // Narrow (portrait) frames need the camera further back to fit the plot.
+    const d = dist * Math.max(1, 1.25 / camera.aspect);
+    camera.position.set(
+      Math.sin(yaw) * Math.cos(pitch) * d,
+      Math.sin(pitch) * d + 1,
+      Math.cos(yaw) * Math.cos(pitch) * d,
+    );
+    camera.lookAt(new Vector3(0, 1.4, 0));
   };
 
   const spinning = () => autoRotate && !reduce && !dragging && performance.now() > pausedUntil;
@@ -380,7 +635,7 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
   canvas.addEventListener('pointermove', (e) => {
     if (!dragging) return;
     yaw = dragging.yaw - (e.clientX - dragging.x) * 0.008;
-    pitch = Math.min(0.8, Math.max(0.08, dragging.pitch + (e.clientY - dragging.y) * 0.004));
+    pitch = Math.min(0.85, Math.max(0.08, dragging.pitch + (e.clientY - dragging.y) * 0.004));
     dirty = true;
     kick();
   });
@@ -429,6 +684,14 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
   const api = {
     show,
     setMood,
+    /** Stop turning and face a fixed angle; used when rendering stills. */
+    pose(nextYaw, nextPitch) {
+      autoRotate = false;
+      yaw = nextYaw;
+      pitch = nextPitch;
+      dirty = true;
+      kick();
+    },
     dispose() {
       if (raf) cancelAnimationFrame(raf);
       ro.disconnect();
@@ -440,5 +703,6 @@ export function createHomesViewer(frame, { models, initial, autoRotate = true })
       frame.classList.remove('is-3d');
     },
   };
+  frame.__viewer = api;
   return api;
 }

@@ -32,6 +32,17 @@ const SELECTION = {
   'roller': ['roller', 4],
   'dump-truck': ['dump-truck', 1],
   'skid-steer': ['skid-steer', 4],
+  // 2026-10-09: more photos so fewer projects share one
+  'asphalt-laying': ['asphalt-overlay', 2],
+  'asphalt-crew': ['asphalt-overlay', 3],
+  'sewer-jetting': ['sewer-cleaning', 0],
+  'manhole-rings': ['manhole', 6],
+  'sludge-pond': ['sludge-beds', 3],
+  'drying-beds': ['sludge-beds', 4],
+  'treatment-aerial': ['wwtp', 1],
+  'culvert-pipe': ['storm-drain', 0],
+  'concrete-pipe': ['storm-drain', 2],
+  'pipe-laying': ['storm-drain', 1],
 };
 
 const WIDTHS = [400, 800, 1200, 1600];
@@ -94,8 +105,11 @@ await writeFile(`${SRC_DIR}/credits.json`, JSON.stringify(credits, null, 2));
 const rows = Object.entries(credits).map(
   ([k, c]) => `| ${k} | [${(c.title || 'Untitled').replace(/\|/g, '/')}](${c.page}) | ${c.creator || 'Unknown'} | [${c.license}](${c.license_url}) | ${c.source} |`,
 );
+// Keep any hand-written sections after the generated table (such as the client logos).
+const old = existsSync('IMAGE_CREDITS.md') ? await readFile('IMAGE_CREDITS.md', 'utf8') : '';
+const tail = old.includes('\n## ') ? old.slice(old.indexOf('\n## ')) : '';
 await writeFile(
   'IMAGE_CREDITS.md',
-  `# Interim image credits\n\nThese openly licensed photos stand in until the client's own photography is approved. Every one is marked \`data-placeholder="stock-photo"\` in the HTML. Remove a row when its photo is replaced. CC BY images must keep their credit on the site's credits page.\n\n| Key | Photo | Author | Licence | Source |\n|---|---|---|---|---|\n${rows.join('\n')}\n`,
+  `# Interim image credits\n\nThese openly licensed photos stand in until the client's own photography is approved. Every one is marked \`data-placeholder="stock-photo"\` in the HTML. Remove a row when its photo is replaced. CC BY images must keep their credit on the site's credits page.\n\n| Key | Photo | Author | Licence | Source |\n|---|---|---|---|---|\n${rows.join('\n')}\n${tail}`,
 );
 console.log(`${Object.keys(credits).length} images processed`);

@@ -312,3 +312,37 @@ if ('IntersectionObserver' in window && watched.length) {
 document.querySelectorAll('.bar[data-to]').forEach((bar) => {
   bar.querySelector('.bar__fill')?.style.setProperty('--to', `${Number(bar.dataset.to)}%`);
 });
+
+/* Map: Google Maps loads only when asked for. Without JavaScript the button opens Google Maps instead. */
+document.querySelectorAll('[data-map]').forEach((box) => {
+  const frame = box.querySelector('iframe[data-src]');
+  box.querySelector('[data-map-load]')?.addEventListener('click', (e) => {
+    if (!frame) return;
+    e.preventDefault();
+    frame.src = frame.dataset.src;
+    frame.hidden = false;
+    box.querySelector('.map-bx__fallback').hidden = true;
+  });
+});
+
+/* Home slideshows: 3D model, floor plan and blueprint. Without JavaScript all three slides stay visible. */
+document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+  const slides = [...gallery.querySelectorAll('[data-slide]')];
+  const thumbs = [...gallery.querySelectorAll('[data-thumb]')];
+  const prev = gallery.querySelector('[data-gallery-prev]');
+  const next = gallery.querySelector('[data-gallery-next]');
+  let current = 0;
+  const go = (i) => {
+    current = (i + slides.length) % slides.length;
+    slides.forEach((s, n) => s.classList.toggle('is-active', n === current));
+    thumbs.forEach((t, n) => t.setAttribute('aria-pressed', n === current ? 'true' : 'false'));
+  };
+  gallery.classList.add('is-gallery');
+  gallery.querySelector('.home-gallery__thumbs').hidden = false;
+  prev.hidden = false;
+  next.hidden = false;
+  thumbs.forEach((t, n) => t.addEventListener('click', () => go(n)));
+  prev.addEventListener('click', () => go(current - 1));
+  next.addEventListener('click', () => go(current + 1));
+  go(0);
+});

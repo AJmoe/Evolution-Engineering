@@ -1,7 +1,15 @@
-{# Google Maps embed with the office address box. The map loads lazily and the address stays readable without it. #}
-<section class="map-bx" aria-labelledby="office-heading">
-  <p class="map-bx__fallback">Block 8 Industrial, Gaborone</p>
-  <iframe title="Map of Block 8 Industrial, Gaborone" src="https://maps.google.com/maps?q={{ 'Block 8 Industrial, Gaborone, Botswana'|url_encode }}&amp;z=14&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+{#
+  Office map with the address box. Google Maps loads only when the visitor asks for it, so the site
+  keeps its no-third-party promise (see the privacy notice). Without JavaScript the button is a plain link.
+#}
+{% import 'components/icons.twig' as ic %}
+{% set q = 'Block 8 Industrial, Gaborone, Botswana'|url_encode %}
+<section class="map-bx" aria-labelledby="office-heading" data-map>
+  <div class="map-bx__fallback">
+    <a class="btn btn--red" href="https://www.google.com/maps/search/?api=1&amp;query={{ q }}" rel="noopener" data-map-load>{{ ic.icon('pin') }} Show map</a>
+    <p class="small">Loads Google Maps</p>
+  </div>
+  <iframe title="Map of Block 8 Industrial, Gaborone" data-src="https://maps.google.com/maps?q={{ q }}&amp;z=14&amp;output=embed" referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
   <div class="container">
     <div class="office-box">
       <h4 id="office-heading">Office Address</h4>

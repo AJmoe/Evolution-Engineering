@@ -22,7 +22,7 @@
     </div>
   </section>
 
-  {# 2. Welcome: photo with brand squares, statement, director #}
+  {# 2. Welcome: photo with brand squares and statement #}
   <section class="bx-section--navy welcome" aria-labelledby="welcome-heading">
     <div class="grid-lines" aria-hidden="true"></div>
     <div class="container welcome__grid">
@@ -35,14 +35,6 @@
         <h2 id="welcome-heading">Engineering Contractor With Roots <span>In Botswana's Mining Sector</span></h2>
         <p class="welcome__lead">Evolution Engineers is a 100% citizen-owned company specialising in civil, mechanical and electrical engineering works, established in May 2007.</p>
         <p>We are seasoned with engineers and artisans who have vast experience in the mining sector. Our clientele includes Debswana, particularly the Jwaneng and Orapa mines, Karowe Diamond Mine, Tati Nickel Mining Company, government ministries, councils and the private sector. Our head office and fabrication workshop are in Gaborone at Plot 61047, Block 8 Industrial.</p>
-        <div class="director">
-          <span class="avatar" aria-hidden="true">TD</span>
-          <div>
-            <strong>Trinity Dialwa</strong>
-            <span>Director</span>
-          </div>
-          <p class="director__card">Cell <a href="tel:{{ settings.cell_e164 }}">+267 {{ settings.cell }}</a><br><a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a></p>
-        </div>
       </div>
     </div>
   </section>
@@ -56,7 +48,7 @@
         <p>Three engineering disciplines, a supplies business and our own plant, run from our head office and fabrication workshop at Block 8 Industrial, Gaborone. Call or write and one of our engineers will answer your questions and arrange a site visit.</p>
       </div>
       <div class="slider" data-slider>
-        <ul class="slider__track" aria-label="Services">
+        <ul class="slider__track" aria-label="Services" tabindex="0">
           {% for card in service_cards %}
             <li>
               <a class="svc-card" href="{{ card.url }}">
@@ -177,40 +169,6 @@
     </div>
   </section>
 
-  {# 7. Statement cards on navy (the theme's testimonial band). Taken from the company profile, not invented quotes. #}
-  <section class="voices on-dark" aria-labelledby="voices-heading">
-    {{ ic.blueprint_art() }}
-    <div class="container voices__grid">
-      <div class="sec-title sec-title--light" data-reveal>
-        <p class="eyebrow">Mission and vision</p>
-        <h2 id="voices-heading">What Drives Our Company?</h2>
-      </div>
-      <div class="slider slider--2" data-slider>
-        <ul class="slider__track" aria-label="Mission and vision">
-          {% for q in [
-            { text: 'To be a leader in providing value-added construction services, by creating a successful partnership with our customers throughout the construction process.', who: 'Our Mission', role: 'Company profile' },
-            { text: 'To establish lasting relationships with our customers by exceeding their expectations and gaining their trust through exceptional performance by every member of the construction team.', who: 'Our Pledge', role: 'Company profile' },
-            { text: 'To create a competitive advantage by purchasing and distributing products and services which provide superior value to our customers.', who: 'Our Vision', role: 'Company profile' },
-          ] %}
-            <li class="quote-card">
-              <div class="quote-card__body">
-                {{ ic.icon('quote') }}
-                <p>{{ q.text }}</p>
-              </div>
-              <div class="quote-card__who">
-                <span class="avatar" aria-hidden="true">EE</span>
-                <div><strong>{{ q.who }}</strong><span>{{ q.role }}</span></div>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-        <div class="slider__nav slider__nav--left">
-          <button class="round-btn" type="button" data-prev aria-label="Previous statement">{{ ic.icon('arrow-left') }}</button>
-          <button class="round-btn" type="button" data-next aria-label="Next statement">{{ ic.icon('arrow') }}</button>
-        </div>
-      </div>
-    </div>
-  </section>
 
   {# 8. Latest milestones (the theme's news section), from dated project records #}
   <section class="bx-section" aria-labelledby="news-heading">
@@ -241,17 +199,21 @@
     </div>
   </section>
 
-  {# 9. Clients, as names (logos need each client's permission) #}
+  {# 9. Clients. Logos remain the property of each organisation (sources in IMAGE_CREDITS.md). #}
   <section class="clients" aria-labelledby="clients-heading">
     <div class="container">
       <h2 id="clients-heading" class="clients__title">We have worked with</h2>
       <ul>
-        <li>Debswana<small>Jwaneng &amp; Orapa</small></li>
-        <li>Water Utilities<small>Corporation</small></li>
-        <li>Morupule<small>Coal Mine</small></li>
-        <li>BDC<small>Botswana Development Corp.</small></li>
-        <li>BURS<small>Unified Revenue Service</small></li>
-        <li>BPC<small>Power Corporation</small></li>
+        {% for c in [
+          { file: 'debswana', name: 'Debswana', w: 420, h: 78 },
+          { file: 'wuc', name: 'Water Utilities Corporation', w: 120, h: 120 },
+          { file: 'morupule', name: 'Morupule Coal Mine', w: 381, h: 120 },
+          { file: 'bdc', name: 'Botswana Development Corporation', w: 82, h: 120 },
+          { file: 'burs', name: 'Botswana Unified Revenue Service', w: 354, h: 120 },
+          { file: 'bpc', name: 'Botswana Power Corporation', w: 277, h: 120 },
+        ] %}
+          <li><img src="/images/clients/{{ c.file }}.png" alt="{{ c.name }}" width="{{ c.w }}" height="{{ c.h }}" loading="lazy"></li>
+        {% endfor %}
       </ul>
     </div>
   </section>

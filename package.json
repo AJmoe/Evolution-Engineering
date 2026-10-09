@@ -9,7 +9,10 @@
     "check:pages": "node tools/screenshots.mjs",
     "check:hero": "node tools/hero-check.mjs && node tools/fallback-check.mjs",
     "check:viewer": "node tools/viewer-check.mjs",
-    "lint": "eslint resources/js && prettier --check \"resources/**/*.{js,css}\""
+    "lint": "eslint resources/js && prettier --check \"resources/**/*.{js,css}\"",
+    "og": "node tools/og-image.mjs",
+    "homes:drawings": "node tools/home-drawings.mjs",
+    "homes:stills": "node tools/home-stills.mjs"
   },
   "devDependencies": {
     "@fontsource/barlow": "^5.3.0",
@@ -17,6 +20,7 @@
     "@fontsource/hanken-grotesk": "^5.1.0",
     "@fontsource/roboto": "^5.3.0",
     "@playwright/test": "^1.63.0",
+    "axe-core": "^4.14.0",
     "eslint": "^9.10.0",
     "prettier": "^3.3.0",
     "sharp": "^0.35.5",

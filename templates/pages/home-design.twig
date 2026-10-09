@@ -9,20 +9,11 @@
 {% block content %}
   {{ ui.page_header(home.name, home.blurb, crumbs) }}
 
-  <section class="section" aria-labelledby="design-heading">
+  <section class="bx-section" aria-labelledby="design-heading">
     <div class="container homes-viewer">
-      <div class="stack-lg">
-        <div class="viewer-frame" data-placeholder="home-design" data-home-viewer data-models="{{ {(home.slug): {name: home.name, params: home.model_params}}|json_encode }}" data-initial="{{ home.slug }}">
-          <div data-design-poster="{{ home.slug }}">{{ ui.home_poster(home) }}</div>
-          <span class="tag">Concept design</span>
-          <div class="mood-toggle" role="group" aria-label="Lighting" data-mood-toggle hidden>
-            <button type="button" data-mood="day" aria-pressed="true">Day</button>
-            <button type="button" data-mood="evening" aria-pressed="false">Evening</button>
-          </div>
-        </div>
-        {{ ui.floorplan(home) }}
-      </div>
+      {{ ui.home_gallery(home, true) }}
       <div class="stack-lg detail__aside">
+        <p class="eyebrow">Concept design</p>
         <h2 id="design-heading" class="h3">Specification</h2>
         <dl class="spec">
           <dt>Bedrooms</dt><dd>{{ home.bedrooms }}</dd>
@@ -30,18 +21,18 @@
           <dt>Floor area</dt><dd>{{ home.area_m2 }} m² {{ home.outdoor_label }}</dd>
         </dl>
         <ul class="features" aria-label="Features">{% for feat in home.features %}<li>{{ feat }}</li>{% endfor %}</ul>
-        <div><a class="btn btn--primary" href="/contact?design={{ home.slug }}">Ask about this design</a></div>
+        <div><a class="btn btn--red" href="/contact?design={{ home.slug }}">Ask about this design</a></div>
         <p class="concept-note">Concept design. Final drawings, sizes and costs are prepared for each plot.</p>
       </div>
     </div>
   </section>
 
   {% if others %}
-    <section class="section section--cloud" aria-labelledby="others-heading">
+    <section class="bx-section bx-section--soft" aria-labelledby="others-heading">
       <div class="container">
-        <div class="section-head section-head--split">
-          <h2 id="others-heading">Other designs</h2>
-          <a class="link-arrow" href="/small-homes">All small homes {{ ui.arrow() }}</a>
+        <div class="sec-title sec-title--split">
+          <div><p class="eyebrow">Small homes</p><h2 id="others-heading">Other Designs</h2></div>
+          <a class="btn btn--red" href="/small-homes">All small homes</a>
         </div>
         <div class="card-grid">{% for h in others %}{{ ui.home_card(h) }}{% endfor %}</div>
       </div>
