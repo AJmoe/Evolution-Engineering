@@ -46,7 +46,31 @@
     <div class="bx-header__tools">
       <button class="circle-btn" type="button" data-search-open aria-label="Search projects">{{ ic.icon('search') }}</button>
       <button class="circle-btn" type="button" data-sidebar-open aria-label="Company information">{{ ic.icon('dots') }}</button>
-      <button class="circle-btn bx-burger" type="button" data-menu-open aria-expanded="false" aria-controls="menu-sheet" aria-label="Menu">{{ ic.icon('menu') }}</button>
+      {# Phone and tablet menu: native details/summary, so it opens even without JavaScript. #}
+      <details class="m-menu" data-m-menu>
+        <summary class="circle-btn bx-burger" aria-label="Menu">{{ ic.icon('menu', 'm-menu__open') }}{{ ic.icon('close', 'm-menu__close') }}</summary>
+        <nav class="m-menu__panel" aria-label="Mobile">
+          <ul>
+            {% for item in nav %}
+              {% set current = item.href == '/' ? current_path == '/' : active == item.href %}
+              <li>
+                {% if item.children is defined %}
+                  <details>
+                    <summary{% if current %} class="is-current"{% endif %}>{{ item.label }}{{ ic.icon('caret', 'caret') }}</summary>
+                    <ul>{% for c in item.children %}<li><a href="{{ c.href }}">{{ c.label }}</a></li>{% endfor %}</ul>
+                  </details>
+                {% else %}
+                  <a href="{{ item.href }}"{% if current %} aria-current="page"{% endif %}>{{ item.label }}</a>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="m-menu__foot">
+            <a class="btn btn--red" href="/contact">Request a quote</a>
+            <a class="m-menu__call" href="tel:{{ settings.phone_e164 }}">{{ ic.icon('phone') }} {{ settings.phone }}</a>
+          </div>
+        </nav>
+      </details>
     </div>
     <a class="btn btn--red btn--pill" href="/contact">Request a quote</a>
   </div>
@@ -77,25 +101,3 @@
     <p class="sidebar-cta"><a class="btn btn--red" href="/contact">Request a quote {{ ic.icon('arrow-circle') }}</a></p>
   </div>
 </aside>
-
-<div class="menu-sheet" id="menu-sheet" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" hidden>
-  <div class="menu-sheet__top">
-    {{ ui.brand() }}
-    <button class="menu-toggle" type="button" data-menu-close>
-      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6"/></svg>
-      Close
-    </button>
-  </div>
-  <ul>
-    {% for item in nav %}
-      <li>
-        <a href="{{ item.href }}">{{ item.label }}</a>
-        {% if item.children is defined %}
-          <ul class="sub-links">{% for c in item.children|slice(1) %}<li><a href="{{ c.href }}">{{ c.label }}</a></li>{% endfor %}</ul>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-  <a class="btn btn--primary" href="/contact">Request a quote</a>
-  <p class="menu-sheet__contact small">Call <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a> or <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a></p>
-</div>

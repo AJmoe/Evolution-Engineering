@@ -85,56 +85,21 @@ if (header) {
   update();
 }
 
-/* Full-screen mobile menu with focus trap and Escape to close */
-const sheet = document.getElementById('menu-sheet');
-const openBtn = document.querySelector('[data-menu-open]');
-if (sheet && openBtn) {
-  const closeBtn = sheet.querySelector('[data-menu-close]');
-  const focusables = () =>
-    [...sheet.querySelectorAll('a[href], button:not([disabled])')].filter((el) => el.offsetParent !== null);
-
-  const open = () => {
-    sheet.hidden = false;
-    requestAnimationFrame(() => sheet.classList.add('is-open'));
-    sheet.setAttribute('aria-hidden', 'false');
-    openBtn.setAttribute('aria-expanded', 'true');
-    document.body.classList.add('menu-open');
-    closeBtn?.focus();
-  };
-  const close = () => {
-    sheet.classList.remove('is-open');
-    sheet.setAttribute('aria-hidden', 'true');
-    openBtn.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('menu-open');
-    window.setTimeout(() => {
-      if (!sheet.classList.contains('is-open')) sheet.hidden = true;
-    }, 260);
-    openBtn.focus();
-  };
-
-  openBtn.addEventListener('click', open);
-  closeBtn?.addEventListener('click', close);
-  sheet.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
+/* Mobile menu: a details element. Close it on outside tap, Escape, link tap, or when the desktop nav appears. */
+const mMenu = document.querySelector('[data-m-menu]');
+if (mMenu) {
+  const close = () => mMenu.removeAttribute('open');
+  document.addEventListener('click', (e) => {
+    if (mMenu.open && !mMenu.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mMenu.open) {
       close();
-      return;
-    }
-    if (e.key !== 'Tab') return;
-    const items = focusables();
-    const first = items[0];
-    const last = items[items.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
+      mMenu.querySelector('summary')?.focus();
     }
   });
-  window.matchMedia('(min-width: 900px)').addEventListener('change', (mq) => {
-    if (mq.matches && sheet.classList.contains('is-open')) close();
-  });
+  mMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  window.matchMedia('(min-width: 1200px)').addEventListener('change', (mq) => mq.matches && close());
 }
 
 /* Project filters: links work without JavaScript; with it, filtering is instant. */

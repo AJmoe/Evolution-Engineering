@@ -478,23 +478,23 @@ a {
   width: 16px;
   height: 16px;
 }
-.bx-header .btn {
+.bx-header__inner > .btn {
   margin-left: 22px;
 }
-.bx-burger {
+.m-menu {
   display: none;
 }
 @media (max-width: 1199px) {
   .bx-nav,
-  .bx-header .btn,
+  .bx-header__inner > .btn,
   .bx-header__tools [data-sidebar-open] {
     display: none;
   }
   .bx-header__tools {
     margin-left: auto;
   }
-  .bx-burger {
-    display: grid;
+  .m-menu {
+    display: block;
   }
   .bx-header__inner {
     padding: 18px var(--gutter);
@@ -639,32 +639,6 @@ a {
 }
 .contact-list a {
   color: inherit;
-}
-
-/* Mobile menu (reuses main.css's sheet behaviour) */
-.menu-sheet {
-  background: var(--navy);
-  color: #fff;
-}
-.menu-sheet a,
-.menu-sheet .menu-toggle {
-  color: #fff;
-}
-.menu-sheet ul a {
-  font-family: var(--font-display);
-  font-weight: 700;
-}
-.menu-sheet .sub-links {
-  display: grid;
-  gap: 4px;
-  margin: 6px 0 10px 16px;
-  padding: 0;
-  list-style: none;
-}
-.menu-sheet .sub-links a {
-  font-size: 1rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
 }
 
 /* ---- Hero ---- */
@@ -2601,39 +2575,122 @@ a {
   min-width: 0;
 }
 
-/* Mobile menu: close button and links on the navy sheet */
-.menu-toggle {
-  display: inline-flex;
+/* Compact mobile menu: a panel that drops down under the menu button */
+.m-menu {
+  position: relative;
+}
+.m-menu > summary {
+  list-style: none;
+}
+.m-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.m-menu__close,
+.m-menu[open] .m-menu__open {
+  display: none;
+}
+.m-menu[open] .m-menu__close {
+  display: block;
+}
+.m-menu[open] > summary {
+  background: var(--red);
+  border-color: var(--red);
+}
+.m-menu__panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 60;
+  width: min(270px, calc(100vw - 32px));
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+  padding: 6px 0 0;
+  background: #fff;
+  border-top: 3px solid var(--red);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 20px 40px rgba(11, 25, 48, 0.25);
+  animation: m-menu-in 0.2s var(--ease);
+}
+@keyframes m-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+.m-menu__panel ul {
+  padding: 0;
+  list-style: none;
+}
+.m-menu__panel > ul > li + li {
+  border-top: 1px solid var(--line);
+}
+.m-menu__panel a,
+.m-menu__panel summary {
+  display: flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 18px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 999px;
-  background: transparent;
-  color: #fff;
-  font-weight: 600;
+  justify-content: space-between;
+  padding: 10px 18px;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--heading);
   cursor: pointer;
 }
-.menu-sheet .menu-sheet__top {
-  padding-left: 0;
+.m-menu__panel summary {
+  list-style: none;
 }
-.menu-sheet ul a {
-  color: #fff;
+.m-menu__panel summary::-webkit-details-marker {
+  display: none;
+}
+.m-menu__panel a:hover,
+.m-menu__panel summary:hover,
+.m-menu__panel [aria-current='page'],
+.m-menu__panel .is-current {
+  color: var(--red);
+  text-decoration: none;
+}
+.m-menu__panel .caret {
+  width: 12px;
+  height: 12px;
+  transition: transform var(--t);
+}
+.m-menu__panel details[open] .caret {
+  transform: rotate(180deg);
+}
+.m-menu__panel details ul {
+  padding-bottom: 6px;
+  background: var(--soft);
+}
+.m-menu__panel details ul a {
+  padding: 7px 18px 7px 30px;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+.m-menu__foot {
+  display: grid;
+  gap: 6px;
+  padding: 12px 18px 14px;
+  border-top: 1px solid var(--line);
+}
+.m-menu__foot .btn {
+  min-height: 42px;
+  padding: 0 16px;
+}
+.m-menu__panel .m-menu__call {
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0 0;
   font-weight: 700;
-  font-size: clamp(1.5rem, 6vw, 2rem);
-  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
-.menu-sheet .sub-links a {
-  padding: 6px 0;
-  border-bottom: 0;
-  font-size: 1rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
+.m-menu__call svg {
+  width: 16px;
+  height: 16px;
+  color: var(--red);
 }
-.menu-sheet__contact {
-  color: rgba(255, 255, 255, 0.7);
-}
-.menu-sheet .bx-logo img {
-  width: 120px;
+.m-menu__panel .m-menu__foot .btn {
+  justify-content: center;
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
 }
