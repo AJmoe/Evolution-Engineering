@@ -6,7 +6,7 @@ Everything here is marked in code with `data-placeholder` or `TODO-CLIENT`. None
 |---|---|---|
 | Logo | `public/images/brand/`, built from the supplied PNG | Optional: a vector (SVG or PDF) logo for sharper rendering |
 | Project photography | `project_images` rows with paths starting `stock/`, shown with an "Illustrative photo" tag. Every project now has its own photo | Daylight photos of each project |
-| Plant photography | `equipment.image_path` values starting `stock/` (same machine type, not their units); others show a drawing | Photos of the current fleet, and confirmation the list is current |
+| Plant photography | `equipment.image_path` values starting `stock/`: every fleet item has an open-licence photo of the same make and model (the Hydromek A4 shows a similar backhoe loader) | Photos of the current fleet, and confirmation the list is current |
 | Facility, service and supplies photos | About page, `ServiceCatalog` photo keys, `supplies.twig` | Photos of the client's own premises, work and stock |
 | Interim photo credits | `/credits` page, `IMAGE_CREDITS.md` | None. Remove each credit when its photo is replaced; delete the page when none remain |
 | Client logos | Homepage strip, `public/images/clients/`, sources in `IMAGE_CREDITS.md` | Logo files from each client, or permission to keep these |

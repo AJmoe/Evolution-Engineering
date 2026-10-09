@@ -197,17 +197,27 @@ function seed(PDO $pdo): void
     ];
     // Interim photos of the same type of machine, not the client's own units.
     $machinePhoto = [
-        '3CX backhoe loader' => 'backhoe',
+        '3CX backhoe loader' => 'jcb-backhoe',
         'A4' => 'backhoe',
         'JS305LC excavator' => 'excavator',
-        'ZX200 excavator (20 ton)' => 'excavator',
-        'ZX330 excavator (33 ton)' => 'excavator',
+        'ZX200 excavator (20 ton)' => 'hitachi-zx200',
+        'ZX330 excavator (33 ton)' => 'hitachi-zx330',
         '432ZX loader' => 'wheel-loader',
         'Skid steer' => 'skid-steer',
         '260-120 roller' => 'roller',
-        'GRW18 pneumatic roller' => 'roller',
-        'HD8VV sit-on roller' => 'roller',
-        'Trucks' => 'dump-truck',
+        'GRW18 pneumatic roller' => 'hamm-pneumatic',
+        'HD8VV sit-on roller' => 'hamm-tandem',
+        'Trucks' => 'sino-truck',
+        'Dutro' => 'hino-dutro',
+        'Liesse' => 'hino-liesse',
+        'Hilux Surf' => 'toyota-hilux-surf',
+        'Hilux' => 'toyota-hilux',
+        'Land Cruiser' => 'toyota-land-cruiser',
+        'DA 110' => 'toyota-dyna',
+        'Runx' => 'toyota-runx',
+        'Amarok' => 'vw-amarok',
+        'Polo' => 'vw-polo',
+        'UG780' => 'nissan-ud',
     ];
     $stmt = $pdo->prepare(
         'INSERT INTO equipment (group_name, make, model, role, quantity_label, image_path, sort, published)

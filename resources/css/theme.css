@@ -2787,3 +2787,15 @@ a {
   opacity: 0.75;
   cursor: progress;
 }
+
+/* Plant cards: every photo cropped to the same 4:3 frame so the grid lines up */
+.machine__media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.machine__media .photo,
+.machine__media .photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

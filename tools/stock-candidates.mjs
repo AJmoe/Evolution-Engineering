@@ -34,6 +34,8 @@ export const SLOTS = {
 
 const API = 'https://api.openverse.org/v1/images/';
 const PER_SLOT = 8;
+// Vehicle models are rarer in open collections; allow smaller originals with MIN_WIDTH=1200.
+const MIN_WIDTH = Number(process.env.MIN_WIDTH) || 1600;
 
 async function search(queries) {
   const pool = new Map();
@@ -56,7 +58,7 @@ async function searchOne(q) {
     if (!res.ok) throw new Error(`${res.status} for ${q}`);
     const data = await res.json();
     return data.results
-      .filter((r) => (r.width || 0) >= 1600 && r.width > r.height * 1.2 && ['cc0', 'pdm', 'by'].includes(r.license))
+      .filter((r) => (r.width || 0) >= MIN_WIDTH && r.width > r.height * 1.2 && ['cc0', 'pdm', 'by'].includes(r.license))
       .slice(0, PER_SLOT)
       .map((r) => ({
         id: r.id,

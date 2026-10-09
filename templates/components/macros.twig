@@ -77,7 +77,7 @@
 {% macro machine_media(m) %}
   {% set key = m.image_path starts with 'stock/' ? m.image_path|slice(6) : null %}
   {% if key and photo_meta(key) %}
-    <div class="machine__media machine__media--photo">{{ _self.photo(key, 'A ' ~ m.role|lower ~ ' machine of the same type as the ' ~ m.make ~ ' ' ~ m.model, '(min-width: 900px) 300px, 70vw', false, true) }}</div>
+    <div class="machine__media machine__media--photo">{{ _self.photo(key, 'A ' ~ (m.group_name in ['vehicles', 'haulage'] ? 'vehicle' : 'machine') ~ ' like our ' ~ m.make ~ ' ' ~ m.model ~ ', used for ' ~ m.role|lower, '(min-width: 900px) 300px, 70vw', false, true) }}</div>
   {% else %}
     <div class="machine__media" data-placeholder="plant-photo">{{ _self.machine(m.group_name) }}</div>
   {% endif %}

@@ -43,6 +43,23 @@ const SELECTION = {
   'culvert-pipe': ['storm-drain', 0],
   'concrete-pipe': ['storm-drain', 2],
   'pipe-laying': ['storm-drain', 1],
+  // 2026-10-09: one photo per fleet item, matching the make and model where open photos exist
+  'jcb-backhoe': ['backhoe', 4],
+  'hitachi-zx200': ['v-hitachi', 5],
+  'hitachi-zx330': ['v-hitachi', 3],
+  'hamm-pneumatic': ['v-hamm', 2],
+  'hamm-tandem': ['v-hamm', 5],
+  'sino-truck': ['v-sino', 0],
+  'hino-dutro': ['v-dutro', 0],
+  'hino-liesse': ['v-liesse', 6],
+  'toyota-hilux-surf': ['v-hilux-surf', 5],
+  'toyota-hilux': ['v-hilux', 6],
+  'toyota-land-cruiser': ['v-landcruiser', 1],
+  'toyota-dyna': ['v-dyna', 1],
+  'toyota-runx': ['v-runx', 7],
+  'vw-amarok': ['v-amarok', 0],
+  'vw-polo': ['v-polo', 4],
+  'nissan-ud': ['v-ud', 3],
 };
 
 const WIDTHS = [400, 800, 1200, 1600];
