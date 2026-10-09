@@ -1,0 +1,29 @@
+# Render Blueprint: one Docker web service with its own MariaDB inside (temporary hosting).
+# The database is re-seeded from database/seeds on every deploy and restart.
+services:
+  - type: web
+    name: evolution-engineers
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: APP_SECRET
+        generateValue: true
+      - key: APP_NOINDEX
+        value: "true"
+      # Optional: SMTP details so the contact form can send email.
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USER
+        sync: false
+      - key: MAIL_PASS
+        sync: false
+      - key: MAIL_ENCRYPTION
+        value: tls
+      - key: MAIL_FROM
+        value: website@evolutionengineers.co.bw
+      - key: MAIL_FROM_NAME
+        value: Evolution Engineers website

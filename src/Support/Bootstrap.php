@@ -40,7 +40,8 @@ final class Bootstrap
     public static function createApp(string $root): App
     {
         \Dotenv\Dotenv::createImmutable($root)->safeLoad();
-        $env = $_ENV;
+        // .env values first (local), then real environment variables (Docker, Render).
+        $env = $_ENV + getenv();
         $debug = ($env['APP_DEBUG'] ?? 'false') === 'true';
         $baseUrl = rtrim((string) ($env['APP_URL'] ?? 'http://localhost:8080'), '/');
         $noindex = ($env['APP_NOINDEX'] ?? 'false') === 'true';

@@ -1,0 +1,14 @@
+.git
+.github
+.env
+node_modules
+vendor
+public/assets
+storage/logs/*
+storage/cache/*
+storage/screenshots
+storage/reference
+storage/stock
+.phpunit.cache
+test-results
+tools/composer.phar

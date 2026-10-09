@@ -55,3 +55,13 @@ node tools/screenshots.mjs         # screenshots, console errors and overflow at
 - `PLACEHOLDERS.md` lists every placeholder and `TODO-CLIENT` item.
 - `OPEN_QUESTIONS.md` lists questions for the client.
 - `LICENSES.md` lists third-party licences.
+
+## Deploy to Render (temporary hosting)
+
+The root `Dockerfile` builds one image with Apache, PHP 8.3 and MariaDB. On every start, `docker/render/start.sh` starts MariaDB, re-creates the database from the seed data and runs Apache on `$PORT`. Enquiries are lost when the service restarts, so this is for previews only.
+
+1. In Render, choose **New > Blueprint** and pick this repository. `render.yaml` creates the web service and a random `APP_SECRET`.
+2. Optional: fill in `MAIL_HOST`, `MAIL_USER` and `MAIL_PASS` so the contact form can send email. Without them, enquiries are still saved in the database.
+3. `APP_URL` defaults to Render's public URL. `APP_NOINDEX=true` keeps search engines away.
+
+Test the image locally with `docker build -t ee . && docker run -p 10000:10000 ee`, then open http://localhost:10000.

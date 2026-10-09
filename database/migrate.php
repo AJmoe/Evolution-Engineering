@@ -12,6 +12,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use EvolutionEngineers\Support\Database;
 
 Dotenv\Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
+// Real environment variables fill in whatever .env does not set (Docker, Render).
+$_ENV += getenv();
 
 $args = array_slice($argv, 1);
 $name = (string) ($_ENV['DB_NAME'] ?? 'evolution_engineers');
