@@ -4,6 +4,7 @@
 
 {% block title %}Projects{% endblock %}
 {% block description %}Roads, pipelines, sewer networks, clinics and mine works delivered by Evolution Engineers for Botswana's mines, utilities, ministries and councils since 2008.{% endblock %}
+{% block robots %}{{ search ? 'noindex, follow' }}{% endblock %}
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}

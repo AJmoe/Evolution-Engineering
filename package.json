@@ -5,23 +5,23 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "stills": "node tools/render-stills.mjs",
     "check:pages": "node tools/screenshots.mjs",
-    "check:hero": "node tools/hero-check.mjs && node tools/fallback-check.mjs",
     "check:viewer": "node tools/viewer-check.mjs",
-    "lint": "eslint resources/js && prettier --check \"resources/**/*.{js,css}\"",
+    "lint": "eslint resources/js tools && prettier --check \"resources/**/*.{js,css}\"",
     "og": "node tools/og-image.mjs",
     "homes:drawings": "node tools/home-drawings.mjs",
-    "homes:stills": "node tools/home-stills.mjs"
+    "homes:stills": "node tools/home-stills.mjs",
+    "check:a11y": "node tools/a11y-check.mjs",
+    "check:crawl": "node tools/audit-crawl.mjs"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@fontsource/barlow": "^5.3.0",
-    "@fontsource/fraunces": "^5.1.0",
-    "@fontsource/hanken-grotesk": "^5.1.0",
     "@fontsource/roboto": "^5.3.0",
     "@playwright/test": "^1.63.0",
     "axe-core": "^4.14.0",
     "eslint": "^9.10.0",
+    "globals": "^14.0.0",
     "prettier": "^3.3.0",
     "sharp": "^0.35.5",
     "vite": "^7.0.0"

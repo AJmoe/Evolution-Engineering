@@ -8,6 +8,7 @@ use EvolutionEngineers\Middleware\Csrf;
 use EvolutionEngineers\Repository\HomeRepository;
 use EvolutionEngineers\Service\EnquiryService;
 use EvolutionEngineers\Service\EnquiryValidator;
+use EvolutionEngineers\Support\ClientIp;
 use EvolutionEngineers\Support\View;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -23,6 +24,7 @@ final class ContactController
         private readonly EnquiryService $enquiries,
         private readonly HomeRepository $homes,
         private readonly LoggerInterface $logger,
+        private readonly bool $trustProxy = false,
     ) {
     }
 
@@ -54,7 +56,7 @@ final class ContactController
     public function submit(Request $request, Response $response): Response
     {
         $input = (array) $request->getParsedBody();
-        $ip = (string) ($request->getServerParams()['REMOTE_ADDR'] ?? '0.0.0.0');
+        $ip = ClientIp::from($request, $this->trustProxy);
 
         // Spam checks: a hidden honeypot field and a minimum fill time. Bots get a fake success.
         $issued = Csrf::issuedAt(is_string($input['_csrf'] ?? null) ? $input['_csrf'] : '');
@@ -80,6 +82,20 @@ final class ContactController
         $this->enquiries->submit($result['data'], $ip);
 
         return $this->render($request, $response, [], [], true);
+    }
+
+    /**
+     * The form's security token expired or was missing (usually a page left open for hours).
+     * Show the form again with what the visitor typed, so nothing is lost.
+     */
+    public function expired(Request $request, Response $response): Response
+    {
+        $data = $this->validator->validate((array) $request->getParsedBody())['data'];
+
+        return $this->render($request, $response, $data, [
+            'form' => 'This form was open for a long time, so for your security we need you to send it again. '
+                . 'Your details are still filled in: check them and press Send enquiry.',
+        ], false, 400);
     }
 
     /**

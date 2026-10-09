@@ -45,14 +45,3 @@
   } %}
   <svg class="{{ cls }}" viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{{ big[name]|raw }}</svg>
 {% endmacro %}
-
-{# Faint construction drawing behind the navy statement band. #}
-{% macro blueprint_art() %}
-  <svg class="voices__art" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
-    <path d="M60 700V300l120-80 120 80v400M60 300h240M120 700V380h120v320M90 420h180M90 500h180M90 580h180"/>
-    <path d="M980 700V120M980 120h420M1000 120l40-60h340l20 60M1060 120v580M1140 120v580M1220 120v580M1300 120v580"/>
-    <path d="M980 200l80 80 80-80 80 80 80-80 80 80M980 360l80 80 80-80 80 80 80-80 80 80M980 520l80 80 80-80 80 80 80-80 80 80"/>
-    <path d="M1180 60V10h20v50M1190 10l-300 90M1190 10l140 40M890 100v60"/>
-    <path d="M380 640h520M380 630v20M900 630v20M640 640V560M560 560h160l-80-60z" stroke-dasharray="6 8"/>
-  </svg>
-{% endmacro %}

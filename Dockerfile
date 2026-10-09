@@ -41,6 +41,6 @@ RUN chmod +x /usr/local/bin/start-site \
 
 ENV APP_ENV=production APP_DEBUG=false APP_NOINDEX=true \
     DB_HOST=127.0.0.1 DB_PORT=3306 DB_NAME=evolution_engineers DB_USER=ee DB_PASS=ee \
-    PORT=10000
+    PORT=10000 TRUST_PROXY=true
 EXPOSE 10000
 CMD ["start-site"]

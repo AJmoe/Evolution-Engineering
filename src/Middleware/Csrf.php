@@ -7,19 +7,24 @@ namespace EvolutionEngineers\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Closure;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Psr7\Response;
 
 /**
  * Stateless double-submit CSRF protection, so the public site needs no session cookie.
  * The token is an HMAC of a random value, carried in a hidden field and checked on POST.
- * Tokens expire after two hours.
+ * Tokens expire after two hours. A failed check is handed to $onFailure (which re-shows the form with a
+ * fresh token); without one, a plain 400 response is returned.
  */
 final class Csrf implements MiddlewareInterface
 {
     private const TTL = 7200;
 
-    public function __construct(private readonly string $secret)
+    /**
+     * @param (Closure(ServerRequestInterface): ResponseInterface)|null $onFailure
+     */
+    public function __construct(private readonly string $secret, private readonly ?Closure $onFailure = null)
     {
     }
 
@@ -29,6 +34,9 @@ final class Csrf implements MiddlewareInterface
             $body = (array) $request->getParsedBody();
             $token = is_string($body['_csrf'] ?? null) ? $body['_csrf'] : '';
             if (!$this->valid($token)) {
+                if ($this->onFailure !== null) {
+                    return ($this->onFailure)($request->withAttribute('csrf_token', $this->issue()));
+                }
                 $response = new Response(400);
                 $response->getBody()->write(
                     'Your form session expired. Go back, reload the page and send the form again.'

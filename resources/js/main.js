@@ -5,19 +5,6 @@ import '../css/theme.css';
 const doc = document.documentElement;
 doc.classList.add('js');
 
-/* Homepage hero film. Loaded only on the homepage; Three.js loads later, when idle. */
-const hero = document.querySelector('[data-hero]');
-if (hero) {
-  import('./hero.js').then(({ initHero, renderStills }) => {
-    const renderMode = doc.dataset.env === 'local' && new URLSearchParams(window.location.search).has('render-stills');
-    if (renderMode) {
-      window.__eeStills = renderStills();
-      return;
-    }
-    initHero(hero);
-  });
-}
-
 /* Small-homes 3D viewers: loaded when a viewer nears the screen, never on low-end devices. */
 const viewerFrames = document.querySelectorAll('[data-home-viewer]');
 if (viewerFrames.length) {
@@ -345,4 +332,45 @@ document.querySelectorAll('[data-gallery]').forEach((gallery) => {
   prev.addEventListener('click', () => go(current - 1));
   next.addEventListener('click', () => go(current + 1));
   go(0);
+});
+
+/* Contact form: show a sending state and block double submission. The server still validates everything. */
+document.querySelectorAll('form.form').forEach((form) => {
+  form.addEventListener('submit', (e) => {
+    const button = form.querySelector('button[type="submit"]');
+    if (!button) return;
+    if (button.getAttribute('aria-busy') === 'true') {
+      e.preventDefault();
+      return;
+    }
+    button.setAttribute('aria-busy', 'true');
+    button.textContent = 'Sending…';
+  });
+});
+
+/* Keep keyboard focus inside an open overlay (search screen, information sidebar). */
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab') return;
+  const open = document.querySelector('.bx-search:not([hidden]), .bx-sidebar.is-open');
+  if (!open) return;
+  const items = [...open.querySelectorAll('a[href], button, input, [tabindex="0"]')].filter(
+    (el) => el.offsetParent !== null,
+  );
+  if (!items.length) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (e.shiftKey && (document.activeElement === first || !open.contains(document.activeElement))) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && (document.activeElement === last || !open.contains(document.activeElement))) {
+    e.preventDefault();
+    first.focus();
+  }
+});
+// Returning with the Back button restores the page from cache; reset any "Sending…" button.
+window.addEventListener('pageshow', () => {
+  document.querySelectorAll('form.form button[aria-busy="true"]').forEach((b) => {
+    b.removeAttribute('aria-busy');
+    b.textContent = 'Send enquiry';
+  });
 });

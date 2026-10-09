@@ -1,9 +1,17 @@
 {% extends 'layout.twig' %}
 {% import 'components/macros.twig' as ui %}
 
-{% block title %}Something went wrong{% endblock %}
+{% block title %}Temporary problem{% endblock %}
 {% block head %}<meta name="robots" content="noindex">{% endblock %}
 
 {% block content %}
-  {{ ui.page_header('Something went wrong on our side.', 'Please try again in a minute. If it keeps happening, call us on ' ~ (settings.phone ?? '392 3065') ~ '.', []) }}
+  {{ ui.page_header('We Could Not Load This Page', 'This is a problem on our side, not with your device. Please try again in a few minutes.', []) }}
+  <section class="bx-section">
+    <div class="container sec-title sec-title--center">
+      <p class="eyebrow">Need us now?</p>
+      <h2>Call Or Email The Office</h2>
+      <p>Phone <a href="tel:{{ settings.phone_e164 }}">{{ settings.phone }}</a>, cell <a href="tel:{{ settings.cell_e164 }}">{{ settings.cell }}</a>, or email <a href="mailto:{{ settings.email_general }}">{{ settings.email_general }}</a>.</p>
+      <p class="btn-row btn-row--center"><a class="btn btn--red" href="{{ current_path ?? '/' }}">Try again</a> <a class="btn btn--secondary" href="/">Go to the homepage</a></p>
+    </div>
+  </section>
 {% endblock %}

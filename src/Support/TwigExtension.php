@@ -10,8 +10,11 @@ use Twig\TwigFunction;
 
 final class TwigExtension extends AbstractExtension
 {
-    public function __construct(private readonly Manifest $manifest, private readonly ?ImageCatalog $images = null)
-    {
+    public function __construct(
+        private readonly Manifest $manifest,
+        private readonly ?ImageCatalog $images = null,
+        private readonly string $publicDir = '',
+    ) {
     }
 
     public function getFunctions(): array
@@ -24,6 +27,7 @@ final class TwigExtension extends AbstractExtension
             new TwigFunction('vite_dev', [$this->manifest, 'isDev']),
             new TwigFunction('vite_preload_fonts', [$this, 'preloadFonts'], ['is_safe' => ['html']]),
             new TwigFunction('photo_meta', fn (?string $key): ?array => $key ? $this->images?->get($key) : null),
+            new TwigFunction('svg_size', [$this, 'svgSize']),
             new TwigFunction('photo_credits', fn (): array => $this->images?->all() ?? []),
         ];
     }
@@ -50,7 +54,40 @@ final class TwigExtension extends AbstractExtension
     {
         return [
             new TwigFilter('tel', static fn (string $v): string => preg_replace('/[^0-9+]/', '', $v) ?? ''),
+            new TwigFilter('excerpt', [self::class, 'excerpt']),
         ];
+    }
+
+    /**
+     * Collapses whitespace and shortens text to at most $max characters on a word boundary,
+     * for meta descriptions (search results show about 155 to 160 characters).
+     */
+    public static function excerpt(string $text, int $max = 158): string
+    {
+        $text = trim((string) preg_replace('/\s+/', ' ', strip_tags($text)));
+        if (mb_strlen($text) <= $max) {
+            return $text;
+        }
+        $cut = mb_substr($text, 0, $max - 1);
+        $space = mb_strrpos($cut, ' ');
+
+        return rtrim($space !== false ? mb_substr($cut, 0, $space) : $cut, ' ,;:.') . '…';
+    }
+
+    /**
+     * Intrinsic width and height of a public SVG, from its viewBox, so <img> tags can reserve space.
+     *
+     * @return array{width: int, height: int}|null
+     */
+    public function svgSize(string $publicPath): ?array
+    {
+        $file = $this->publicDir . '/' . ltrim($publicPath, '/');
+        $head = is_file($file) ? (string) file_get_contents($file, false, null, 0, 400) : '';
+        if (!preg_match('/viewBox="[\d.]+ [\d.]+ ([\d.]+) ([\d.]+)"/', $head, $m)) {
+            return null;
+        }
+
+        return ['width' => (int) round((float) $m[1]), 'height' => (int) round((float) $m[2])];
     }
 
     public function css(string $entry): string

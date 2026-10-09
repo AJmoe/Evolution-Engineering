@@ -6,10 +6,6 @@
   </a>
 {% endmacro %}
 
-{% macro arrow() %}
-  <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6h14M9 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-{% endmacro %}
-
 {% macro page_header(title, intro, crumbs, bg) %}
   <header class="page-banner">
     <div class="page-banner__bg">{{ _self.photo(bg ?: 'building-glass', '', '100vw', true, false) }}</div>
@@ -78,17 +74,6 @@
   </div>
 {% endmacro %}
 
-{% macro project_card(p, hidden) %}
-  <article class="card" data-category="{{ p.category }}" data-year="{{ p.year }}"{% if hidden %} hidden{% endif %}>
-    <div class="card__media">{{ _self.project_media(p, '(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw', false) }}</div>
-    <div class="card__body">
-      <h3 class="card__title"><a href="/projects/{{ p.slug }}">{{ p.title }}</a></h3>
-      <p class="card__meta"><span>{{ p.client_name }}</span><span>{{ p.year_label }}</span></p>
-      <p class="card__meta"><span>{{ p.category_label }}</span><span>{{ p.role_label }}</span></p>
-    </div>
-  </article>
-{% endmacro %}
-
 {% macro machine_media(m) %}
   {% set key = m.image_path starts with 'stock/' ? m.image_path|slice(6) : null %}
   {% if key and photo_meta(key) %}
@@ -113,70 +98,6 @@
   </svg>
 {% endmacro %}
 
-{# Daylight poster of a concept home, drawn per design type. Replaced by the 3D viewer when it loads. #}
-{% macro home_poster(home) %}
-  {% set t = home.model_params.type ?? 'gable' %}
-  <svg viewBox="0 0 400 300" aria-hidden="true">
-    <defs>
-      <linearGradient id="sky-{{ home.slug }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6F7"/><stop offset="1" stop-color="#F4F8FB"/></linearGradient>
-    </defs>
-    <rect width="400" height="300" fill="url(#sky-{{ home.slug }})"/>
-    <ellipse cx="200" cy="246" rx="190" ry="34" fill="#9CC46A" opacity=".55"/>
-    <ellipse cx="200" cy="244" rx="130" ry="14" fill="#0B2A4A" opacity=".08"/>
-    {% if t == 'gable' %}
-      <path d="M110 236V160h180v76z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
-      <path d="M96 164l104-62 104 62z" fill="#8A97A6" stroke="#0B2A4A" stroke-width="1.5"/>
-      <path d="M110 180h-36v56h36" fill="#F4F8FB" stroke="#0B2A4A" stroke-width="1.5"/><path d="M68 180h42" stroke="#0B2A4A" stroke-width="3"/>
-      <rect x="140" y="184" width="36" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="226" y="184" width="36" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="190" y="196" width="22" height="40" fill="#C2A27A" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="300" y="196" width="24" height="40" rx="3" fill="#D3DFEA" stroke="#0B2A4A" stroke-width="1.2"/>
-    {% elseif t == 'lshape' %}
-      <path d="M70 236v-70h150v70z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
-      <path d="M220 236v-92h110v92z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
-      <path d="M60 170l80-36 90 36z" fill="#8A97A6" stroke="#0B2A4A" stroke-width="1.5"/>
-      <path d="M210 148l65-44 65 44z" fill="#8A97A6" stroke="#0B2A4A" stroke-width="1.5"/>
-      <rect x="90" y="186" width="40" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="150" y="196" width="22" height="40" fill="#C2A27A" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="240" y="170" width="30" height="26" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="284" y="170" width="30" height="26" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
-    {% else %}
-      <path d="M60 236v-78h120v78zM220 236v-78h120v78z" fill="#FFFFFF" stroke="#0B2A4A" stroke-width="1.5"/>
-      <path d="M52 158h136v-10H52zM212 158h136v-10H212z" fill="#D3DFEA" stroke="#0B2A4A" stroke-width="1.5"/>
-      <path d="M180 236v-60h40v60" fill="#F4F8FB" stroke="#0B2A4A" stroke-width="1.2"/>
-      <path d="M176 176h48M184 176v-8M196 176v-8M208 176v-8M216 176v-8" stroke="#C2A27A" stroke-width="3"/>
-      <rect x="80" y="180" width="36" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="130" y="196" width="22" height="40" fill="#C2A27A" stroke="#0B2A4A" stroke-width="1.2"/>
-      <rect x="244" y="180" width="72" height="28" fill="#9FC9E6" stroke="#0B2A4A" stroke-width="1.2"/>
-      <path d="M340 236v-56h44v56M336 180h52" fill="none" stroke="#0B2A4A" stroke-width="1.5"/>
-    {% endif %}
-  </svg>
-{% endmacro %}
-
-{# Indicative floor plan drawn from the design type. TODO-CLIENT: replace with the designer's SVG plans. #}
-{% macro floorplan(home) %}
-  {% set t = home.model_params.type ?? 'gable' %}
-  <figure class="floorplan" data-placeholder="floor-plan">
-    <svg viewBox="0 0 320 220" role="img" aria-labelledby="fp-{{ home.slug }}" fill="none" stroke="currentColor" stroke-width="3" font-family="Hanken Grotesk, sans-serif" font-size="10">
-      <title id="fp-{{ home.slug }}">Indicative floor plan of {{ home.name }}: {{ home.bedrooms }} bedroom{{ home.bedrooms > 1 ? 's' }}, {{ home.bathrooms }} bathroom{{ home.bathrooms > 1 ? 's' }}, {{ home.area_m2 }} m²</title>
-      {% if t == 'gable' %}
-        <rect x="60" y="30" width="200" height="130"/><path d="M160 30v80M160 110h100M210 110v50" stroke-width="2"/>
-        <rect x="60" y="160" width="200" height="40" stroke-dasharray="5 4" stroke-width="1.5"/>
-        <g fill="currentColor" stroke="none"><text x="80" y="80">Living and kitchen</text><text x="178" y="72">Bedroom</text><text x="168" y="140">Bath</text><text x="220" y="140">Store</text><text x="130" y="184">Veranda</text></g>
-      {% elseif t == 'lshape' %}
-        <path d="M30 30h170v90h90v80H30z"/><path d="M200 30v90M110 30v90M30 120h170M200 120v80M120 120v80" stroke-width="2"/>
-        <rect x="200" y="30" width="90" height="90" stroke-dasharray="5 4" stroke-width="1.5"/>
-        <g fill="currentColor" stroke="none"><text x="44" y="80">Bedroom 1</text><text x="124" y="80">Bedroom 2</text><text x="54" y="164">Bath</text><text x="140" y="164">Kitchen</text><text x="224" y="164">Living</text><text x="222" y="80">Veranda</text></g>
-      {% else %}
-        <path d="M20 20h280v180H20z"/><rect x="110" y="70" width="100" height="80" stroke-dasharray="5 4" stroke-width="1.5"/>
-        <path d="M110 20v50M210 20v50M110 150v50M210 150v50M20 110h90M210 110h90" stroke-width="2"/>
-        <g fill="currentColor" stroke="none"><text x="34" y="60">Bedroom 1</text><text x="130" y="48">Living</text><text x="226" y="60">Bedroom 2</text><text x="134" y="114">Courtyard</text><text x="34" y="160">Kitchen</text><text x="130" y="180">Bath</text><text x="226" y="160">Bedroom 3</text></g>
-      {% endif %}
-    </svg>
-    <figcaption class="small muted">Indicative plan. Final drawings are prepared for each plot.</figcaption>
-  </figure>
-{% endmacro %}
-
 {% macro home_card(h) %}
   <article class="card">
     <div class="card__media"><img src="/images/homes/{{ h.slug }}-3d-sm.webp" width="600" height="450" alt="Rendered view of {{ h.name }}" loading="lazy"></div>
@@ -186,37 +107,6 @@
       <p class="card__meta"><span>{{ h.bedrooms }} bed</span><span>{{ h.bathrooms }} bath</span><span>{{ h.area_m2 }} m² {{ h.outdoor_label }}</span></p>
     </div>
   </article>
-{% endmacro %}
-
-{# Line icons, drawn on a 48 grid in the brand's deep blue. Decorative: always aria-hidden. #}
-{% macro service_icon(slug) %}
-  <svg class="line-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    {% if slug == 'civil-engineering' %}
-      <path d="M4 34h40M8 34V24M40 34V24M4 24c8-10 32-10 40 0M16 34V20.5M24 34V18M32 34V20.5"/><path d="M4 40h40" stroke-dasharray="2 4"/>
-    {% elseif slug == 'mechanical-engineering' %}
-      <circle cx="24" cy="24" r="6"/><path d="M24 8v5M24 35v5M8 24h5M35 24h5M12.7 12.7l3.6 3.6M31.7 31.7l3.6 3.6M12.7 35.3l3.6-3.6M31.7 16.3l3.6-3.6"/><circle cx="24" cy="24" r="12"/>
-    {% elseif slug == 'electrical-engineering' %}
-      <path d="M27 6L13 27h10l-3 15 15-22H25l2-14z"/>
-    {% else %}
-      <path d="M4 24h10M34 24h10M14 14v20M34 14v20M14 14l20 20M14 34l20-20M24 14V7M19 7h10"/>
-    {% endif %}
-  </svg>
-{% endmacro %}
-
-{% macro check() %}
-  <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
-{% endmacro %}
-
-{% macro phone_icon() %}
-  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 006 6L16 13l5 2v4a2 2 0 01-2 2A16 16 0 013 5a2 2 0 012-2z"/></svg>
-{% endmacro %}
-
-{% macro pin_icon() %}
-  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-{% endmacro %}
-
-{% macro mail_icon() %}
-  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 7 8.5-7"/></svg>
 {% endmacro %}
 
 {#
@@ -265,6 +155,8 @@
 #}
 {% macro home_gallery(h, eager) %}
   {% set base = '/images/homes/' ~ h.slug %}
+  {% set plan = svg_size(base ~ '-plan.svg') %}
+  {% set bp = svg_size(base ~ '-blueprint.svg') %}
   <div class="home-gallery" data-gallery>
     <div class="home-gallery__stage">
       <figure class="gslide is-active" data-slide id="slide-{{ h.slug }}-3d">
@@ -279,11 +171,11 @@
         <figcaption>3D model. Drag to turn it.</figcaption>
       </figure>
       <figure class="gslide" data-slide id="slide-{{ h.slug }}-plan">
-        <a class="drawing-frame" href="{{ base }}-plan.svg" target="_blank" rel="noopener"><img src="{{ base }}-plan.svg" alt="Floor plan of {{ h.name }}: room layout with furniture and dimensions" loading="lazy"></a>
+        <a class="drawing-frame" href="{{ base }}-plan.svg" target="_blank" rel="noopener"><img src="{{ base }}-plan.svg"{% if plan %} width="{{ plan.width }}" height="{{ plan.height }}"{% endif %} alt="Floor plan of {{ h.name }}: room layout with furniture and dimensions" loading="lazy"></a>
         <figcaption>Floor plan. Open it full size for detail.</figcaption>
       </figure>
       <figure class="gslide" data-slide id="slide-{{ h.slug }}-blueprint">
-        <a class="drawing-frame drawing-frame--blue" href="{{ base }}-blueprint.svg" target="_blank" rel="noopener"><img src="{{ base }}-blueprint.svg" alt="Blueprint of {{ h.name }}: front and side elevations with heights" loading="lazy"></a>
+        <a class="drawing-frame drawing-frame--blue" href="{{ base }}-blueprint.svg" target="_blank" rel="noopener"><img src="{{ base }}-blueprint.svg"{% if bp %} width="{{ bp.width }}" height="{{ bp.height }}"{% endif %} alt="Blueprint of {{ h.name }}: front and side elevations with heights" loading="lazy"></a>
         <figcaption>Blueprint: front and side elevations.</figcaption>
       </figure>
       <button class="round-btn gallery-prev" type="button" data-gallery-prev aria-label="Previous view" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -291,8 +183,8 @@
     </div>
     <div class="home-gallery__thumbs" role="group" aria-label="Views of {{ h.name }}" hidden>
       <button type="button" data-thumb="0" aria-pressed="true" aria-controls="slide-{{ h.slug }}-3d"><img src="{{ base }}-3d-sm.webp" alt="" width="600" height="450" loading="lazy"><span>3D model</span></button>
-      <button type="button" data-thumb="1" aria-pressed="false" aria-controls="slide-{{ h.slug }}-plan"><img src="{{ base }}-plan.svg" alt="" loading="lazy"><span>Floor plan</span></button>
-      <button type="button" data-thumb="2" aria-pressed="false" aria-controls="slide-{{ h.slug }}-blueprint"><img src="{{ base }}-blueprint.svg" alt="" loading="lazy"><span>Blueprint</span></button>
+      <button type="button" data-thumb="1" aria-pressed="false" aria-controls="slide-{{ h.slug }}-plan"><img src="{{ base }}-plan.svg" alt=""{% if plan %} width="{{ plan.width }}" height="{{ plan.height }}"{% endif %} loading="lazy"><span>Floor plan</span></button>
+      <button type="button" data-thumb="2" aria-pressed="false" aria-controls="slide-{{ h.slug }}-blueprint"><img src="{{ base }}-blueprint.svg" alt=""{% if bp %} width="{{ bp.width }}" height="{{ bp.height }}"{% endif %} loading="lazy"><span>Blueprint</span></button>
     </div>
   </div>
 {% endmacro %}

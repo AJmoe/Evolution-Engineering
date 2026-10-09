@@ -1,25 +1,8 @@
-/* Evolution Engineers: light-first design system from the developer brief. */
-
+/* Evolution Engineers: base styles (reset, layout, forms, tables, filters). The Buildnox-style theme is in theme.css. */
 :root {
-  --white: #ffffff;
-  --cloud: #f4f8fb;
-  --mist: #e6eef5;
-  --line: #d3dfea;
-  --ink: #0b2a4a;
-  --slate: #4a6075;
-  --brand: #0a93d8;
-  --brand-deep: #0b6fa8;
-  --accent: #f26a21;
-  --leaf: #86b94f;
+  /* Colours, fonts and type sizes are set in theme.css; these are the shared structural tokens. */
   --error: #c62839;
 
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-
-  --fs-display: clamp(2.75rem, 6vw, 5.5rem);
-  --fs-h2: clamp(2rem, 4vw, 3.5rem);
-  --fs-h3: clamp(1.4rem, 2.2vw, 2rem);
-  --fs-body: 1.0625rem;
   --fs-small: 0.875rem;
 
   --s-1: 4px;
@@ -34,10 +17,6 @@
   --s-10: 144px;
 
   --gutter: 24px;
-  --max: 1320px;
-  --section: clamp(72px, 10vw, 144px);
-  --radius: 6px;
-  --shadow: 0 24px 60px rgba(11, 42, 74, 0.08);
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --t: 240ms;
   color-scheme: light;
@@ -107,14 +86,12 @@ a:hover {
 /* Typography */
 h1,
 h2,
-h3,
-.display {
+h3 {
   font-family: var(--font-display);
   font-weight: 300;
   color: var(--ink);
   text-wrap: balance;
 }
-.display,
 h1 {
   font-size: var(--fs-display);
   line-height: 1.02;
@@ -172,33 +149,7 @@ small {
 .section {
   padding-block: var(--section);
 }
-.section--cloud {
-  background: var(--cloud);
-}
-.section--tight {
-  padding-block: clamp(48px, 6vw, 96px);
-}
-.section-head {
-  display: grid;
-  gap: var(--s-4);
-  margin-bottom: clamp(32px, 5vw, 64px);
-  max-width: 820px;
-}
-.section-head--split {
-  max-width: none;
-  grid-template-columns: 1fr;
-  align-items: end;
-}
-@media (min-width: 900px) {
-  .section-head--split {
-    grid-template-columns: 1fr auto;
-  }
-}
-.grid-12 {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--gutter);
-}
+
 .stack > * + * {
   margin-top: var(--s-4);
 }
@@ -273,25 +224,6 @@ small {
   background: var(--ink);
   color: var(--white);
 }
-.btn--small {
-  min-height: 44px;
-  padding: 0 var(--s-4);
-  font-size: 0.9375rem;
-}
-.link-arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  font-weight: 600;
-  color: var(--brand-deep);
-}
-.link-arrow svg {
-  transition: transform var(--t) var(--ease);
-}
-.link-arrow:hover svg {
-  transform: translateX(3px);
-}
-
 body.menu-open {
   overflow: hidden;
 }
@@ -430,37 +362,6 @@ body.menu-open {
 }
 
 /* Clients and registrations */
-.two-col {
-  display: grid;
-  gap: var(--s-7);
-}
-@media (min-width: 900px) {
-  .two-col {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--s-9);
-  }
-}
-.plain-list {
-  list-style: none;
-  padding: 0;
-}
-.plain-list li {
-  padding: var(--s-3) 0;
-  border-bottom: 1px solid var(--line);
-}
-.plain-list li:first-child {
-  border-top: 1px solid var(--line);
-}
-.client-names {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: var(--s-2);
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
-  line-height: 1.2;
-}
 
 /* Tables */
 .table-wrap {
@@ -730,21 +631,6 @@ tbody tr:hover {
     gap: var(--s-9);
   }
 }
-.contact-routes {
-  display: grid;
-  gap: var(--s-5);
-}
-.contact-routes h2 {
-  font-size: 1.5rem;
-  font-weight: 400;
-}
-.map-link {
-  display: block;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-  color: var(--brand-deep);
-}
 
 /* FAQ */
 .faq details {
@@ -825,17 +711,6 @@ tbody tr:hover {
   background: var(--ink);
   color: var(--white);
 }
-.floorplan {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--white);
-  padding: var(--s-4);
-  color: var(--ink);
-}
-.floorplan svg {
-  width: 100%;
-  height: auto;
-}
 .features {
   display: flex;
   flex-wrap: wrap;
@@ -891,32 +766,18 @@ html[data-env='local'] [data-placeholder] {
     --line: #8aa1b6;
     --slate: #34495c;
   }
-  .nav-pill {
-    background: var(--white);
-  }
 }
 
 @media print {
-  .bx-header,
-  .cta-band,
-  .hero__art {
+  .bx-header {
     display: none;
   }
 }
-
-.site-footer address {
-  font-style: normal;
-}
-
 .h3 {
   font-size: var(--fs-h3);
   line-height: 1.15;
   font-weight: 400;
   letter-spacing: -0.01em;
-}
-
-.site-footer .footer-plate .brand {
-  color: var(--ink);
 }
 
 /* 3D homes viewer */
@@ -974,16 +835,6 @@ html[data-env='local'] [data-placeholder] {
   overflow: hidden;
   background: var(--mist);
 }
-.photo-frame--wide {
-  aspect-ratio: 21 / 9;
-}
-.wide-photo {
-  margin-top: clamp(32px, 5vw, 64px);
-}
-.detail-photo {
-  display: grid;
-  gap: var(--s-2);
-}
 .photo-tag {
   position: absolute;
   left: var(--s-3);
@@ -1005,7 +856,6 @@ html[data-env='local'] [data-placeholder] {
 .photo img {
   transition: transform 400ms var(--ease);
 }
-
 .card__media > .photo-tag {
   width: auto;
   height: auto;

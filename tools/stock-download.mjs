@@ -86,12 +86,15 @@ for (const [key, [slot, index]] of Object.entries(SELECTION)) {
     await pipeline.clone().avif({ quality: 52, effort: 4 }).toFile(`${OUT_DIR}/${key}-${w}.avif`);
     await pipeline.clone().webp({ quality: 74 }).toFile(`${OUT_DIR}/${key}-${w}.webp`);
   }
+  // Normalise links that Openverse returns in a dead form (checked 2026-10-09).
+  const licenseUrl = (c.license_url || '').replace(/deed\.en\/$/, '');
+  const creatorUrl = /panoramio\.com/.test(c.creator_url || '') ? null : c.creator_url;
   credits[key] = {
     title: c.title,
     creator: c.creator,
-    creator_url: c.creator_url,
+    creator_url: creatorUrl,
     license: c.license === 'by' ? `CC BY ${c.license_version}` : c.license === 'cc0' ? 'CC0 1.0' : 'Public domain',
-    license_url: c.license_url,
+    license_url: licenseUrl,
     source: c.source,
     page: c.landing,
     original: c.url,

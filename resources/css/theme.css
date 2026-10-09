@@ -60,7 +60,6 @@
   font-display: swap;
   src: url('../fonts/barlow-latin-700-normal.woff2') format('woff2');
 }
-
 :root {
   /* Palette */
   --navy: #0b1930;
@@ -104,7 +103,6 @@
   --shadow: 0 10px 40px rgba(23, 43, 86, 0.08);
   --section: clamp(80px, 9vw, 120px);
 }
-
 body {
   color: var(--text);
   font-family: var(--font-body);
@@ -117,14 +115,12 @@ h3,
 h4,
 h5,
 h6,
-.display,
 .h3 {
   font-family: var(--font-display);
   color: var(--heading);
   letter-spacing: 0;
 }
-h1,
-.display {
+h1 {
   font-weight: 900;
   line-height: 1.12;
 }
@@ -164,9 +160,6 @@ a {
 }
 .container {
   max-width: calc(var(--max) + 2 * var(--gutter));
-}
-.container--wide {
-  max-width: calc(var(--wide) + 2 * var(--gutter));
 }
 
 /* ---- Buttons ---- */
@@ -296,7 +289,6 @@ a {
 .sec-title--center p {
   margin-inline: auto;
 }
-
 .bx-section {
   position: relative;
   padding-block: var(--section);
@@ -605,14 +597,14 @@ a {
   width: 170px;
   margin-bottom: 34px;
 }
-.bx-sidebar__panel h3 {
+.bx-sidebar__panel h2 {
   font-size: 1.75rem;
   margin-bottom: 18px;
 }
 .sidebar-cta {
   margin-top: 34px;
 }
-.bx-sidebar__panel h4 {
+.bx-sidebar__panel h3 {
   margin: 34px 0 18px;
 }
 .bx-sidebar__panel p {
@@ -833,44 +825,6 @@ a {
   font-size: 1.1875rem;
   line-height: 1.7;
 }
-.director {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  margin-top: 50px;
-}
-.avatar {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.15);
-  background: var(--blue);
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: #fff;
-}
-.director strong {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #fff;
-}
-.director span {
-  color: rgba(255, 255, 255, 0.85);
-}
-.director__card {
-  margin-left: 30px;
-  padding-left: 30px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 1rem;
-}
-.director__card a {
-  color: #fff;
-}
 @media (max-width: 899px) {
   .welcome {
     padding-bottom: 80px;
@@ -888,15 +842,6 @@ a {
   .squares {
     grid-template-columns: repeat(2, 48px);
     grid-template-rows: repeat(3, 48px);
-  }
-  .director {
-    flex-wrap: wrap;
-  }
-  .director__card {
-    margin-left: 0;
-    padding-left: 0;
-    border-left: 0;
-    width: 100%;
   }
 }
 
@@ -923,17 +868,13 @@ a {
 .slider__track > * {
   scroll-snap-align: start;
 }
-.slider--2 .slider__track {
-  grid-auto-columns: calc((100% - 30px) / 2);
-}
 @media (max-width: 1099px) {
   .slider__track {
     grid-auto-columns: calc((100% - 30px) / 2);
   }
 }
 @media (max-width: 639px) {
-  .slider__track,
-  .slider--2 .slider__track {
+  .slider__track {
     grid-auto-columns: 86%;
     gap: 18px;
   }
@@ -951,13 +892,6 @@ a {
   width: 30px;
   height: 1px;
   background: rgba(23, 43, 86, 0.35);
-}
-.slider__nav--left {
-  justify-content: flex-start;
-}
-.slider__nav--left::before,
-.slider__nav--left::after {
-  display: none;
 }
 .round-btn {
   display: grid;
@@ -993,15 +927,6 @@ a {
   width: 14px;
   height: 14px;
 }
-.on-dark .round-btn {
-  border-color: rgba(255, 255, 255, 0.8);
-  color: #fff;
-}
-.on-dark .round-btn:disabled:hover {
-  border-color: rgba(255, 255, 255, 0.8);
-  color: #fff;
-}
-
 .svc-card {
   position: relative;
   display: flex;
@@ -1582,77 +1507,8 @@ a {
   color: rgba(120, 150, 200, 0.12);
   pointer-events: none;
 }
-.voices__grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 80px;
-}
 .voices h2 {
   color: #fff;
-}
-.quote-card {
-  display: flex;
-  flex-direction: column;
-}
-.quote-card__body {
-  position: relative;
-  flex: 1;
-  padding: 44px 50px 40px;
-  border-radius: 6px;
-  background: #fff;
-  color: var(--text-soft);
-}
-.quote-card__body::after {
-  content: '';
-  position: absolute;
-  left: 50px;
-  bottom: -12px;
-  border: 12px solid transparent;
-  border-top-color: #fff;
-  border-bottom: 0;
-  border-left-width: 18px;
-  border-right-width: 18px;
-}
-.quote-card__body svg {
-  width: 40px;
-  height: 32px;
-  margin-bottom: 22px;
-  color: var(--red);
-}
-.quote-card__body p {
-  font-size: 1.0625rem;
-  line-height: 1.75;
-  color: var(--text-soft) !important;
-}
-.quote-card__who {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 26px 0 0 50px;
-}
-.quote-card__who .avatar {
-  width: 60px;
-  height: 60px;
-  font-size: 1rem;
-  border-color: rgba(255, 255, 255, 0.9);
-  border-width: 3px;
-}
-.quote-card__who strong {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 1.0625rem;
-  color: #fff;
-}
-.quote-card__who div span {
-  font-size: 0.95rem;
-  color: var(--red);
-}
-@media (max-width: 999px) {
-  .voices__grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
 }
 
 /* ---- Posts (latest milestones) with a red date badge ---- */
@@ -1841,13 +1697,13 @@ a {
   color: #fff;
   pointer-events: auto;
 }
-.office-box h4 {
+.office-box h2 {
   position: relative;
   margin-bottom: 36px;
   font-size: 1.25rem;
   color: #fff;
 }
-.office-box h4::after {
+.office-box h2::after {
   content: '';
   position: absolute;
   left: 0;
@@ -1943,7 +1799,7 @@ a {
   font-weight: 500;
   line-height: 1.7;
 }
-.bx-footer h4 {
+.bx-footer__title {
   margin-bottom: 28px;
   font-size: 1.375rem;
   font-weight: 500;
@@ -2288,18 +2144,6 @@ a {
 .project-bx .spec {
   margin-top: 10px;
 }
-.project-quote {
-  margin-top: 36px;
-}
-.project-quote svg {
-  width: 34px;
-  height: 28px;
-  margin-bottom: 12px;
-  color: var(--red);
-}
-.project-quote p {
-  font-style: italic;
-}
 @media (max-width: 899px) {
   .project-bx {
     grid-template-columns: 1fr;
@@ -2425,14 +2269,6 @@ a {
   height: 16px;
 }
 
-.visually-hidden-focusable:not(:focus) {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
-
 @media (max-width: 999px) {
   .clients ul {
     grid-template-columns: repeat(3, auto);
@@ -2442,28 +2278,6 @@ a {
   .clients ul {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-
-.quote-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  padding: 0;
-  list-style: none;
-}
-@media (max-width: 699px) {
-  .quote-grid {
-    grid-template-columns: 1fr;
-  }
-}
-.director__name span {
-  color: var(--text-soft);
-}
-.about-bx__body .director strong {
-  color: var(--heading);
-}
-.about-bx__body .avatar {
-  border-color: var(--soft);
 }
 
 /* Navy feature box over a full-width photo, above the footer on inner pages */
@@ -2534,7 +2348,6 @@ a {
     grid-template-columns: 1fr;
   }
 }
-
 .bx-section--flush {
   padding-top: 0;
 }
@@ -2565,7 +2378,6 @@ a {
   transition: transform 0.6s var(--ease);
 }
 /* Grid children that hold scrolling tracks must be allowed to shrink below their content width. */
-.voices__grid > *,
 .slider,
 .welcome__grid > *,
 .about-bx__grid > *,
@@ -2694,7 +2506,6 @@ a {
   font-size: 0.8125rem;
   font-weight: 700;
 }
-
 .btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -2704,7 +2515,6 @@ a {
 .detail__aside .eyebrow {
   margin-bottom: 0;
 }
-
 .map-bx {
   background: #dfe5ee
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='none' stroke='%23fff' stroke-width='10'%3E%3Cpath d='M0 50h160M0 120h160M60 0v160M130 0v160'/%3E%3C/g%3E%3Cg fill='none' stroke='%23eef1f6' stroke-width='3'%3E%3Cpath d='M0 85h160M95 0v160'/%3E%3C/g%3E%3C/svg%3E");
@@ -2937,4 +2747,43 @@ a {
 }
 .homes-viewer[hidden] {
   display: none;
+}
+.btn-row--center {
+  justify-content: center;
+  margin-top: 26px;
+}
+/* The hero kicker sits inside the h1 so the heading reads "Evolution in Engineering" */
+.bx-hero h1 .bx-hero__kicker {
+  display: block;
+  white-space: normal;
+}
+.bx-hero__word {
+  display: block;
+}
+
+/* Long email addresses must wrap on 320 px screens */
+.bx-footer__strip ul {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 999px) {
+  .bx-footer__strip ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.bx-footer__strip li span,
+.contact-card p,
+.contact-list span,
+.office-box p {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 380px) {
+  .contact-card {
+    padding: 32px 18px;
+  }
+}
+
+/* Contact form: sending state, so a second press cannot send a duplicate */
+.form button[type='submit'][aria-busy='true'] {
+  opacity: 0.75;
+  cursor: progress;
 }

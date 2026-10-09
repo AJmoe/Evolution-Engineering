@@ -11,7 +11,7 @@
 }[service.slug] %}
 
 {% block title %}{{ service.name }}{% endblock %}
-{% block description %}{{ service.name }} from Evolution Engineers, Gaborone: {{ service.summary|lower|trim('.') }}. Request a quote for your project.{% endblock %}
+{% block description %}{{ service.name }} by Evolution Engineers, Gaborone: {{ service.summary|lower|trim('.') }}. Request a quote.{% endblock %}
 {% block head %}{{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}{% endblock %}
 
 {% block content %}

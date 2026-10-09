@@ -1,5 +1,5 @@
 // Shared Three.js helpers: renderer setup, a sky environment for reflections,
-// canvas textures and easing. Imported only by the 3D modules.
+// canvas textures and a contact shadow. Imported only by the homes viewer.
 import {
   BackSide,
   CanvasTexture,
@@ -16,13 +16,6 @@ import {
   WebGLRenderer,
   Float32BufferAttribute,
 } from 'three';
-
-export const clamp01 = (v) => Math.min(1, Math.max(0, v));
-/** 0..1 position of p between a and b, clamped. */
-export const range = (p, a, b) => clamp01((p - a) / (b - a));
-export const smooth = (t) => t * t * (3 - 2 * t);
-export const easeOut = (t) => 1 - Math.pow(1 - t, 3);
-export const lerp = (a, b, t) => a + (b - a) * t;
 
 export function createRenderer(canvas, { pixelRatio, shadows, alpha = true, preserve = false }) {
   const renderer = new WebGLRenderer({
@@ -47,7 +40,10 @@ export function createRenderer(canvas, { pixelRatio, shadows, alpha = true, pres
  * Builds a small sky-gradient scene and prefilters it with PMREM,
  * so glass reflects a daylight sky rather than black.
  */
-export function skyEnvironment(renderer, { top = '#8EC2E8', horizon = '#F4F8FB', ground = '#D9D6CF', sun = true } = {}) {
+export function skyEnvironment(
+  renderer,
+  { top = '#8EC2E8', horizon = '#F4F8FB', ground = '#D9D6CF', sun = true } = {},
+) {
   const scene = new Scene();
   const geo = new SphereGeometry(50, 48, 24);
   const pos = geo.attributes.position;
@@ -95,7 +91,10 @@ export function skyDome(radius, { top, mid, horizon }) {
     colors.push(c.r, c.g, c.b);
   }
   geo.setAttribute('color', new Float32BufferAttribute(colors, 3));
-  const dome = new Mesh(geo, new MeshBasicMaterial({ vertexColors: true, side: BackSide, fog: false, depthWrite: false }));
+  const dome = new Mesh(
+    geo,
+    new MeshBasicMaterial({ vertexColors: true, side: BackSide, fog: false, depthWrite: false }),
+  );
   dome.renderOrder = -1;
   dome.frustumCulled = false;
   return dome;
@@ -111,69 +110,6 @@ export function canvasTexture(width, height, draw, { srgb = true, repeat = true 
   if (repeat) tex.wrapS = tex.wrapT = RepeatWrapping;
   tex.anisotropy = 4;
   return tex;
-}
-
-/**
- * Curtain-wall textures: one tile is 4 bays by 4 floors.
- * Returns a colour map and a roughness map that share layout.
- */
-export function facadeTextures() {
-  const W = 512;
-  const H = 512;
-  const bays = 4;
-  const floors = 4;
-  const bw = W / bays;
-  const fh = H / floors;
-  const spandrel = fh * 0.24;
-  const mullion = 4;
-
-  const color = canvasTexture(W, H, (ctx) => {
-    for (let f = 0; f < floors; f++) {
-      const y = f * fh;
-      for (let b = 0; b < bays; b++) {
-        const x = b * bw;
-        const g = ctx.createLinearGradient(x, y, x + bw, y + fh);
-        const tint = (b + f) % 3;
-        g.addColorStop(0, ['#6FA7CF', '#78AFD6', '#6A9FC7'][tint]);
-        g.addColorStop(1, ['#3F7FAE', '#4787B5', '#3B78A6'][tint]);
-        ctx.fillStyle = g;
-        ctx.fillRect(x, y, bw, fh);
-      }
-      ctx.fillStyle = '#E7ECF1';
-      ctx.fillRect(0, y + fh - spandrel, W, spandrel);
-      ctx.fillStyle = 'rgba(11,42,74,0.10)';
-      ctx.fillRect(0, y + fh - spandrel, W, 2);
-    }
-    ctx.fillStyle = '#C9D4DE';
-    for (let b = 0; b <= bays; b++) ctx.fillRect(b * bw - mullion / 2, 0, mullion, H);
-  });
-
-  const rough = canvasTexture(
-    W,
-    H,
-    (ctx) => {
-      ctx.fillStyle = '#141414';
-      ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = '#B0B0B0';
-      for (let f = 0; f < floors; f++) ctx.fillRect(0, f * fh + fh - spandrel, W, spandrel);
-      for (let b = 0; b <= bays; b++) ctx.fillRect(b * bw - mullion / 2, 0, mullion, H);
-    },
-    { srgb: false },
-  );
-
-  const metal = canvasTexture(
-    W,
-    H,
-    (ctx) => {
-      ctx.fillStyle = '#5A5A5A';
-      ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = '#000000';
-      for (let f = 0; f < floors; f++) ctx.fillRect(0, f * fh + fh - spandrel, W, spandrel);
-    },
-    { srgb: false },
-  );
-
-  return { color, rough, metal, tileBays: bays, tileFloors: floors };
 }
 
 /** Soft radial shadow used as a contact shadow under buildings and homes. */

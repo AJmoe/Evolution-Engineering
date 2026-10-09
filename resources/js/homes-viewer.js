@@ -96,7 +96,7 @@ function textures() {
         }
       }
     }),
-    tiles: canvasTexture(256, 256, (c, w, h) => {
+    tiles: canvasTexture(256, 256, (c, w) => {
       const r = rand(5);
       for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {

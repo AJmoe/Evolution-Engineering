@@ -1,5 +1,5 @@
-// Smoke test for the small-homes 3D viewer: it renders, switches designs and moods,
-// rotates with the keyboard, and logs no console errors.
+// Smoke test for the small-homes slideshows: each design's 3D model renders, the plan and blueprint
+// slides switch, the evening mood and keyboard rotation work, and nothing logs a console error.
 // Usage: node tools/viewer-check.mjs [baseUrl]
 import { chromium } from '@playwright/test';
 
@@ -16,35 +16,32 @@ const errors = [];
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
 page.on('pageerror', (e) => errors.push(e.message));
 
-await page.goto(base + '/small-homes', { waitUntil: 'networkidle' });
-const frame = page.locator('[data-home-viewer]');
-await frame.scrollIntoViewIfNeeded();
-await page.waitForSelector('[data-home-viewer].is-3d', { timeout: 20000 });
-await page.waitForTimeout(800);
-
+await page.goto(base + '/small-homes', { waitUntil: 'load' });
 for (const slug of ['the-compact', 'the-family-two', 'the-courtyard']) {
   await page.click(`[data-design-tab="${slug}"]`);
-  await page.waitForTimeout(900);
-  await frame.screenshot({ path: `storage/screenshots/viewer-${slug}.png` });
-  console.log('rendered', slug, '| label:', await page.getAttribute('.viewer__canvas', 'aria-label'));
+  const panel = page.locator(`[data-design-panel="${slug}"]`);
+  await panel.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await page.waitForSelector(`[data-design-panel="${slug}"] [data-home-viewer].is-3d`, { timeout: 20000 });
+  await page.waitForTimeout(800);
+  const label = await panel.locator('.viewer__canvas').getAttribute('aria-label');
+  for (const n of [1, 2, 0]) {
+    await panel.locator(`[data-thumb="${n}"]`).click();
+    const active = await panel.locator('.gslide.is-active').getAttribute('id');
+    if (!active.endsWith(['-3d', '-plan', '-blueprint'][n])) errors.push(`${slug}: thumb ${n} showed ${active}`);
+  }
+  console.log('rendered', slug, '| slides switch | label:', label);
 }
-await page.click('[data-mood="evening"]');
+const panel = page.locator('[data-design-panel="the-courtyard"]');
+await panel.locator('[data-mood="evening"]').click();
 await page.waitForTimeout(700);
-await frame.screenshot({ path: 'storage/screenshots/viewer-evening.png' });
-await page.focus('.viewer__canvas');
+await panel.locator('[data-home-viewer]').screenshot({ path: 'storage/screenshots/viewer-evening.png' });
+await panel.locator('.viewer__canvas').focus();
 await page.keyboard.press('ArrowRight');
 await page.keyboard.press('ArrowRight');
 await page.waitForTimeout(400);
-await frame.screenshot({ path: 'storage/screenshots/viewer-rotated.png' });
-console.log('evening and keyboard rotation captured');
-
-await page.goto(base + '/', { waitUntil: 'networkidle' });
-const teaser = page.locator('[data-home-viewer]');
-await teaser.scrollIntoViewIfNeeded();
-await page.waitForSelector('[data-home-viewer].is-3d', { timeout: 20000 });
-await page.waitForTimeout(800);
-await teaser.screenshot({ path: 'storage/screenshots/viewer-home-teaser.png' });
-console.log('homepage teaser rendered');
+await panel.locator('[data-home-viewer]').screenshot({ path: 'storage/screenshots/viewer-rotated.png' });
+console.log('evening mood and keyboard rotation captured');
 
 console.log(errors.length ? `ERRORS:\n${errors.join('\n')}` : 'No console errors');
 await browser.close();
+process.exit(errors.length ? 1 : 0);

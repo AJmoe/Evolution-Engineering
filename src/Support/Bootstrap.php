@@ -18,6 +18,7 @@ use EvolutionEngineers\Repository\HomeRepository;
 use EvolutionEngineers\Repository\ProjectRepository;
 use EvolutionEngineers\Service\EnquiryRouter;
 use EvolutionEngineers\Service\EnquiryService;
+use EvolutionEngineers\Service\EnquiryValidator;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 use PDO;
@@ -73,14 +74,15 @@ final class Bootstrap
             ]);
             $twig->addExtension(new TwigExtension(
                 $c->get(Manifest::class),
-                new ImageCatalog($root . '/resources/images/stock/credits.json', $root . '/public/images/stock')
+                new ImageCatalog($root . '/resources/images/stock/credits.json', $root . '/public/images/stock'),
+                $root . '/public'
             ));
 
             return $twig;
         });
         $container->set(View::class, static fn (Container $c): View => new View(
             $c->get(Twig::class),
-            $c->get(CatalogueRepository::class),
+            static fn (): CatalogueRepository => $c->get(CatalogueRepository::class),
             $baseUrl,
             $noindex
         ));
@@ -102,7 +104,17 @@ final class Bootstrap
             $baseUrl,
             $noindex
         ));
-        $csrf = new Csrf($secret);
+        $container->set(ContactController::class, static fn (Container $c): ContactController => new ContactController(
+            $c->get(View::class),
+            $c->get(EnquiryValidator::class),
+            $c->get(EnquiryService::class),
+            $c->get(HomeRepository::class),
+            $c->get(LoggerInterface::class),
+            ($env['TRUST_PROXY'] ?? 'false') === 'true'
+        ));
+        // An expired or missing form token re-shows the contact form with the visitor's details kept.
+        $csrf = new Csrf($secret, static fn (ServerRequestInterface $request): ResponseInterface =>
+            $container->get(ContactController::class)->expired($request, new Response()));
 
         $app = AppFactory::createFromContainer($container);
 
@@ -137,7 +149,9 @@ final class Bootstrap
                     [],
                     $status
                 );
-            } catch (Throwable) {
+            } catch (Throwable $renderError) {
+                $container->get(LoggerInterface::class)
+                    ->error('Error page failed to render: ' . $renderError->getMessage());
                 $response = new Response($status);
                 $response->getBody()->write($notFound ? 'Page not found.' : 'Something went wrong.');
 

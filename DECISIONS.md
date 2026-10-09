@@ -88,3 +88,13 @@ The client asked for the site to match the Buildnox 2 theme (wp1.themevibrant.co
 - **Roboto 700/900** had overlapping contours that showed as stray lines in outlined text; `tools/font-remove-overlaps.py` merges them.
 - **Icons and sharing.** A gear favicon from the logo, an Apple touch icon, and a new social image (`npm run og`).
 - **WhatsApp button** for the cell number, above which the back-to-top button now sits.
+
+## 2026-10-09: Production audit
+
+- **Proxy-aware rate limit.** Behind Render, `REMOTE_ADDR` is the proxy, so every visitor shared one rate-limit bucket. `ClientIp` uses the last `X-Forwarded-For` hop when `TRUST_PROXY=true` (set in the Dockerfile).
+- **Expired form tokens** re-show the contact form with the visitor's details and a clear message, instead of a plain-text 400.
+- **Error page without a database.** `View` resolves settings lazily and falls back to fixed contact details, so the styled error page renders when MariaDB is down.
+- **Metadata.** Titles keep the brand suffix only while they fit in 60 characters; descriptions are trimmed to 158 characters on a word boundary; Twitter tags and `og:image:alt` added; search-result pages (`?q=`) are noindex.
+- **Headings.** The hero `h1` now reads "Evolution in Engineering"; footer, map and sidebar headings no longer skip levels.
+- **Dead code removed:** the parked 3D hero (scripts, stills, tools), unused macros, and about 320 lines of unused CSS (`tools/css-prune.mjs`). The old design is still under the `classic-design` tag.
+- **Lint works:** `eslint.config.js` and `.prettierrc` added; `npm run lint`, `check:a11y` and `check:crawl` scripts.

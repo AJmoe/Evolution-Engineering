@@ -3,7 +3,7 @@
 {% set crumbs = [{ label: 'Projects', href: '/projects' }, { label: project.title, href: '/projects/' ~ project.slug }] %}
 
 {% block title %}{{ project.title }}{% endblock %}
-{% block description %}{{ project.summary|length > 150 ? project.summary|slice(0, 147) ~ '...' : project.summary ~ ' For ' ~ project.client_name ~ '.' }}{% endblock %}
+{% block description %}{{ project.summary|trim('.') }}. For {{ project.client_name }}, {{ project.year_label }}. {{ project.role_label }}: Evolution Engineers.{% endblock %}
 {% block head %}
   {{ ui.breadcrumb_jsonld(crumbs, base_url, csp_nonce) }}
   <script type="application/ld+json" nonce="{{ csp_nonce }}">{{ {
