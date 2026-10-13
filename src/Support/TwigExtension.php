@@ -28,7 +28,7 @@ final class TwigExtension extends AbstractExtension
             new TwigFunction('vite_preload_fonts', [$this, 'preloadFonts'], ['is_safe' => ['html']]),
             new TwigFunction('photo_meta', fn (?string $key): ?array => $key ? $this->images?->get($key) : null),
             new TwigFunction('svg_size', [$this, 'svgSize']),
-            new TwigFunction('photo_credits', fn (): array => $this->images?->all() ?? []),
+            new TwigFunction('photo_credits', fn (): array => $this->images?->credits() ?? []),
         ];
     }
 

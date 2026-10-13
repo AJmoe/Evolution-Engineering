@@ -32,8 +32,8 @@ final class ServiceCatalog
                 'clients' => 'Government ministries, district and city councils, utilities, mines and private '
                     . 'developers.',
                 'project_categories' => ['roads', 'water_sewerage', 'civil_building', 'design_build'],
-                'photo' => 'road-new',
-                'photo_alt' => 'A newly surfaced road running through open, dry countryside',
+                'photo' => 'site-road-convoy',
+                'photo_alt' => 'Our tipper truck feeding an asphalt paver on a newly surfaced town road',
             ],
             'mechanical-engineering' => [
                 'slug' => 'mechanical-engineering',
@@ -84,7 +84,7 @@ final class ServiceCatalog
     {
         return [
             ['name' => "Civil\nEngineering", 'icon' => 'civil', 'url' => '/services/civil-engineering',
-                'photo' => 'road-new', 'photo_alt' => 'A road under construction in open countryside'],
+                'photo' => 'site-road-convoy', 'photo_alt' => 'Our tipper truck and paver surfacing a town road'],
             ['name' => "Mechanical\nEngineering", 'icon' => 'mechanical', 'url' => '/services/mechanical-engineering',
                 'photo' => 'pipe-welding', 'photo_alt' => 'A welder working inside a large steel pipe'],
             ['name' => "Electrical\nEngineering", 'icon' => 'electrical', 'url' => '/services/electrical-engineering',
@@ -92,7 +92,7 @@ final class ServiceCatalog
             ['name' => "Valves, Pipes\n& Motors", 'icon' => 'supplies', 'url' => '/supplies',
                 'photo' => 'gate-valve', 'photo_alt' => 'A large industrial gate valve'],
             ['name' => "Roads\nWorks", 'icon' => 'roads', 'url' => '/projects?type=roads',
-                'photo' => 'road-paving', 'photo_alt' => 'Asphalt being laid on a highway'],
+                'photo' => 'site-paver-crew', 'photo_alt' => 'Our paving crew laying fresh asphalt behind the paver'],
             ['name' => "Water\n& Sewerage", 'icon' => 'water', 'url' => '/projects?type=water_sewerage',
                 'photo' => 'sewer-works', 'photo_alt' => 'Workers laying a large sewer pipe in a trench'],
             ['name' => "Design\n& Build", 'icon' => 'design', 'url' => '/projects?type=design_build',

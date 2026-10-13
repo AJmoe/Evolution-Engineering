@@ -4,8 +4,6 @@ These openly licensed photos stand in until the client's own photography is appr
 
 | Key | Photo | Author | Licence | Source |
 |---|---|---|---|---|
-| road-new | [Yashkulsky District Road Construction](https://commons.wikimedia.org/w/index.php?curid=53079384) | Panoramio Contributor Svetlov Artem | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) | wikimedia |
-| road-paving | [Asphalt Paving on Oregon 62 Expressway (37904264591)](https://commons.wikimedia.org/w/index.php?curid=95465801) | Oregon Department of Transportation | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
 | pipeline-trench | [STEGAL pipeline construction 2](https://commons.wikimedia.org/w/index.php?curid=156088320) | Thuringius | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | wikimedia |
 | pipeline-forest | [Pipeline construction in Canada](https://commons.wikimedia.org/w/index.php?curid=152441707) | Jason Woodhead | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
 | pipe-welding | [Pipeline construction, Seattle, 1990 (51833085580)](https://commons.wikimedia.org/w/index.php?curid=114687530) | Seattle Municipal Archives from Seattle, WA | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
@@ -29,8 +27,6 @@ These openly licensed photos stand in until the client's own photography is appr
 | roller | [664Ammann ASC 150 Road Roller Soil Compactor](https://commons.wikimedia.org/w/index.php?curid=64085752) | Judgefloro | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en) | wikimedia |
 | dump-truck | [Mercedes-Benz Actros 4148 Dump truck near Neptunbrunnen in Berlin. Spielvogel 2013 2](https://commons.wikimedia.org/w/index.php?curid=30561054) | For a gallery of some more of my uploaded pictures see: here. | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en) | wikimedia |
 | skid-steer | [Case skid-steer loader - Arlington, MA](https://commons.wikimedia.org/w/index.php?curid=113496353) | Daderot | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | wikimedia |
-| asphalt-laying | [Road resurfacing, Newport Harbour, Isle of Wight, England](https://commons.wikimedia.org/w/index.php?curid=142936166) | ITookSomePhotos | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | wikimedia |
-| asphalt-crew | [Road Resurfacing at the junction of Queens Road and South Terrace, Hastings. c.1990 (6608302717)](https://commons.wikimedia.org/w/index.php?curid=85796563) | Phil Sellens from East Sussex | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
 | sewer-jetting | [File:LKW zur Kanalreinigung in Deutschland (1).JPG](https://commons.wikimedia.org/w/index.php?curid=16300232) | High Contrast | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/de/deed.en) | wikimedia |
 | manhole-rings | [Precast concrete manholes](https://commons.wikimedia.org/w/index.php?curid=150260324) | Sindugab | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | wikimedia |
 | sludge-pond | [Primary sludge drying bed (was reed bed) (3231557031)](https://commons.wikimedia.org/w/index.php?curid=36545198) | SuSanA Secretariat | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
@@ -44,7 +40,6 @@ These openly licensed photos stand in until the client's own photography is appr
 | hitachi-zx330 | [Hitachi excavator by the sea in Helsinki, Finland, 2021](https://commons.wikimedia.org/w/index.php?curid=113787756) | Henry Söderlund | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
 | hamm-pneumatic | [Hamm roller at Barcelona](https://commons.wikimedia.org/w/index.php?curid=19612705) | Alf van Beem | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | wikimedia |
 | hamm-tandem | [Hamm HD 120 articulated tandem roller with vibratory and oscillating drum (33149955706)](https://commons.wikimedia.org/w/index.php?curid=57357858) | dankeck | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en) | wikimedia |
-| sino-truck | [CNHTC Sinotruk Howo, Jamaica](https://commons.wikimedia.org/w/index.php?curid=89411410) | Jason Lawrence | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
 | hino-dutro | [Tohoku Railway Transportation Hino Dutro](https://commons.wikimedia.org/w/index.php?curid=112799833) | Ypy31 | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | wikimedia |
 | hino-liesse | [Hino Liesse (49941391387)](https://commons.wikimedia.org/w/index.php?curid=99941857) | Jason Lawrence from New York | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |
 | toyota-hilux-surf | [1997 Toyota Hilux Surf SSR-X (KZN185), rear left](https://commons.wikimedia.org/w/index.php?curid=149113464) | Guyon from Richmond, VA, United States of America | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | wikimedia |

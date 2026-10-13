@@ -7,8 +7,6 @@ import sharp from 'sharp';
 
 // Published key -> [candidate slot, index on the contact sheet]
 const SELECTION = {
-  'road-new': ['roads-paving', 2],
-  'road-paving': ['roads-paving', 1],
   'pipeline-trench': ['pipeline-trench', 6],
   'pipeline-forest': ['pipeline-trench', 0],
   'pipe-welding': ['pipeline-trench', 5],
@@ -33,8 +31,6 @@ const SELECTION = {
   'dump-truck': ['dump-truck', 1],
   'skid-steer': ['skid-steer', 4],
   // 2026-10-09: more photos so fewer projects share one
-  'asphalt-laying': ['asphalt-overlay', 2],
-  'asphalt-crew': ['asphalt-overlay', 3],
   'sewer-jetting': ['sewer-cleaning', 0],
   'manhole-rings': ['manhole', 6],
   'sludge-pond': ['sludge-beds', 3],
@@ -49,7 +45,6 @@ const SELECTION = {
   'hitachi-zx330': ['v-hitachi', 3],
   'hamm-pneumatic': ['v-hamm', 2],
   'hamm-tandem': ['v-hamm', 5],
-  'sino-truck': ['v-sino', 0],
   'hino-dutro': ['v-dutro', 0],
   'hino-liesse': ['v-liesse', 6],
   'toyota-hilux-surf': ['v-hilux-surf', 5],
@@ -71,6 +66,9 @@ const candidates = JSON.parse(await readFile('storage/stock/candidates.json', 'u
 await mkdir(SRC_DIR, { recursive: true });
 await mkdir(OUT_DIR, { recursive: true });
 
+// Keep the client's own photos (tools/site-photos.mjs) when the stock set is rebuilt.
+const previous = existsSync(`${SRC_DIR}/credits.json`) ? JSON.parse(await readFile(`${SRC_DIR}/credits.json`, 'utf8')) : {};
+const own = Object.fromEntries(Object.entries(previous).filter(([, c]) => c.own));
 const credits = {};
 for (const [key, [slot, index]] of Object.entries(SELECTION)) {
   const c = candidates[slot]?.[index];
@@ -121,7 +119,7 @@ for (const [key, [slot, index]] of Object.entries(SELECTION)) {
   console.log(`${key}: ${meta.width}x${meta.height}  ${credits[key].license}`);
 }
 
-await writeFile(`${SRC_DIR}/credits.json`, JSON.stringify(credits, null, 2));
+await writeFile(`${SRC_DIR}/credits.json`, JSON.stringify({ ...credits, ...own }, null, 2) + '\n');
 const rows = Object.entries(credits).map(
   ([k, c]) => `| ${k} | [${(c.title || 'Untitled').replace(/\|/g, '/')}](${c.page}) | ${c.creator || 'Unknown'} | [${c.license}](${c.license_url}) | ${c.source} |`,
 );

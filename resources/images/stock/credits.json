@@ -1,28 +1,4 @@
 {
-  "road-new": {
-    "title": "Yashkulsky District Road Construction",
-    "creator": "Panoramio Contributor Svetlov Artem",
-    "creator_url": null,
-    "license": "CC BY 3.0",
-    "license_url": "https://creativecommons.org/licenses/by/3.0/",
-    "source": "wikimedia",
-    "page": "https://commons.wikimedia.org/w/index.php?curid=53079384",
-    "original": "https://upload.wikimedia.org/wikipedia/commons/8/83/Yashkulsky_District_Road_Construction.jpg",
-    "width": 2400,
-    "height": 1800
-  },
-  "road-paving": {
-    "title": "Asphalt Paving on Oregon 62 Expressway (37904264591)",
-    "creator": "Oregon Department of Transportation",
-    "creator_url": "https://www.flickr.com/people/28364885@N02",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0/",
-    "source": "wikimedia",
-    "page": "https://commons.wikimedia.org/w/index.php?curid=95465801",
-    "original": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Asphalt_Paving_on_Oregon_62_Expressway_%2837904264591%29.jpg",
-    "width": 2400,
-    "height": 1600
-  },
   "pipeline-trench": {
     "title": "STEGAL pipeline construction 2",
     "creator": "Thuringius",
@@ -299,30 +275,6 @@
     "width": 2400,
     "height": 1800
   },
-  "asphalt-laying": {
-    "title": "Road resurfacing, Newport Harbour, Isle of Wight, England",
-    "creator": "ITookSomePhotos",
-    "creator_url": null,
-    "license": "CC0 1.0",
-    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "source": "wikimedia",
-    "page": "https://commons.wikimedia.org/w/index.php?curid=142936166",
-    "original": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Road_resurfacing%2C_Newport_Harbour%2C_Isle_of_Wight%2C_England.jpg",
-    "width": 2400,
-    "height": 1800
-  },
-  "asphalt-crew": {
-    "title": "Road Resurfacing at the junction of Queens Road and South Terrace, Hastings. c.1990 (6608302717)",
-    "creator": "Phil Sellens from East Sussex",
-    "creator_url": "https://www.flickr.com/people/33303746@N07",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0/",
-    "source": "wikimedia",
-    "page": "https://commons.wikimedia.org/w/index.php?curid=85796563",
-    "original": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Road_Resurfacing_at_the_junction_of_Queens_Road_and_South_Terrace%2C_Hastings._c.1990_%286608302717%29.jpg",
-    "width": 1784,
-    "height": 1192
-  },
   "sewer-jetting": {
     "title": "File:LKW zur Kanalreinigung in Deutschland (1).JPG",
     "creator": "High Contrast",
@@ -479,18 +431,6 @@
     "width": 2400,
     "height": 1800
   },
-  "sino-truck": {
-    "title": "CNHTC Sinotruk Howo, Jamaica",
-    "creator": "Jason Lawrence",
-    "creator_url": null,
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0/",
-    "source": "wikimedia",
-    "page": "https://commons.wikimedia.org/w/index.php?curid=89411410",
-    "original": "https://upload.wikimedia.org/wikipedia/commons/c/c9/CNHTC_Sinotruk_Howo%2C_Jamaica.jpg",
-    "width": 2400,
-    "height": 1800
-  },
   "hino-dutro": {
     "title": "Tohoku Railway Transportation Hino Dutro",
     "creator": "Ypy31",
@@ -610,5 +550,61 @@
     "original": "https://upload.wikimedia.org/wikipedia/commons/f/fa/2nd_gen_Nissan_Diesel_Condor_1980s_Philippines.jpg",
     "width": 2400,
     "height": 1108
+  },
+  "site-road-convoy": {
+    "title": "Tipper EVO-16 feeding the paver on a town road",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
+  },
+  "site-rural-overlay": {
+    "title": "Paver and tipper on a rural road overlay",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
+  },
+  "site-paver-crew": {
+    "title": "Paving crew behind the Uniter paver",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
+  },
+  "site-paver-closeup": {
+    "title": "Crew member beside the Uniter paver",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
+  },
+  "site-asphalt-raking": {
+    "title": "Crew raking asphalt behind the paver",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
+  },
+  "site-failed-section": {
+    "title": "Failed road section broken out for reconstruction",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
+  },
+  "site-asphalt-plant": {
+    "title": "Asphalt plant loading a tipper",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
+  },
+  "site-plant-stack": {
+    "title": "Asphalt plant stack and generator",
+    "own": true,
+    "source": "evolution-engineers",
+    "width": 1280,
+    "height": 960
   }
 }

@@ -8,7 +8,7 @@
 
 {% macro page_header(title, intro, crumbs, bg) %}
   <header class="page-banner">
-    <div class="page-banner__bg">{{ _self.photo(bg ?: 'building-glass', '', '100vw', true, false) }}</div>
+    <div class="page-banner__bg">{{ _self.photo(bg ?: 'building-glass', '', '100vw', true) }}</div>
     <div class="grid-lines" aria-hidden="true"></div>
     <div class="container">
       <h1>{{ title }}</h1>
@@ -77,7 +77,9 @@
 {% macro machine_media(m) %}
   {% set key = m.image_path starts with 'stock/' ? m.image_path|slice(6) : null %}
   {% if key and photo_meta(key) %}
-    <div class="machine__media machine__media--photo">{{ _self.photo(key, 'A ' ~ (m.group_name in ['vehicles', 'haulage'] ? 'vehicle' : 'machine') ~ ' like our ' ~ m.make ~ ' ' ~ m.model ~ ', used for ' ~ m.role|lower, '(min-width: 900px) 300px, 70vw', false, true) }}</div>
+    {% set kind = m.group_name in ['vehicles', 'haulage'] ? 'vehicle' : 'machine' %}
+    {% set alt = photo_meta(key).own ? 'One of our ' ~ m.make ~ ' ' ~ m.model : 'A ' ~ kind ~ ' like our ' ~ m.make ~ ' ' ~ m.model %}
+    <div class="machine__media machine__media--photo">{{ _self.photo(key, alt ~ ', used for ' ~ m.role|lower, '(min-width: 900px) 300px, 70vw', false) }}</div>
   {% else %}
     <div class="machine__media" data-placeholder="plant-photo">{{ _self.machine(m.group_name) }}</div>
   {% endif %}
@@ -110,27 +112,26 @@
 {% endmacro %}
 
 {#
-  Responsive photo. key is an interim stock key (public/images/stock) until the admin image pipeline
-  serves the client's own photos. Interim photos are marked so they can be found and replaced.
+  Responsive photo. key is a catalog key (public/images/stock): an interim stock photo, marked so it
+  can be found and replaced, or one of the client's own site photos (m.own), which needs no marker.
 #}
-{% macro photo(key, alt, sizes, eager, tag) %}
+{% macro photo(key, alt, sizes, eager) %}
   {% set m = photo_meta(key) %}
   {% if m %}
     {% set base = '/images/stock/' ~ m.key %}
     {% set largest = m.widths|last %}
-    <picture class="photo" data-placeholder="stock-photo">
+    <picture class="photo"{% if not m.own %} data-placeholder="stock-photo"{% endif %}>
       <source type="image/avif" srcset="{% for w in m.widths %}{{ base }}-{{ w }}.avif {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="{{ sizes }}">
       <source type="image/webp" srcset="{% for w in m.widths %}{{ base }}-{{ w }}.webp {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="{{ sizes }}">
       <img src="{{ base }}-{{ m.widths[1] ?? largest }}.webp" alt="{{ alt }}" width="{{ m.width }}" height="{{ m.height }}"{% if eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
     </picture>
-    {% if tag %}<span class="photo-tag">Illustrative photo</span>{% endif %}
   {% endif %}
 {% endmacro %}
 
-{# Key and alt text for each project's interim photo. Removed once real photography is uploaded. #}
+{# Each project's photo: the client's own site photo or an interim stock photo, else a drawing. #}
 {% macro project_media(p, sizes, eager) %}
   {% if p.photo_key and photo_meta(p.photo_key) %}
-    {{ _self.photo(p.photo_key, p.photo_alt, sizes, eager, true) }}
+    {{ _self.photo(p.photo_key, p.photo_alt, sizes, eager) }}
   {% else %}
     {{ _self.drawing(p.category) }}
   {% endif %}
