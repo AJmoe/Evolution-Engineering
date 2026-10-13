@@ -107,16 +107,17 @@ function seed(PDO $pdo): void
             json_encode($facts, JSON_UNESCAPED_UNICODE), $featured, $scope, $scope, $i]);
     }
 
-    // Interim openly licensed photos, until the client's own project photography is approved.
-    // Alt text describes what the photo shows, not the named project.
+    // The client's own road photos (site-*) and interim openly licensed photos for the rest, until
+    // each project's own photography is approved. Alt text describes what the photo shows, since the
+    // site photos are not tied to a named project.
     $photos = [
         'masama-mmamashia-transmission-pipeline' => ['pipeline-trench', 'Large steel pipes laid out beside a pipeline trench'],
-        'mahalapye-radisele-road-overlay' => ['road-new', 'A newly surfaced road running through open, dry countryside'],
+        'mahalapye-radisele-road-overlay' => ['site-rural-overlay', 'Our paver and tipper laying an asphalt overlay on a rural road'],
         'morupule-coal-mine-clinic' => ['building-glass', 'A glass-fronted building under construction with tower cranes'],
-        'palapye-internal-roads-overlay' => ['road-paving', 'A paving crew and roller laying fresh asphalt'],
+        'palapye-internal-roads-overlay' => ['site-road-convoy', 'Our tipper truck feeding the paver, with rollers following, on a town road'],
         'mochudi-malotwana-earthworks' => ['excavator', 'An excavator moving earth on a road site'],
-        'tsau-habu-junction-overlay' => ['asphalt-crew', 'A paving crew laying asphalt on a city street'],
-        'mmashoro-failed-section-rehabilitation' => ['asphalt-laying', 'Workers laying fresh asphalt on a road'],
+        'tsau-habu-junction-overlay' => ['site-asphalt-raking', 'Our crew raking fresh asphalt behind the paver'],
+        'mmashoro-failed-section-rehabilitation' => ['site-failed-section', 'A failed road section broken out with a backhoe, ready for reconstruction'],
         'jwaneng-dewatering-pipeline' => ['pipeline-forest', 'A pipeline laid along a cleared trench'],
         'gaborone-sludge-drying-beds' => ['drying-beds', 'Sludge drying beds at a wastewater works'],
         'bdc-warehouse-gaborone-west' => ['steel-frame', 'A steel-framed building going up beside a crane'],
@@ -139,7 +140,8 @@ function seed(PDO $pdo): void
     $stmt = $pdo->prepare('INSERT INTO project_images (project_id, path, alt, caption, sort) VALUES (?, ?, ?, ?, 0)');
     foreach ($photos as $slug => [$key, $alt]) {
         if (isset($ids[$slug])) {
-            $stmt->execute([$ids[$slug], 'stock/' . $key, $alt, 'Illustrative photo']);
+            $caption = str_starts_with($key, 'site-') ? 'Evolution Engineers site photo' : 'Illustrative photo';
+            $stmt->execute([$ids[$slug], 'stock/' . $key, $alt, $caption]);
         }
     }
 
@@ -195,7 +197,7 @@ function seed(PDO $pdo): void
         ['vehicles', 'Volkswagen', 'Polo', 'Pool vehicle', null],
         ['vehicles', 'Nissan', 'UG780', 'Heavy vehicle', null],
     ];
-    // Interim photos of the same type of machine, not the client's own units.
+    // Photos of the client's own units (site-*), else interim photos of the same type of machine.
     $machinePhoto = [
         '3CX backhoe loader' => 'jcb-backhoe',
         'A4' => 'backhoe',
@@ -207,7 +209,7 @@ function seed(PDO $pdo): void
         '260-120 roller' => 'roller',
         'GRW18 pneumatic roller' => 'hamm-pneumatic',
         'HD8VV sit-on roller' => 'hamm-tandem',
-        'Trucks' => 'sino-truck',
+        'Trucks' => 'site-road-convoy',
         'Dutro' => 'hino-dutro',
         'Liesse' => 'hino-liesse',
         'Hilux Surf' => 'toyota-hilux-surf',

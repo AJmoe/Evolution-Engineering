@@ -757,7 +757,7 @@ a {
   }
 }
 
-/* ---- Welcome: photo with three coloured squares, statement, director ---- */
+/* ---- Welcome: photo, statement, director ---- */
 .welcome {
   overflow: hidden;
   padding-block: 0 120px;
@@ -782,26 +782,8 @@ a {
   width: 100%;
   height: 740px;
   object-fit: cover;
-}
-.squares {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 78px);
-  grid-template-rows: repeat(3, 78px);
-}
-.squares span:nth-child(1) {
-  grid-area: 1 / 2;
-  background: var(--red);
-}
-.squares span:nth-child(2) {
-  grid-area: 2 / 1;
-  background: var(--blue);
-}
-.squares span:nth-child(3) {
-  grid-area: 3 / 2;
-  background: var(--green);
+  /* Keep the plant's stack in frame (site-plant-stack). */
+  object-position: 65% center;
 }
 .welcome__body {
   padding-top: 110px;
@@ -838,10 +820,6 @@ a {
   }
   .welcome__body {
     padding-top: 0;
-  }
-  .squares {
-    grid-template-columns: repeat(2, 48px);
-    grid-template-rows: repeat(3, 48px);
   }
 }
 
@@ -987,12 +965,6 @@ a {
 .svc-card:hover .svc-card__img img {
   transform: scale(1.08);
 }
-.svc-card .photo-tag,
-.tile .photo-tag,
-.post .photo-tag {
-  display: none;
-}
-
 /* Grid version of the cards (services page) */
 .svc-grid {
   display: grid;
@@ -1187,6 +1159,7 @@ a {
   place-items: center;
   width: 136px;
   height: 136px;
+  border-radius: 50%;
   background: var(--red);
 }
 .feature-box__badge span {

@@ -835,18 +835,6 @@ html[data-env='local'] [data-placeholder] {
   overflow: hidden;
   background: var(--mist);
 }
-.photo-tag {
-  position: absolute;
-  left: var(--s-3);
-  bottom: var(--s-3);
-  padding: 2px var(--s-2);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--slate);
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.6;
-}
 .machine__media--photo {
   display: block;
 }
@@ -855,8 +843,4 @@ html[data-env='local'] [data-placeholder] {
 }
 .photo img {
   transition: transform 400ms var(--ease);
-}
-.card__media > .photo-tag {
-  width: auto;
-  height: auto;
 }

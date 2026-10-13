@@ -4,12 +4,14 @@
 #}
 {% import 'components/icons.twig' as ic %}
 {% set q = 'Block 8 Industrial, Gaborone, Botswana'|url_encode %}
+{# Google's keyless embed renders blank for an address search, so the embed drops a pin on Block 8 by coordinates. #}
+{% set pin = '-24.6066,25.9137' %}
 <section class="map-bx" aria-labelledby="office-heading" data-map>
   <div class="map-bx__fallback">
     <a class="btn btn--red" href="https://www.google.com/maps/search/?api=1&amp;query={{ q }}" rel="noopener" data-map-load>{{ ic.icon('pin') }} Show map</a>
     <p class="small">Loads Google Maps</p>
   </div>
-  <iframe title="Map of Block 8 Industrial, Gaborone" data-src="https://maps.google.com/maps?q={{ q }}&amp;z=14&amp;output=embed" referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+  <iframe title="Map of Block 8 Industrial, Gaborone" data-src="https://maps.google.com/maps?q={{ pin }}&amp;z=15&amp;output=embed" referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
   <div class="container">
     <div class="office-box">
       <h2 id="office-heading">Office Address</h2>

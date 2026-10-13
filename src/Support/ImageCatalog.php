@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace EvolutionEngineers\Support;
 
 /**
- * Knows which interim photos exist, their dimensions and their credits.
- * Reads resources/images/stock/credits.json, written by tools/stock-download.mjs.
+ * Knows which photos exist, their dimensions and their credits: the interim stock set and the
+ * client's own site photos (marked "own"). Reads resources/images/stock/credits.json, written by
+ * tools/stock-download.mjs and tools/site-photos.mjs.
  */
 final class ImageCatalog
 {
@@ -25,7 +26,7 @@ final class ImageCatalog
     }
 
     /**
-     * @return array{key: string, width: int, height: int, widths: list<int>}|null
+     * @return array{key: string, width: int, height: int, widths: list<int>, own: bool}|null
      */
     public function get(string $key): ?array
     {
@@ -39,7 +40,23 @@ final class ImageCatalog
             fn (int $w): bool => $w <= max($width, 400) && is_file("{$this->publicDir}/{$key}-{$w}.webp")
         ));
 
-        return ['key' => $key, 'width' => $width, 'height' => (int) $item['height'], 'widths' => $widths];
+        return [
+            'key' => $key,
+            'width' => $width,
+            'height' => (int) $item['height'],
+            'widths' => $widths,
+            'own' => (bool) ($item['own'] ?? false),
+        ];
+    }
+
+    /**
+     * Openly licensed photos that need a credit; the client's own photos are left out.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public function credits(): array
+    {
+        return array_filter($this->all(), fn (array $item): bool => !($item['own'] ?? false));
     }
 
     /**

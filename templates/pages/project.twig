@@ -44,7 +44,8 @@
       <div class="project-bx__photos">
         <figure>
           <div class="split-bx__media">{{ ui.project_media(project, '(min-width: 900px) 50vw, 100vw', true) }}</div>
-          {% if project.photo_key %}<figcaption class="small muted">Illustrative photo of similar work. Photography of this project will follow.</figcaption>{% endif %}
+          {% if project.photo_key and photo_meta(project.photo_key).own %}<figcaption class="small muted">Evolution Engineers at work on one of our road contracts.</figcaption>
+          {% elseif project.photo_key %}<figcaption class="small muted">Illustrative photo of similar work. Photography of this project will follow.</figcaption>{% endif %}
         </figure>
       </div>
     </div>

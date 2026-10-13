@@ -5,7 +5,7 @@
 {% block content %}
   {# 1. Hero: kicker, oversized half-outlined word, short statement, link #}
   <section class="bx-hero" aria-labelledby="hero-heading">
-    <div class="bx-hero__bg">{{ ui.photo('building-glass', '', '100vw', true, false) }}</div>
+    <div class="bx-hero__bg">{{ ui.photo('building-glass', '', '100vw', true) }}</div>
     <div class="grid-lines" aria-hidden="true"></div>
     <div class="container">
       <h1 id="hero-heading" data-reveal><span class="bx-hero__kicker">Evolution in </span><span class="bx-hero__word"><span>Engin</span><span class="outline">eering</span></span></h1>
@@ -21,13 +21,13 @@
     </div>
   </section>
 
-  {# 2. Welcome: photo with brand squares and statement #}
+  {# 2. Welcome: photo and statement #}
   <section class="bx-section--navy welcome" aria-labelledby="welcome-heading">
     <div class="grid-lines" aria-hidden="true"></div>
     <div class="container welcome__grid">
       <div class="welcome__media" data-reveal>
-        {{ ui.photo('pipeline-trench', 'Workers laying a pipeline in a trench', '(min-width: 900px) 300px, 100vw', false, true) }}
-        <div class="squares" aria-hidden="true"><span></span><span></span><span></span></div>
+        {# Tall crop of a landscape photo, so the browser needs about 740 x 4/3 px of width. #}
+        {{ ui.photo('site-plant-stack', 'Our asphalt plant at work, with smoke rising from its stack', '(min-width: 900px) 990px, 120vw', false) }}
       </div>
       <div class="welcome__body">
         <p class="eyebrow">Welcome to Evolution Engineers</p>
@@ -53,7 +53,7 @@
               <a class="svc-card" href="{{ card.url }}">
                 {{ ic.picto(card.icon, 'svc-icon') }}
                 <h3>{{ card.name }}</h3>
-                <div class="svc-card__img">{{ ui.photo(card.photo, card.photo_alt, '(min-width: 1100px) 260px, (min-width: 640px) 45vw, 86vw', false, false) }}</div>
+                <div class="svc-card__img">{{ ui.photo(card.photo, card.photo_alt, '(min-width: 1100px) 260px, (min-width: 640px) 45vw, 86vw', false) }}</div>
               </a>
             </li>
           {% endfor %}
@@ -68,7 +68,7 @@
 
   {# 4. Why choose us: real facts only. Bars are computed from the project records. #}
   <section class="why-bx" aria-labelledby="why-heading">
-    <div class="why-bx__bg">{{ ui.photo('water-tower', '', '100vw', false, false) }}</div>
+    <div class="why-bx__bg">{{ ui.photo('water-tower', '', '100vw', false) }}</div>
     <div class="why-bx__grid">
       <div class="why-bx__card" data-reveal>
         <p class="eyebrow">Our key points</p>
@@ -104,7 +104,7 @@
         </div>
       </div>
       <div class="why-bx__side">
-        <div class="why-bx__photo">{{ ui.photo('pipeline-forest', 'A large pipeline under construction through forest', '(min-width: 1000px) 600px, 100vw', false, true) }}</div>
+        <div class="why-bx__photo">{{ ui.photo('pipeline-forest', 'A large pipeline under construction through forest', '(min-width: 1000px) 600px, 100vw', false) }}</div>
         <div class="feature-box" data-reveal>
           <div class="feature-box__badge" aria-hidden="true"><span>{{ ic.icon('gear') }}</span></div>
           <p class="eyebrow">Mines, utilities, ministries</p>
@@ -147,7 +147,7 @@
   <section class="about-bx" aria-labelledby="about-heading">
     <div class="container about-bx__grid">
       <div class="about-bx__media" data-reveal>
-        {{ ui.photo('roller', 'A road roller compacting soil', '(min-width: 1000px) 400px, 100vw', false, true) }}
+        {{ ui.photo('site-paver-closeup', 'An Evolution Engineers crew member with a shovel beside our asphalt paver', '(min-width: 1000px) 640px, 100vw', false) }}
       </div>
       <div class="about-bx__body">
         <p class="eyebrow">About company</p>
